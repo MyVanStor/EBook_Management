@@ -1,0 +1,97 @@
+Bảng users:
+	id: Số định danh tài khoản - INT - PRIMARY KEY
+	fullname: Họ và tên của người dùng - VARCHAR(100) - DEFAULT ""
+	password: Mật khẩu tài khoản sau khi mã hóa - VARCHAR(20) - DEFAULT ""
+	link_avatar: Đường dẫn tới ảnh đại diện tài khoản - TEXT - DEFAULT ""
+	phone_number: Số điện thoại - VARCHAR(10) - NOT NULL - UNIQUE
+	gender: Giới tính - TINYINT(1) - DEFAULT 2 - 0: Nữ 1: Nam 2: Chưa xác định
+	date_of_birth: Sinh nhật - DATE
+	budget: Số dư tài khoản - FLOAT - DEFAULT 0 - Đơn vị: VNĐ
+	role_id: 
+	facebook_account_id: Id của tài khoản khi liên kết với facebook, nếu có id tài khoản thì mật khẩu có thể để trống - INT - DEFAULT 0
+	google_account_id: Id của tài khoản khi liên kết với google, nếu có id tài khoản thì mật khẩu có thể để trống - INT - DEFAULT 0
+	is_active: Trạng thái tài khoản - TINYINT(1) - DEFAULT 1 - 1: Hoạt động 2: Tạm dừng
+	create_at: Thời gian tạo tài khoản - DATETIME
+	update_at: Thời gian gần nhất cập nhật tài khoản - DATETIME
+
+Bảng tokens:
+	id: Số định danh của token - INT - PRIMARY KEY
+	token: LONGTEXT - UNIQUE - NOT NULL
+	token_type: VARCHAR(50) - NOT NULL
+	expiration_date: Ngày hết hạn của token - DATETIME
+	revoked: TINYINT(1) NOT NULL
+	expired: TINYINT(1) NOT NULL
+	user_id: INT - FOREIGN KEY
+
+Bảng social_accounts: Hỗ trợ đăng nhập từ facebook và google
+	id: INT PRIMARY KEY
+	provider: Tên nhà cung cấp social network - VARCHAR(20) - NOT NULL 
+	provider_id: - VARCHAR(50) - NOT NULL
+	email: email tài khoản VARCHAR(150) NOT NULL 
+	name: Tên người dùng - VARCHAR(150) NOT NULL 
+	user_id: INT - FOREIGN KEY
+
+Bảng categories: Danh mục sách
+	id: Số định danh của danh mục - INT PRIMARY KEY
+	name: Tên danh mục - VARCHAR(100) NOT NULL
+	description: Mô tả về danh mục - VARCHAR(255) - DEFAULT ""
+
+Bảng books: Thông tin về sách
+	id: Mã định danh của sách - INT PRIMARY KEY
+	title: Tiêu đề sách - VARCHAR(100) - NOT NULL - UNIQUE
+	summary: Tóm tắt nội dung - LONGTEXT - DEFAULT ""
+	image: Hình ảnh bìa sách - LONGTEXT - DEFAULT ""
+	type_of_book: Thể loại sách - VARCHAR(100) - ENUM(Sáng tác - Xuất bản - Cá nhân)
+	publishing_year: Năm xuất bản - INT - DEFAULT 0
+	evaluate: Đánh giá - FLOAT - DEFAULT 0
+	status: Trạng thái sách - VARCHAR(100) - ENUM(Công khai - Riêng tư - Theo dõi - Trả phí)
+	thumbnail: Đường dẫn tới vùng lưu trữ sách - LONGTEXT - NOT NULL - UNIQUE
+	price: Giá bán của sách - FLOAT - DEFAULT 0 - CHECK >= 0
+
+Bảng ratings: Các đánh giá của người dùng
+	id: Mã định danh của đánh giá - INT PRIMARY KEY
+	score: Điểm đánh giá trên thang 10 - TINYINT(2) NOT NULL - CHECK >= 0
+	book_id
+	user_id
+
+Bảng orders: Chứa thông tin mua sách
+	id: Mã định danh đơn hàng
+	order_date: Thời gian mua sách - DATETIME - DEFAULT: Current time
+	status: Trạng thái đơn hàng - VARCHAR(100) - ENUM(Chờ thanh toán - Chờ xác nhận phía đối tác - Hoàn thành - Hủy bỏ)
+	total_money: Tổng tiền đơn hàng - FLOAT - NOT NULL
+	payment_method: Phương thức thanh toán - ENUM(Các kênh thanh toán hỗ trợ - MOMO, AGRIBANK, MBBank, ...)
+
+Bảng order_details: Chứa thông tin chi tiết từng sản phẩm đơn hàng
+	id: Mã định danh
+	order_id
+	book_id
+	price: Giá bán của sách
+
+Bảng comments: Chứa bình luận về sách của người dùng
+	id: Mã định danh bình luận
+	comment: Bình luận - VARCHAR(255) - NOT NULL 
+	user_id
+	create_at: Thời gian tạo bình luận - DATETIME
+	update_at: Thời gian cập nhật bình luận - DATETIME
+
+Bảng follows: Chứa thông tin theo dõi
+	id: Mã định danh
+	user_id: Người thực hiện theo dõi
+	following: Người được theo dõi
+	
+Bảng authors: Tác giả
+	id: Mã định danh tác giả - INT PRIMARY KEY
+	name: Tên tác giả - VARCHAR(100) - NOT NULL - UNIQUE
+
+Bảng painters: Họa sĩ
+	id: Mã định danh họa sĩ - INT PRIMARY KEY
+	name: Tên họa sĩ - VARCHAR(100) - NOT NULL - UNIQUE
+
+Bảng user_book:
+	id: Mã định danh - INT PRIMARY KEY
+	user_id
+	book_id
+	status: Mối quan hệ - ENUM(Chủ sách - Người mua - Người theo dõi)
+
+
+	
