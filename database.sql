@@ -47,8 +47,8 @@ CREATE TABLE users(
     facebook_account_id INT DEFAULT 0,
     google_account_id INT DEFAULT 0,
     is_active TINYINT(1) DEFAULT 1,
-    create_at DATETIME,
-    update_at DATETIME,
+    created_at DATETIME,
+    updated_at DATETIME,
     role_id INT,
     FOREIGN KEY (role_id) REFERENCES roles(id)
 );

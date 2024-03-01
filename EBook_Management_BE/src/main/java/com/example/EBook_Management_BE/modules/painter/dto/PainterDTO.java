@@ -1,4 +1,4 @@
-package com.example.EBook_Management_BE.modules.author.dto;
+package com.example.EBook_Management_BE.modules.painter.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthorDTO {
-	@NotBlank(message = "Author cannot blank")
+public class PainterDTO {
+	@NotBlank(message = "Painter cannot blank")
 	String name;
 }

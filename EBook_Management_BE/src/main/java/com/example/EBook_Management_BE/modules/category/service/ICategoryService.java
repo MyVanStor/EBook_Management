@@ -9,4 +9,6 @@ public interface ICategoryService {
 	Category getCategoryById(Long categoryId);
 	
 	Category updateCategory(Long categoryId, CategoryDTO categoryDTO);
+	
+	Category deleteCategoryById(Long categoryId) throws Exception;
 }

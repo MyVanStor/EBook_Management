@@ -20,5 +20,4 @@ public class CategoryDTO {
 	String name;
 
 	String description;
-
 }

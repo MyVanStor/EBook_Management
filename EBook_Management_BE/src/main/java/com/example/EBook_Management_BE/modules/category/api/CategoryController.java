@@ -2,10 +2,13 @@ package com.example.EBook_Management_BE.modules.category.api;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,6 +36,13 @@ public class CategoryController {
 	private final CategoryService categoryService;
 	private final LocalizationUtils localizationUtils;
 
+	@GetMapping("/{id}")
+	public ResponseEntity<ResponseObject> getCategoryById(@PathVariable Long id) {
+		Category existingCategory = categoryService.getCategoryById(id);
+		return ResponseEntity.ok(ResponseObject.builder().data(existingCategory)
+				.message("Get category information successfully").status(HttpStatus.OK).build());
+	}
+
 	@PostMapping("")
 	public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryDTO categoryDTO,
 			BindingResult result) {
@@ -59,5 +69,12 @@ public class CategoryController {
 		categoryService.updateCategory(id, categoryDTO);
 		return ResponseEntity.ok(ResponseObject.builder().data(categoryService.getCategoryById(id))
 				.message(localizationUtils.getLocalizedMessage(MessageKeys.UPDATE_CATEGORY_SUCCESSFULLY)).build());
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<ResponseObject> deleteCategory(@PathVariable Long id) throws Exception {
+		categoryService.deleteCategoryById(id);
+		return ResponseEntity
+				.ok(ResponseObject.builder().status(HttpStatus.OK).message("Delete category successfully").build());
 	}
 }
