@@ -16,4 +16,6 @@ public class MessageKeys {
     public static final String INSERT_ROLE_SUCCESSFULLY = "role.create_role.create_successfully";
     public static final String DELETE_ROLE_SUCCESSFULLY = "role.delete_role.delete_successfully";
     public static final String UPDATE_ROLE_SUCCESSFULLY = "role.update_role.update_successfully";
+    
+    public static final String ROLE_DOES_NOT_EXISTS = "user.login.role_not_exist";
 }

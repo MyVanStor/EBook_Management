@@ -1,5 +1,7 @@
 package com.example.EBook_Management_BE.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,14 +12,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Data
 @Getter
 @Setter
 @Table(name = "order_details")
@@ -33,10 +33,12 @@ public class OrderDetail {
 	@Column(name = "price", columnDefinition = "FLOAT")
 	double price;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "book_id")
 	Book book;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "order_id")
 	Order order;

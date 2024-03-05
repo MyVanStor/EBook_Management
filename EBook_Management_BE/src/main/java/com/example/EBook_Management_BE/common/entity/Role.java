@@ -1,9 +1,10 @@
 package com.example.EBook_Management_BE.common.entity;
 
-import java.util.Set;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,6 +35,6 @@ public class Role {
 	@Column(name = "name", length = 100, nullable = false, unique = true)
 	String name;
 	
-	@OneToMany(mappedBy = "role")
-	Set<User> users;
+	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+	List<User> users;
 }

@@ -2,26 +2,25 @@ package com.example.EBook_Management_BE.common.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Data
+
 @Getter
 @Setter
 @Table(name = "categories")
@@ -41,8 +40,7 @@ public class Category {
 	@Column(name = "description", length = 255)
 	String description;
 	
-	@ManyToMany
-	@JoinTable(name = "category_book", joinColumns = { @JoinColumn(name = "category_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "book_id") })
+	@JsonIgnore
+	@ManyToMany(mappedBy = "categories")
 	Set<Book> books;
 }

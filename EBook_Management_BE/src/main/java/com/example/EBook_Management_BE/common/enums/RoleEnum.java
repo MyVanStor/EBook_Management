@@ -1,6 +1,6 @@
 package com.example.EBook_Management_BE.common.enums;
 
-public class Role {
+public class RoleEnum {
 	public static final String ADMIN = "admin";
 	
 	public static final String USER = "user";

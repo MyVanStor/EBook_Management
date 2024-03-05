@@ -7,19 +7,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Data
 @Getter
 @Setter
 @Table(name = "books")
@@ -50,22 +50,25 @@ public class Book {
 	@Column(name = "evaluate", columnDefinition = "FLOAT", nullable = false)
 	double evaluate;
 	
-	@Column(name = "status", length = 100, nullable = false)
-	String status;
-	
 	@Column(name = "thumbnail", length = 255, nullable = false, unique = true)
 	String thumbnail;
 	
 	@Column(name = "price", columnDefinition = "FLOAT")
 	double price;
 	
-	@ManyToMany(mappedBy = "books")
+	@ManyToMany
+	@JoinTable(name = "author_book", joinColumns = { @JoinColumn(name = "book_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "author_id") })
 	Set<Author> authors;
 	
-	@ManyToMany(mappedBy = "books")
+	@ManyToMany
+	@JoinTable(name = "painter_book", joinColumns = { @JoinColumn(name = "book_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "painter_id") })
 	Set<Painter> painters;
 	
-	@ManyToMany(mappedBy = "books")
+	@ManyToMany
+	@JoinTable(name = "category_book", joinColumns = { @JoinColumn(name = "book_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "category_id") })
 	Set<Category> categories;
 	
 	@OneToMany(mappedBy = "book")

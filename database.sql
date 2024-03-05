@@ -98,8 +98,8 @@ CREATE TABLE order_details(
 CREATE TABLE comment(
 	id INT PRIMARY KEY AUTO_INCREMENT,
     comment LONGTEXT NOT NULL,
-    create_at DATETIME,
-    update_at DATETIME,
+    created_at DATETIME,
+    updated_at DATETIME,
     user_id INT,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );

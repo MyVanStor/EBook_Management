@@ -1,9 +1,13 @@
 package com.example.EBook_Management_BE.common.entity;
 
+import java.util.Date;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -49,6 +53,9 @@ public class User extends BaseEntity{
 
 	@Column(name = "budget", columnDefinition = "FLOAT", nullable = false)
 	double budget;
+	
+	@Column(name = "date_of_birth", columnDefinition = "DATE")
+	Date dateOfBirth;
 
 	@Column(name = "facebook_account_id", length = 100, unique = true)
 	String facebookAccountId;
@@ -59,28 +66,29 @@ public class User extends BaseEntity{
 	@Column(name = "is_active", columnDefinition = "TINYINT(1)")
 	short isActive;
 	
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	Set<UserBook> userBooks;
 	
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	Set<Rating> ratings;
 	
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	Set<Comment> comments;
 	
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	Set<Follow> follows;
 	
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	Set<Order> orders;
 	
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	Set<SocialAccount> socialAccounts;
 	
-	@OneToOne(mappedBy = "user")
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
 	Token token;
 	
-	@ManyToOne()
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "role_id")
 	Role role;
 }
