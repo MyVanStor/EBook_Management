@@ -66,25 +66,26 @@ public class User extends BaseEntity{
 	@Column(name = "is_active", columnDefinition = "TINYINT(1)")
 	short isActive;
 	
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user")
 	Set<UserBook> userBooks;
 	
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user")
 	Set<Rating> ratings;
 	
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user")
 	Set<Comment> comments;
 	
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@JsonIgnore
+	@OneToMany(mappedBy = "user")
 	Set<Follow> follows;
 	
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user")
 	Set<Order> orders;
 	
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "user")
 	Set<SocialAccount> socialAccounts;
 	
-	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "user")
 	Token token;
 	
 	@JsonIgnore
