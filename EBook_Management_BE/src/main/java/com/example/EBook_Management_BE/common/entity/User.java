@@ -72,6 +72,7 @@ public class User extends BaseEntity{
 	@OneToMany(mappedBy = "user")
 	Set<Rating> ratings;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	Set<Comment> comments;
 	

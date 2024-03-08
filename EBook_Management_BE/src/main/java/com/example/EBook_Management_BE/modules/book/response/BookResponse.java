@@ -43,6 +43,9 @@ public class BookResponse {
 	
 	@JsonProperty("evaluate")
 	double evaluate;
+	
+	@JsonProperty("number_of_review")
+	Long numberOfReview; 
 
 	@JsonProperty("thumbnail")
 	String thumbnail;

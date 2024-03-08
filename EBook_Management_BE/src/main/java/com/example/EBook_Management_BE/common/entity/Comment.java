@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +23,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class Comment extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +32,12 @@ public class Comment extends BaseEntity{
 
 	@Column(name = "comment", length = 255, nullable = false)
 	String comment;
+	
+	@Column(name = "reply_type", nullable = false)
+	String replyType;
+	
+	@Column(name = "reply_id", nullable = false)
+	Long replyId;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")

@@ -72,7 +72,8 @@ public class BookService implements IBookService {
 
 	@Override
 	public Book getBookById(Long bookId) {
-		return bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found"));
+		return bookRepository.findById(bookId)
+				.orElseThrow(() -> new RuntimeException(String.format("Book with id = %d not found", bookId)));
 	}
 
 	@Override
@@ -109,17 +110,17 @@ public class BookService implements IBookService {
 
 	@Override
 	@Transactional
-	public void deleteBook(Long bookId) throws Exception{
+	public void deleteBook(Long bookId) throws Exception {
 		Book book = getBookById(bookId);
-		
+
 		for (UserBook userBook : book.getUserBooks()) {
-			if(userBook.getStatus() == "buyer") {
+			if (userBook.getStatus() == "buyer") {
 				throw new IllegalStateException("Cannot delete book because have user buy book");
 			}
 		}
-		
+
 		userBookRepository.deleteAll(book.getUserBooks());
-		
+
 		bookRepository.deleteById(bookId);
 	}
 }

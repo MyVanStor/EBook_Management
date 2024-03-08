@@ -47,6 +47,9 @@ public class Book {
 	@Column(name = "publishing_year")
 	Integer publishingYear;
 	
+	@Column(name = "number_of_review")
+	Long numberOfReview;
+	
 	@Column(name = "evaluate", columnDefinition = "FLOAT", nullable = false)
 	double evaluate;
 	

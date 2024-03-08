@@ -11,3 +11,7 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    default-locale: en
