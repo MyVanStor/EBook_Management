@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -44,6 +45,7 @@ public class RoleController {
 	}
 
 	@PostMapping("")
+	@PreAuthorize("hasRole('ROLE_SYS-ADMIN')")
 	public ResponseEntity<RoleResponse> createRole(@Valid @RequestBody RoleDTO roleDTO, BindingResult result) {
 		RoleResponse roleResponse = new RoleResponse();
 
@@ -62,6 +64,7 @@ public class RoleController {
 	}
 
 	@PutMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_SYS-ADMIN')")
 	public ResponseEntity<ResponseObject> updateRole(@PathVariable Long id, @Valid @RequestBody RoleDTO roleDTO) {
 		roleService.updateRole(id, roleDTO);
 		return ResponseEntity.ok(ResponseObject.builder().data(roleService.getRoleById(id))
@@ -69,6 +72,7 @@ public class RoleController {
 	}
 
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_SYS-ADMIN')")
 	public ResponseEntity<ResponseObject> deleteRole(@PathVariable Long id) throws Exception {
 		roleService.deleteRoleById(id);
 		return ResponseEntity

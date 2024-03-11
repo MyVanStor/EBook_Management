@@ -52,5 +52,4 @@ public class UserResponse {
 	
 	@JsonProperty("role_name")
 	String roleName;
-	
 }

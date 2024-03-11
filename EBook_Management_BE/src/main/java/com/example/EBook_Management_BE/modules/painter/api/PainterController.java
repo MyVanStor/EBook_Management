@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -45,6 +46,7 @@ public class PainterController {
 	}
 
 	@PostMapping("")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SYS-ADMIN')")
 	public ResponseEntity<PainterResponse> createPainter(@Valid @RequestBody PainterDTO painterDTO,
 			BindingResult result) {
 		PainterResponse painterResponse = new PainterResponse();
@@ -63,6 +65,7 @@ public class PainterController {
 	}
 
 	@PutMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
 	public ResponseEntity<ResponseObject> updatePainter(@PathVariable Long id,
 			@Valid @RequestBody PainterDTO painterDTO) {
 		painterService.updatePainter(id, painterDTO);
@@ -71,6 +74,7 @@ public class PainterController {
 	}
 	
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
 	public ResponseEntity<ResponseObject> deletePainter(@PathVariable Long id) throws Exception {
 		painterService.deletePainterById(id);
 		return ResponseEntity

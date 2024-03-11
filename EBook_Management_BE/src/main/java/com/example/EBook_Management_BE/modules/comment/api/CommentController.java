@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -42,6 +43,7 @@ public class CommentController {
 	}
 
 	@PostMapping("/book")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<CommentResponse> createBookComment(@Valid @RequestBody CommentDTO commentDTO,
 			BindingResult result) {
 		CommentResponse commentResponse = new CommentResponse();
@@ -62,6 +64,7 @@ public class CommentController {
 	}
 	
 	@PostMapping("/reply")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<CommentResponse> createReplyComment(@Valid @RequestBody CommentDTO commentDTO,
 			BindingResult result) {
 		CommentResponse commentResponse = new CommentResponse();

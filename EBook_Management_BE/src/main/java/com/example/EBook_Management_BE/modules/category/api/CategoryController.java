@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -44,6 +45,7 @@ public class CategoryController {
 	}
 
 	@PostMapping("")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SYS-ADMIN')")
 	public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryDTO categoryDTO,
 			BindingResult result) {
 		CategoryResponse categoryResponse = new CategoryResponse();
@@ -64,6 +66,7 @@ public class CategoryController {
 	}
 
 	@PutMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
 	public ResponseEntity<ResponseObject> updateCategory(@PathVariable Long id,
 			@Valid @RequestBody CategoryDTO categoryDTO) {
 		categoryService.updateCategory(id, categoryDTO);
@@ -72,6 +75,7 @@ public class CategoryController {
 	}
 
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
 	public ResponseEntity<ResponseObject> deleteCategory(@PathVariable Long id) throws Exception {
 		categoryService.deleteCategoryById(id);
 		return ResponseEntity

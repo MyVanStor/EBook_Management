@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -37,6 +38,7 @@ public class FollowController {
 	private final LocalizationUtils localizationUtils;
 
 	@PostMapping("")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<FollowResponse> createFollow(@Valid @RequestBody FollowDTO followDTO, BindingResult result)
 			throws Exception {
 		FollowResponse followResponse = new FollowResponse();
@@ -57,6 +59,7 @@ public class FollowController {
 	}
 	
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> getFollowById(@PathVariable Long id) {
 		Follow existingFollow = followService.getFollowById(id);
 		
@@ -90,6 +93,7 @@ public class FollowController {
 	}
 	
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> deleteFollow(@PathVariable Long id) throws Exception {
 		followService.deleteFollow(id);
 		return ResponseEntity.ok(ResponseObject.builder().data(null)

@@ -1,5 +1,7 @@
 package com.example.EBook_Management_BE.common.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,6 +41,7 @@ public class Comment extends BaseEntity{
 	@Column(name = "reply_id", nullable = false)
 	Long replyId;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	User user;

@@ -8,10 +8,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +25,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class Token {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,16 +38,25 @@ public class Token {
 	@Column(name = "token_type", length = 50, nullable = false)
 	String tokenType;
 	
+	@Column(name = "refresh_token", length = 255)
+    private String refreshToken;
+	
 	@Column(name = "expiration_date")
 	LocalDateTime expirationDate;
 	
+	@Column(name = "refresh_expiration_date")
+    private LocalDateTime refreshExpirationDate;
+	
+	@Column(name = "is_mobile", columnDefinition = "TINYINT(1)")
+    private boolean isMobile;
+	
 	@Column(name = "revoked", columnDefinition = "TINYINT(1)", nullable = false)
-	short revoked;
+	boolean revoked;
 
 	@Column(name = "expired", columnDefinition = "TINYINT(1)", nullable = false)
-	short expired;
+	boolean expired;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "user_id")
 	User user;
 }

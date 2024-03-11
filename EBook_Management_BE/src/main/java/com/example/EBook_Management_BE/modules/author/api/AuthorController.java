@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -44,6 +45,7 @@ public class AuthorController {
 	}
 
 	@PostMapping("")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SYS-ADMIN')")
 	public ResponseEntity<AuthorResponse> createAuthor(@Valid @RequestBody AuthorDTO authorDTO, BindingResult result) {
 		AuthorResponse authorResponse = new AuthorResponse();
 
@@ -62,6 +64,7 @@ public class AuthorController {
 	}
 
 	@PutMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
 	public ResponseEntity<ResponseObject> updateAuthor(@PathVariable Long id,
 			@Valid @RequestBody AuthorDTO authorDTO) {
 		authorService.updateAuthor(id, authorDTO);
@@ -70,6 +73,7 @@ public class AuthorController {
 	}
 
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
 	public ResponseEntity<ResponseObject> deleteAuthor(@PathVariable Long id) throws Exception {
 		authorService.deleteAuthorById(id);
 		return ResponseEntity

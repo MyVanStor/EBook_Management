@@ -21,6 +21,9 @@ public class UserDTO {
 
 	String password;
 	
+	@JsonProperty("retype_password")
+    private String retypePassword;
+	
 	@JsonProperty("link_avatar")
 	String linkAvatar;
 	
@@ -35,10 +38,10 @@ public class UserDTO {
 	Date dateOfBirth;
 	
 	@JsonProperty("facebook_account_id")
-	String facebookAccountId;
+	int facebookAccountId;
 	
 	@JsonProperty("google_account_id")
-	String googleAccountId;
+	int googleAccountId;
 	
 	@JsonProperty("is_active")
 	short isActive;
