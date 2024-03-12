@@ -1,9 +1,12 @@
 package com.example.EBook_Management_BE.modules.user.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,10 +22,12 @@ import com.example.EBook_Management_BE.common.entity.User;
 import com.example.EBook_Management_BE.common.enums.RoleEnum;
 import com.example.EBook_Management_BE.common.exceptions.DataNotFoundException;
 import com.example.EBook_Management_BE.common.exceptions.ExpiredTokenException;
+import com.example.EBook_Management_BE.common.exceptions.InvalidPasswordException;
 import com.example.EBook_Management_BE.common.repository.RoleRepository;
 import com.example.EBook_Management_BE.common.repository.TokenRepository;
 import com.example.EBook_Management_BE.common.repository.UserRepository;
 import com.example.EBook_Management_BE.common.utils.MessageKeys;
+import com.example.EBook_Management_BE.modules.user.dto.UpdateUserDTO;
 import com.example.EBook_Management_BE.modules.user.dto.UserDTO;
 import com.example.EBook_Management_BE.modules.user.mapper.UserMapper;
 
@@ -116,6 +121,89 @@ public class UserService implements IUserService {
 	public User getUserDetailsFromRefreshToken(String refreshToken) throws Exception {
 		Token existingToken = tokenRepository.findByRefreshToken(refreshToken);
         return getUserDetailsFromToken(existingToken.getToken());
+	}
+
+	@Override
+	@Transactional
+	public User updateUser(Long userId, UpdateUserDTO updatedUserDTO) throws Exception {
+		// Find the existing user by userId
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+
+        // Check if the phone number is being changed and if it already exists for another user
+        String newPhoneNumber = updatedUserDTO.getPhoneNumber();
+        if (!existingUser.getPhoneNumber().equals(newPhoneNumber) &&
+                userRepository.existsByPhoneNumber(newPhoneNumber)) {
+            throw new DataIntegrityViolationException("Phone number already exists");
+        }
+
+        // Update user information based on the DTO
+        if (updatedUserDTO.getFullname() != null) {
+            existingUser.setFullname(updatedUserDTO.getFullname());
+        }
+        if (newPhoneNumber != null) {
+            existingUser.setPhoneNumber(newPhoneNumber);
+        }
+        if (updatedUserDTO.getLinkAvatar() != null) {
+        	existingUser.setLinkAvatar(updatedUserDTO.getLinkAvatar());
+        }
+        if (updatedUserDTO.getGender() != existingUser.getGender()) {
+        	existingUser.setLinkAvatar(updatedUserDTO.getLinkAvatar());
+        }
+        if (updatedUserDTO.getDateOfBirth() != null) {
+            existingUser.setDateOfBirth(updatedUserDTO.getDateOfBirth());
+        }
+        if (updatedUserDTO.getFacebookAccountId() > 0) {
+            existingUser.setFacebookAccountId(updatedUserDTO.getFacebookAccountId());
+        }
+        if (updatedUserDTO.getGoogleAccountId() > 0) {
+            existingUser.setGoogleAccountId(updatedUserDTO.getGoogleAccountId());
+        }
+
+        // Update the password if it is provided in the DTO
+        if (updatedUserDTO.getPassword() != null
+                && !updatedUserDTO.getPassword().isEmpty()) {
+            if(!updatedUserDTO.getPassword().equals(updatedUserDTO.getRetypePassword())) {
+                throw new DataNotFoundException("Password and retype password not the same");
+            }
+            String newPassword = updatedUserDTO.getPassword();
+            String encodedPassword = passwordEncoder.encode(newPassword);
+            existingUser.setPassword(encodedPassword);
+        }
+        
+        if (updatedUserDTO.getIsActive() != existingUser.getIsActive()) {
+        	existingUser.setIsActive(updatedUserDTO.getIsActive());
+        }
+
+        return userRepository.save(existingUser);
+	}
+
+	@Override
+	public Page<User> findAll(String keyword, Pageable pageable) throws Exception {
+		return userRepository.findAll(keyword, pageable);
+	}
+
+	@Override
+	public void resetPassword(Long userId, String newPassword) throws InvalidPasswordException, DataNotFoundException {
+		User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        existingUser.setPassword(encodedPassword);
+        userRepository.save(existingUser);
+        //reset password => clear token
+        List<Token> tokens = tokenRepository.findByUser(existingUser);
+        for (Token token : tokens) {
+            tokenRepository.delete(token);
+        }
+	}
+
+	@Override
+	public void blockOrEnable(Long userId, short active) throws DataNotFoundException {
+		User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+        existingUser.setIsActive(active);
+        userRepository.save(existingUser);
+		
 	}
 
 }

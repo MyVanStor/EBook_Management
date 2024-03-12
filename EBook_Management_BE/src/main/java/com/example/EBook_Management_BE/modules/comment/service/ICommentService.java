@@ -9,4 +9,8 @@ public interface ICommentService {
 	Comment createBookComment(CommentDTO commentDTO);
 	
 	Comment createReplyComment(CommentDTO commentDTO);
+	
+	Comment updateComment(Long commentId, CommentDTO commentDTO);
+	
+	void deleteComment(Long commentId);
 }	

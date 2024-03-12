@@ -1,5 +1,7 @@
 package com.example.EBook_Management_BE.modules.rating.service;
 
+import java.util.Set;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,4 +74,12 @@ public class RatingService implements IRatingService {
 		ratingRepository.deleteById(ratingId);
 	}
 
+	@Override
+	public int getAllRatingByBookId(Long bookId) {
+		Book book = bookService.getBookById(bookId);
+		
+		Set<Rating> ratings = ratingRepository.findByBook(book);
+		
+		return ratings.size();
+	}
 }

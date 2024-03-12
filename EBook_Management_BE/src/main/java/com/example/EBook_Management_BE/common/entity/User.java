@@ -73,7 +73,7 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
 	int googleAccountId;
 	
 	@Column(name = "is_active", columnDefinition = "TINYINT(1)")
-	boolean isActive;
+	short isActive;
 	
 	@OneToMany(mappedBy = "user")
 	Set<UserBook> userBooks;

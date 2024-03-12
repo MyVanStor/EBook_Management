@@ -11,4 +11,6 @@ public interface IRatingService {
 	Rating updateRating(Long ratingId, RatingDTO ratingDTO);
 
 	void deleteRating(Long ratingId);
+	
+	int getAllRatingByBookId(Long bookId);
 }

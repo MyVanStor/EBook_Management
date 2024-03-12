@@ -89,7 +89,7 @@ public class JwtTokenUtil {
             Token existingToken = tokenRepository.findByToken(token);
             if(existingToken == null ||
                     existingToken.isRevoked() == true ||
-                    !userDetails.isActive()
+                    !(userDetails.getIsActive() == 1)
             ) {
                 return false;
             }

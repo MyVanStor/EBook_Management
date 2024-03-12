@@ -8,9 +8,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +38,7 @@ public class CommentController {
 	private final LocalizationUtils localizationUtils;
 	
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> getCommmentById(@PathVariable Long id) {
 		Comment existingComment = commentService.getCommentById(id);
 		return ResponseEntity.ok(ResponseObject.builder().data(existingComment)
@@ -82,5 +85,25 @@ public class CommentController {
 		Comment comment = commentService.createReplyComment(commentDTO);
 		commentResponse.setComment(comment);
 		return ResponseEntity.created(null).body(commentResponse);
+	}
+	
+	@PutMapping("/{commentId}")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<ResponseObject> updateComment(@PathVariable Long commentId, @Valid @RequestBody CommentDTO commentDTO) {
+		Comment comment = commentService.updateComment(commentId, commentDTO);
+		
+		return ResponseEntity.ok(ResponseObject.builder()
+				.status(HttpStatus.OK)
+				.message(String.format("Update comment id = %d success", commentId))
+				.data(comment)
+				.build());
+	}
+	
+	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+	public ResponseEntity<ResponseObject> deleteComment(@PathVariable Long id) throws Exception {
+		commentService.deleteComment(id);
+		return ResponseEntity
+				.ok(ResponseObject.builder().status(HttpStatus.OK).message("Delete comment successfully").build());
 	}
 }

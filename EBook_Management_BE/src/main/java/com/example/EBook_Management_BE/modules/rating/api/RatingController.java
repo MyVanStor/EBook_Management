@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -65,5 +66,16 @@ public class RatingController {
 		ratingService.deleteRating(id);
 		return ResponseEntity
 				.ok(ResponseObject.builder().status(HttpStatus.OK).message("Delete rating successfully").build());
+	}
+	
+	@GetMapping("/all/{bookId}")
+	public ResponseEntity<ResponseObject> getAllRatingByBookId(@PathVariable Long bookId) {
+		int countRating = ratingService.getAllRatingByBookId(bookId);
+		
+		return ResponseEntity.ok(ResponseObject.builder()
+				.status(HttpStatus.OK)
+				.message(String.format("Get all ratings book with book_id = %d success", bookId))
+				.data(countRating)
+				.build());
 	}
 }

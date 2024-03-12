@@ -57,4 +57,25 @@ public class CommentService implements ICommentService {
 		return commentRepository.save(newComment);
 	}
 
+	@Override
+	@Transactional
+	public Comment updateComment(Long commentId, CommentDTO commentDTO) {
+		Comment existingComment = getCommentById(commentId);
+
+		if (existingComment.getReplyId() == commentDTO.getReplyId()
+				&& existingComment.getUser().getId() == commentDTO.getUserId()) {
+			existingComment.setComment(commentDTO.getComment());
+		}
+
+		return commentRepository.save(existingComment);
+	}
+
+	@Override
+	@Transactional
+	public void deleteComment(Long commentId) {
+		getCommentById(commentId);
+		
+		commentRepository.deleteById(commentId);
+	}
+
 }
