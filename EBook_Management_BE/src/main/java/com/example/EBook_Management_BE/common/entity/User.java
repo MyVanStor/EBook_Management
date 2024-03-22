@@ -89,12 +89,14 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
 	@OneToMany(mappedBy = "user")
 	Set<Follow> follows;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	Set<Order> orders;
 	
 	@OneToMany(mappedBy = "user")
 	Set<SocialAccount> socialAccounts;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	Set<Token> tokens;
 	

@@ -2,6 +2,8 @@ package com.example.EBook_Management_BE.common.entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -56,6 +58,7 @@ public class Token {
 	@Column(name = "expired", columnDefinition = "TINYINT(1)", nullable = false)
 	boolean expired;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	User user;

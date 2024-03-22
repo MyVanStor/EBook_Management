@@ -2,6 +2,8 @@ package com.example.EBook_Management_BE.common.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -74,6 +76,7 @@ public class Book {
 			@JoinColumn(name = "category_id") })
 	Set<Category> categories;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "book")
 	Set<OrderDetail> orderDetails;
 	

@@ -32,9 +32,6 @@ public class BookDTO {
 	Integer publishingYear;
 
 	double evaluate;
-	
-	@JsonProperty("number_of_review")
-	Long numberOfReview;
 
 	String thumbnail;
 

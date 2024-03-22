@@ -10,7 +10,7 @@ public class Uri {
 
 	public static final String BOOK = "api/v1/book";
 
-	public static final String BOOK_ORDER = "api/v1/bookorder";
+	public static final String ORDER = "api/v1/order";
 
 	public static final String CATEGORY = "api/v1/category";
 

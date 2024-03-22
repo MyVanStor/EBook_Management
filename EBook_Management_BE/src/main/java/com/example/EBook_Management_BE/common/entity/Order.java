@@ -1,7 +1,8 @@
 package com.example.EBook_Management_BE.common.entity;
 
-import java.time.LocalDateTime;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,14 +27,11 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Order {
+public class Order extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	Long id;
-	
-	@Column(name = "order_date")
-	LocalDateTime orderDate;
 	
 	@Column(name = "status", length = 100, nullable = false)
 	String status;
@@ -47,6 +45,7 @@ public class Order {
 	@OneToMany(mappedBy = "order")
 	Set<OrderDetail> orderDetails;
 	
+	@JsonIgnore
 	@ManyToOne()
 	@JoinColumn(name = "user_id")
 	User user;
