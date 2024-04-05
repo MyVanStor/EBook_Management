@@ -53,7 +53,6 @@ public class UserController {
 	private UserMapper userMapper;
 
 	@PostMapping("/register")
-	// can we register an "admin" user ?
 	public ResponseEntity<ResponseObject> createUser(@Valid @RequestBody UserDTO userDTO, BindingResult result)
 			throws Exception {
 		if (result.hasErrors()) {
