@@ -1,0 +1,73 @@
+package com.example.EBook_Management_BE.responses;
+
+import java.util.Set;
+
+import com.example.EBook_Management_BE.entity.Author;
+import com.example.EBook_Management_BE.entity.Category;
+import com.example.EBook_Management_BE.entity.OrderDetail;
+import com.example.EBook_Management_BE.entity.Painter;
+import com.example.EBook_Management_BE.entity.Rating;
+import com.example.EBook_Management_BE.entity.UserBook;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class BookResponse {
+	@JsonProperty("id")
+	Long id;
+
+	@JsonProperty("title")
+	String title;
+
+	@JsonProperty("summary")
+	String summary;
+	
+	@JsonProperty("image")
+	String image;
+	
+	@JsonProperty("type_of_book")
+	String typeOfBook;
+
+	@JsonProperty("publishing_year")
+	Integer publishingYear;
+	
+	@JsonProperty("evaluate")
+	double evaluate;
+	
+	@JsonProperty("number_of_review")
+	Long numberOfReview; 
+
+	@JsonProperty("thumbnail")
+	String thumbnail;
+
+	@JsonProperty("price")
+	double price;
+	
+	@JsonProperty("authors")
+	Set<Author> authors;
+
+	@JsonProperty("painters")
+	Set<Painter> painters;
+
+	@JsonProperty("categories")
+	Set<Category> categories;
+
+	@JsonProperty("order_details")
+	Set<OrderDetail> orderDetails;
+
+	@JsonProperty("user_books")
+	Set<UserBook> userBooks;
+
+	@JsonProperty("ratings")
+	Set<Rating> ratings;
+}
