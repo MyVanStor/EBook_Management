@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.example.EBook_Management_BE.entity.Token;
 import com.example.EBook_Management_BE.entity.User;
 import com.example.EBook_Management_BE.repositories.TokenRepository;
+import com.example.EBook_Management_BE.services.token.ITokenRedisService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -34,6 +35,7 @@ public class JwtTokenUtil {
 	private String secretKey;
 	
 	private final TokenRepository tokenRepository;
+	private final ITokenRedisService tokenRedisService;
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenUtil.class);
 
 	public String generateToken(User user) {
@@ -83,10 +85,16 @@ public class JwtTokenUtil {
         return extractClaim(token, Claims::getSubject);
     }
 	
-	public boolean validateToken(String token, User userDetails) {
+	public boolean validateToken(String token, User userDetails) throws Exception {
         try {
             String phoneNumber = extractPhoneNumber(token);
-            Token existingToken = tokenRepository.findByToken(token);
+            Token existingToken = tokenRedisService.getToken(token);
+            if (existingToken == null) {
+            	existingToken = tokenRepository.findByToken(token);
+            	
+            	tokenRedisService.saveToken(token, existingToken);
+            }
+            		
             if(existingToken == null ||
                     existingToken.isRevoked() == true ||
                     !(userDetails.getIsActive() == 1)

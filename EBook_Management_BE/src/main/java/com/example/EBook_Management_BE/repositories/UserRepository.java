@@ -15,6 +15,8 @@ import com.example.EBook_Management_BE.entity.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 	boolean existsByPhoneNumber(String phoneNumber);
 	
+	boolean existsByRole(Role role);
+	
 	Optional<User> findByPhoneNumber(String phoneNumber);
 	
 	List<User> findByRole(Role role);

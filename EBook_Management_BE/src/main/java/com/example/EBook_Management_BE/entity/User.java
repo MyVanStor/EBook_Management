@@ -3,15 +3,12 @@ package com.example.EBook_Management_BE.entity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -39,7 +36,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User extends BaseEntity implements UserDetails, OAuth2User {
+public class User extends BaseEntity implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -48,7 +45,7 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
 	@Column(name = "fullname", length = 100)
 	String fullname;
 
-	@Column(name = "password", length = 20, nullable = false)
+	@Column(name = "password", nullable = false)
 	String password;
 
 	@Column(name = "link_avatar", length = 255, unique = true)
@@ -57,7 +54,7 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
 	@Column(name = "phone_number", length = 10, unique = true)
 	String phoneNumber;
 
-	@Column(name = "gender", columnDefinition = "TINYINT(1)")
+	@Column(name = "gender")
 	short gender;
 
 	@Column(name = "budget", columnDefinition = "FLOAT", nullable = false)
@@ -72,12 +69,14 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
 	@Column(name = "google_account_id", length = 100, unique = true)
 	int googleAccountId;
 	
-	@Column(name = "is_active", columnDefinition = "TINYINT(1)")
+	@Column(name = "is_active")
 	short isActive;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	Set<UserBook> userBooks;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	Set<Rating> ratings;
 	
@@ -93,6 +92,7 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
 	@OneToMany(mappedBy = "user")
 	Set<Order> orders;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	Set<SocialAccount> socialAccounts;
 	
@@ -101,6 +101,17 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
 	Set<Token> tokens;
 	
 	@JsonIgnore
+	@OneToMany(mappedBy = "user")
+	Set<ReadingHistory> readingHistories;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "user")
+	Set<Painter> painters;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "user")
+	Set<Author> authors;
+	
 	@ManyToOne
 	@JoinColumn(name = "role_id")
 	Role role;
@@ -112,7 +123,7 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
 
 		return authorityList;
 	}
-                              
+               
 	@Override
 	public String getUsername() {
 		return phoneNumber;
@@ -122,7 +133,7 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
 	public boolean isAccountNonExpired() {
 		return true;
 	}
-
+	
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
@@ -138,13 +149,4 @@ public class User extends BaseEntity implements UserDetails, OAuth2User {
 		return true;
 	}
 
-	@Override
-	public Map<String, Object> getAttributes() {
-		return new HashMap<String, Object>();
-	}
-
-	@Override
-	public String getName() {
-		return getAttribute("name");
-	}
 }

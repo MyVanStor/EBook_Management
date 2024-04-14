@@ -1,7 +1,9 @@
 package com.example.EBook_Management_BE.responses;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.example.EBook_Management_BE.entity.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AccessLevel;
@@ -50,6 +52,12 @@ public class UserResponse {
 	@JsonProperty("is_active")
 	short isActive;
 	
-	@JsonProperty("role_name")
-	String roleName;
+	@JsonProperty("role")
+	Role role;
+	
+	@JsonProperty("created_at")
+	LocalDateTime createdAt;
+	
+	@JsonProperty("updated_at")
+	LocalDateTime updatedAt;
 }
