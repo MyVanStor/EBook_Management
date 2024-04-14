@@ -70,4 +70,13 @@ public class GlobalExceptionHandler {
 	    		.message(exception.getMessage())	
 	    		.build());
 	}
+	
+	@ExceptionHandler(SelfFollowException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<ResponseObject> handleSelfFollowException(SelfFollowException exception) {
+	    return ResponseEntity.badRequest().body(ResponseObject.builder()
+	    		.status(HttpStatus.BAD_REQUEST)
+	    		.message(exception.getMessage())	
+	    		.build());
+	}
 }

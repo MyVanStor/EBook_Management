@@ -5,11 +5,14 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.EBook_Management_BE.dtos.FollowDTO;
+import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.entity.Follow;
 import com.example.EBook_Management_BE.entity.User;
+import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
+import com.example.EBook_Management_BE.exceptions.SelfFollowException;
 import com.example.EBook_Management_BE.repositories.FollowRepository;
 import com.example.EBook_Management_BE.services.user.UserService;
+import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,36 +21,33 @@ import lombok.RequiredArgsConstructor;
 public class FollowService implements IFollowService {
 	private final FollowRepository followRepository;
 	private final UserService userService;
+	
+	private final LocalizationUtils localizationUtils;
 
 	@Override
 	@Transactional
-	public Follow createFollow(FollowDTO followDTO) throws Exception {
-		if (followDTO.getFollowing() == followDTO.getUserId()) {
-			throw new Exception("Cannot follow yourself");
+	public Follow createFollow(Follow follow) throws Exception {
+		if (follow.getFollowing() == follow.getUser().getId()) {
+			throw new SelfFollowException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.FOLLOW_NOT_FOLLOW_YOURSELF));
 		}
 
-		User user = userService.getUserById(followDTO.getUserId());
-
-		Follow newFollow = Follow.builder().following(followDTO.getFollowing()).user(user).build();
-
-		return followRepository.save(newFollow);
+		return followRepository.save(follow);
 	}
 
 	@Override
-	public Follow getFollowById(Long followId) {
-		return followRepository.findById(followId)
-				.orElseThrow(() -> new RuntimeException(String.format("Follow with id = %d not found", followId)));
+	public Follow getFollowById(Long followId) throws DataNotFoundException {
+		return followRepository.findById(followId).orElseThrow(() -> new DataNotFoundException(
+				localizationUtils.getLocalizedMessage(MessageExceptionKeys.FOLLOW_NOT_FOUND)));
 	}
 
 	@Override
 	@Transactional
 	public void deleteFollow(Long followId) {
 		followRepository.deleteById(followId);
-
 	}
 
 	@Override
-	public Set<Follow> getAllFollowByUserId(Long userId) {
+	public Set<Follow> getAllFollowByUserId(Long userId) throws DataNotFoundException {
 		User user = userService.getUserById(userId);
 		
 		return followRepository.findByUser(user);
