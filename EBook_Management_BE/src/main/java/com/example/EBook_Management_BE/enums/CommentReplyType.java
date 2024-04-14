@@ -1,7 +1,9 @@
 package com.example.EBook_Management_BE.enums;
 
 public class CommentReplyType {
-	public static String BOOK = "book";
+	public static final String BOOK = "BOOK";
 	
-	public static String COMMENT = "comment";
+	public static final String COMMENT = "COMMENT";
+	
+	public static final String CHAPTER = "CHAPTER";
 }
