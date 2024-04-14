@@ -1,18 +1,19 @@
 package com.example.EBook_Management_BE.services.author;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.EBook_Management_BE.dtos.AuthorDTO;
+import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.entity.Author;
-import com.example.EBook_Management_BE.entity.Book;
+import com.example.EBook_Management_BE.exceptions.DeleteException;
+import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
+import com.example.EBook_Management_BE.exceptions.DuplicateException;
 import com.example.EBook_Management_BE.repositories.AuthorRepository;
 import com.example.EBook_Management_BE.repositories.BookRepository;
+import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,44 +23,48 @@ public class AuthorService implements IAuthorService {
 	private final AuthorRepository authorRepository;
 	private final BookRepository bookRepository;
 
-	@Override
-	@Transactional
-	public Author createAuthor(AuthorDTO authorDTO) {
-		Author newAuthor = Author.builder().name(authorDTO.getName()).build();
-
-		return authorRepository.save(newAuthor);
-	}
-
-	@Override
-	public Author getAuthorById(Long authorId) {
-		return authorRepository.findById(authorId).orElseThrow(() -> new RuntimeException("Author cannot found"));
-	}
+	private final LocalizationUtils localizationUtils;
 
 	@Override
 	@Transactional
-	public Author updateAuthor(Long authorId, AuthorDTO authorDTO) {
+	public Author createAuthor(Author author) throws DuplicateException {
+		if (authorRepository.existsByNameAndUser(author.getName(), author.getUser())) {
+			throw new DuplicateException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.AUTHOR_DUPLICATE_AUTHOR));
+		}
+
+		return authorRepository.save(author);
+	}
+
+	@Override
+	public Author getAuthorById(Long authorId) throws DataNotFoundException {
+		return authorRepository.findById(authorId).orElseThrow(() -> new DataNotFoundException(
+				localizationUtils.getLocalizedMessage(MessageExceptionKeys.AUTHOR_NOT_FOUND)));
+	}
+
+	@Override
+	@Transactional
+	public Author updateAuthor(Long authorId, Author authorUpdate) throws Exception {
 		Author exitstingAuthor = getAuthorById(authorId);
 
-		exitstingAuthor.setName(authorDTO.getName());
-		authorRepository.save(exitstingAuthor);
+		authorUpdate.setId(exitstingAuthor.getId());
+		authorRepository.save(authorUpdate);
 
-		return exitstingAuthor;
+		return authorUpdate;
 	}
 
 	@Override
 	@Transactional
-	public Author deleteAuthorById(Long authorId) throws Exception {
-		Author author = authorRepository.findById(authorId)
-				.orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+	public void deleteAuthorById(Long authorId) throws Exception {
+		Author author = getAuthorById(authorId);
 		Set<Author> authors = new HashSet<Author>();
 		authors.add(author);
-		
-		List<Book> books = bookRepository.findByAuthors(authors);
-		if (!books.isEmpty()) {
-			throw new IllegalStateException("Cannot delete author with associated books");
+
+		if (bookRepository.existsByAuthors(authors)) {
+			throw new DeleteException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.AUTHOR_DELETE_HAVE_ASSOCIATED_BOOK));
 		} else {
 			authorRepository.deleteById(authorId);
-			return author;
 		}
 	}
 

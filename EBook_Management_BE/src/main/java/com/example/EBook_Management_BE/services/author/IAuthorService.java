@@ -1,15 +1,16 @@
 package com.example.EBook_Management_BE.services.author;
 
-import com.example.EBook_Management_BE.dtos.AuthorDTO;
 import com.example.EBook_Management_BE.entity.Author;
+import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
+import com.example.EBook_Management_BE.exceptions.DuplicateException;
 
 public interface IAuthorService {
-	Author createAuthor(AuthorDTO authorDTO);
+	Author createAuthor(Author author) throws DuplicateException;
 	
-	Author getAuthorById(Long authorId);
+	Author getAuthorById(Long authorId) throws DataNotFoundException;
 
-	Author updateAuthor(Long authorId, AuthorDTO authorDTO);
+	Author updateAuthor(Long authorId, Author authorUpdate) throws Exception;
 
-	Author deleteAuthorById(Long authorId) throws Exception;
+	void deleteAuthorById(Long authorId) throws Exception;
 
 }
