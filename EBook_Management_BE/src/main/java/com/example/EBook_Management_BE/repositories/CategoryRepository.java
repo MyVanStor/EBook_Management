@@ -9,5 +9,7 @@ import com.example.EBook_Management_BE.entity.Category;
 
 
 public interface CategoryRepository extends JpaRepository<Category, Long>{
+	boolean existsByName(String name);
+	
 	Set<Category> findByBooks(Set<Book> books);
 }

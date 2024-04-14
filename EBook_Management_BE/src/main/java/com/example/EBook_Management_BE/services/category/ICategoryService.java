@@ -1,14 +1,15 @@
 package com.example.EBook_Management_BE.services.category;
 
-import com.example.EBook_Management_BE.dtos.CategoryDTO;
 import com.example.EBook_Management_BE.entity.Category;
+import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
+import com.example.EBook_Management_BE.exceptions.DuplicateException;
 
 public interface ICategoryService {
-	Category createCategory(CategoryDTO categoryDTO);
+	Category createCategory(Category category) throws DuplicateException;
 	
-	Category getCategoryById(Long categoryId);
+	Category getCategoryById(Long categoryId) throws DataNotFoundException;
 	
-	Category updateCategory(Long categoryId, CategoryDTO categoryDTO);
+	Category updateCategory(Long categoryId, Category category) throws Exception;
 	
-	Category deleteCategoryById(Long categoryId) throws Exception;
+	void deleteCategoryById(Long categoryId) throws Exception;
 }

@@ -1,18 +1,19 @@
 package com.example.EBook_Management_BE.services.category;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.EBook_Management_BE.dtos.CategoryDTO;
-import com.example.EBook_Management_BE.entity.Book;
+import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.entity.Category;
+import com.example.EBook_Management_BE.exceptions.DeleteException;
+import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
+import com.example.EBook_Management_BE.exceptions.DuplicateException;
 import com.example.EBook_Management_BE.repositories.BookRepository;
 import com.example.EBook_Management_BE.repositories.CategoryRepository;
+import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,45 +23,47 @@ public class CategoryService implements ICategoryService {
 	private final CategoryRepository categoryRepository;
 	private final BookRepository bookRepository;
 
-	@Override
-	@Transactional
-	public Category createCategory(CategoryDTO categoryDTO) {
-		Category newCategory = Category.builder().name(categoryDTO.getName()).description(categoryDTO.getDescription())
-				.build();
-
-		return categoryRepository.save(newCategory);
-	}
-
-	@Override
-	public Category getCategoryById(Long categoryId) {
-		return categoryRepository.findById(categoryId).orElseThrow(() -> new RuntimeException("Category not found"));
-	}
+	private final LocalizationUtils localizationUtils;
 
 	@Override
 	@Transactional
-	public Category updateCategory(Long categoryId, CategoryDTO categoryDTO) {
-		Category existingCategory = getCategoryById(categoryId);
+	public Category createCategory(Category category) throws DuplicateException {
+		if (categoryRepository.existsByName(category.getName())) {
+			throw new DuplicateException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.CATEGORY_DUPLICATE_CATEGORY));
+		}
 
-		existingCategory.setName(categoryDTO.getName());
-		categoryRepository.save(existingCategory);
+		return categoryRepository.save(category);
+	}
 
-		return existingCategory;
+	@Override
+	public Category getCategoryById(Long categoryId) throws DataNotFoundException {
+		return categoryRepository.findById(categoryId).orElseThrow(() -> new DataNotFoundException(
+				localizationUtils.getLocalizedMessage(MessageExceptionKeys.CATEGORY_NOT_FOUND)));	}
+
+	@Override
+	@Transactional
+	public Category updateCategory(Long categoryId, Category categoryUpdate) throws Exception {
+		Category exitstingCategory = getCategoryById(categoryId);
+
+		categoryUpdate.setId(exitstingCategory.getId());
+		categoryRepository.save(categoryUpdate);
+
+		return categoryUpdate;
 	}
 
 	@Override
 	@Transactional
-	public Category deleteCategoryById(Long categoryId) throws Exception {
-		Category category = categoryRepository.findById(categoryId)
-				.orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+	public void deleteCategoryById(Long categoryId) throws Exception {
+		Category category = getCategoryById(categoryId);
 		Set<Category> categories = new HashSet<Category>();
 		categories.add(category);
-		
-		List<Book> books = bookRepository.findByCategories(categories);
-		if (!books.isEmpty()) {
-			throw new IllegalStateException("Cannot delete category with associated books");
+
+		if (bookRepository.existsByCategories(categories)) {
+			throw new DeleteException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.CATEGORY_DELETE_HAVE_ASSOCIATED_BOOK));
 		} else {
 			categoryRepository.deleteById(categoryId);
-			return category;
 		}
 	}
 
