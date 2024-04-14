@@ -21,6 +21,9 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
 	List<Book> findByPainters(Set<Painter> painters);
 
-	List<Book> findByAuthors(Set<Author> authors);
-
+	boolean existsByAuthors(Set<Author> authors);
+	
+	boolean existsByPainters(Set<Painter> painters);
+	
+	boolean existsByCategories(Set<Category> categories);
 }

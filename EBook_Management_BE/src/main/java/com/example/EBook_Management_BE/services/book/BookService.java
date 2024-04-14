@@ -1,24 +1,16 @@
 package com.example.EBook_Management_BE.services.book;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.EBook_Management_BE.dtos.BookDTO;
-import com.example.EBook_Management_BE.entity.Author;
+import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.entity.Book;
-import com.example.EBook_Management_BE.entity.Category;
-import com.example.EBook_Management_BE.entity.Painter;
 import com.example.EBook_Management_BE.entity.UserBook;
-import com.example.EBook_Management_BE.mappers.BookMapper;
-import com.example.EBook_Management_BE.repositories.AuthorRepository;
+import com.example.EBook_Management_BE.enums.StatusUserBook;
+import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
 import com.example.EBook_Management_BE.repositories.BookRepository;
-import com.example.EBook_Management_BE.repositories.CategoryRepository;
-import com.example.EBook_Management_BE.repositories.PainterRepository;
 import com.example.EBook_Management_BE.repositories.UserBookRepository;
+import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,86 +18,31 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookService implements IBookService {
 	private final BookRepository bookRepository;
-	private final CategoryRepository categoryRepository;
-	private final PainterRepository painterRepository;
-	private final AuthorRepository authorRepository;
 	private final UserBookRepository userBookRepository;
 
-	@Autowired
-	private BookMapper bookMapper;
+	private final LocalizationUtils localizationUtils;
 
 	@Override
 	@Transactional
-	public Book createBook(BookDTO bookDTO) throws Exception {
-		Book book = bookMapper.mapToBookEntity(bookDTO);
-
-		Set<Category> categories = new HashSet<>();
-		for (Long categoryId : bookDTO.getCategoryIds()) {
-			Category category = categoryRepository.findById(categoryId)
-					.orElseThrow(() -> new RuntimeException("Category not found"));
-			category.setBooks(Set.of(book));
-			categories.add(category);
-		}
-
-		Set<Painter> painters = new HashSet<>();
-		for (Long painterId : bookDTO.getPainterIds()) {
-			Painter painter = painterRepository.findById(painterId)
-					.orElseThrow(() -> new RuntimeException("Painter not found"));
-			painter.setBooks(Set.of(book));
-			painters.add(painter);
-		}
-
-		Set<Author> authors = new HashSet<>();
-		for (Long authorId : bookDTO.getAuthorIds()) {
-			Author author = authorRepository.findById(authorId)
-					.orElseThrow(() -> new RuntimeException("Category not found"));
-			author.setBooks(Set.of(book));
-			authors.add(author);
-		}
-
-		book.setAuthors(authors);
-		book.setCategories(categories);
-		book.setPainters(painters);
-
+	public Book createBook(Book book) throws Exception {
 		return bookRepository.save(book);
 	}
 
 	@Override
-	public Book getBookById(Long bookId) {
-		return bookRepository.findById(bookId)
-				.orElseThrow(() -> new RuntimeException(String.format("Book with id = %d not found", bookId)));
+	public Book getBookById(Long bookId) throws DataNotFoundException {
+		return bookRepository.findById(bookId).orElseThrow(() -> new DataNotFoundException(
+				localizationUtils.getLocalizedMessage(MessageExceptionKeys.BOOK_NOT_FOUND)));
 	}
 
 	@Override
 	@Transactional
-	public Book updateBook(Long bookId, BookDTO bookDTO) {
+	public Book updateBook(Long bookId, Book book) throws Exception {
 		Book existingBook = getBookById(bookId);
-		existingBook.getAuthors().clear();
-		existingBook.getCategories().clear();
-		existingBook.getPainters().clear();
 
-		for (Long categoryId : bookDTO.getCategoryIds()) {
-			Category category = categoryRepository.findById(categoryId)
-					.orElseThrow(() -> new RuntimeException("Category not found"));
-			category.setBooks(Set.of(existingBook));
-			existingBook.getCategories().add(category);
-		}
+		book.setId(existingBook.getId());
+		bookRepository.save(book);
 
-		for (Long painterId : bookDTO.getPainterIds()) {
-			Painter painter = painterRepository.findById(painterId)
-					.orElseThrow(() -> new RuntimeException("Painter not found"));
-			painter.setBooks(Set.of(existingBook));
-			existingBook.getPainters().add(painter);
-		}
-
-		for (Long authorId : bookDTO.getAuthorIds()) {
-			Author author = authorRepository.findById(authorId)
-					.orElseThrow(() -> new RuntimeException("Author not found"));
-			author.setBooks(Set.of(existingBook));
-			existingBook.getAuthors().add(author);
-		}
-
-		return bookRepository.save(existingBook);
+		return book;
 	}
 
 	@Override
@@ -114,8 +51,9 @@ public class BookService implements IBookService {
 		Book book = getBookById(bookId);
 
 		for (UserBook userBook : book.getUserBooks()) {
-			if (userBook.getStatus() == "buyer") {
-				throw new IllegalStateException("Cannot delete book because have user buy book");
+			if (userBook.getStatus() == StatusUserBook.BUYER) {
+				throw new IllegalStateException(
+						localizationUtils.getLocalizedMessage(MessageExceptionKeys.BOOK_DELETE_HAVE_USER_BUYING));
 			}
 		}
 

@@ -1,14 +1,14 @@
 package com.example.EBook_Management_BE.services.book;
 
-import com.example.EBook_Management_BE.dtos.BookDTO;
 import com.example.EBook_Management_BE.entity.Book;
+import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
 
 public interface IBookService {
-	Book createBook(BookDTO bookDTO) throws Exception;
+	Book createBook(Book book) throws Exception;
 
-	Book getBookById(Long bookId);
+	Book getBookById(Long bookId) throws DataNotFoundException;
 
-	Book updateBook(Long bookId, BookDTO bookDTO);
+	Book updateBook(Long bookId, Book book) throws Exception;
 
 	void deleteBook(Long bookId) throws Exception;
 

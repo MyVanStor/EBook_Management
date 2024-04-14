@@ -55,9 +55,6 @@ public class Book {
 	@Column(name = "evaluate", columnDefinition = "FLOAT", nullable = false)
 	double evaluate;
 	
-	@Column(name = "thumbnail", length = 255, nullable = false, unique = true)
-	String thumbnail;
-	
 	@Column(name = "price", columnDefinition = "FLOAT")
 	double price;
 	
@@ -85,4 +82,7 @@ public class Book {
 	
 	@OneToMany(mappedBy = "book")
 	Set<Rating> ratings;
+	
+	@OneToMany(mappedBy = "book")
+	Set<Chapter> chapters;
 }

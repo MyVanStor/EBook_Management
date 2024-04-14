@@ -2,8 +2,6 @@ package com.example.EBook_Management_BE.dtos;
 
 import java.util.Set;
 
-import com.example.EBook_Management_BE.entity.Rating;
-import com.example.EBook_Management_BE.entity.UserBook;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AccessLevel;
@@ -42,10 +40,4 @@ public class BookDTO {
 	Set<Long> painterIds;
 
 	Set<Long> authorIds;
-
-	Set<Long> orderDetailIds;
-
-	Set<UserBook> userBooks;
-
-	Set<Rating> ratings;
 }

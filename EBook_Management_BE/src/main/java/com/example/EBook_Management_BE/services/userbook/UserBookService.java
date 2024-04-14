@@ -1,17 +1,13 @@
 package com.example.EBook_Management_BE.services.userbook;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.EBook_Management_BE.dtos.UserBookDTO;
-import com.example.EBook_Management_BE.entity.Book;
-import com.example.EBook_Management_BE.entity.User;
+import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.entity.UserBook;
-import com.example.EBook_Management_BE.mappers.UserBookMapper;
-import com.example.EBook_Management_BE.repositories.BookRepository;
+import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
 import com.example.EBook_Management_BE.repositories.UserBookRepository;
-import com.example.EBook_Management_BE.repositories.UserRepository;
+import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,37 +15,24 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserBookService implements IUserBookService {
 	private final UserBookRepository userBookRepository;
-	private final UserRepository userRepository;
-	private final BookRepository bookRepository;
-
-	@Autowired
-	private UserBookMapper userBookMapper;
+	
+	private final LocalizationUtils localizationUtils;
 
 	@Override
 	@Transactional
-	public UserBook createUserBook(UserBookDTO userBookDTO) {
-		User user = userRepository.findById(userBookDTO.getUserId())
-				.orElseThrow(() -> new RuntimeException("User with id = " + userBookDTO.getUserId() + " not found"));
-
-		Book book = bookRepository.findById(userBookDTO.getBookId())
-				.orElseThrow(() -> new RuntimeException("Book with id = " + userBookDTO.getBookId() + " not found"));
-
-		UserBook userBook = userBookMapper.mapToUserBookEntity(userBookDTO);
-		userBook.setBook(book);
-		userBook.setUser(user);
-
+	public UserBook createUserBook(UserBook userBook) {
 		return userBookRepository.save(userBook);
 	}
 
 	@Override
-	public UserBook getUserBookById(Long userBookId) {
+	public UserBook getUserBookById(Long userBookId) throws DataNotFoundException {
 		return userBookRepository.findById(userBookId)
-				.orElseThrow(() -> new RuntimeException(String.format("UserBook with id = %d not found", userBookId)));
+				.orElseThrow(() -> new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.USER_BOOK_NOT_FOUND)));
 	}
 
 	@Override
 	@Transactional
-	public void deleteUserBook(Long userBookId) {		
+	public void deleteUserBook(Long userBookId) throws Exception {	
 		userBookRepository.deleteById(userBookId);
 	}
 

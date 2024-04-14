@@ -1,12 +1,12 @@
 package com.example.EBook_Management_BE.responses;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import com.example.EBook_Management_BE.entity.Author;
 import com.example.EBook_Management_BE.entity.Category;
-import com.example.EBook_Management_BE.entity.OrderDetail;
+import com.example.EBook_Management_BE.entity.Chapter;
 import com.example.EBook_Management_BE.entity.Painter;
-import com.example.EBook_Management_BE.entity.Rating;
 import com.example.EBook_Management_BE.entity.UserBook;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -41,17 +41,20 @@ public class BookResponse {
 	@JsonProperty("publishing_year")
 	Integer publishingYear;
 	
+	@JsonProperty("number_of_review")
+	Long numberOfReview;
+	
 	@JsonProperty("evaluate")
 	double evaluate;
-	
-	@JsonProperty("number_of_review")
-	Long numberOfReview; 
-
-	@JsonProperty("thumbnail")
-	String thumbnail;
 
 	@JsonProperty("price")
 	double price;
+	
+	@JsonProperty("created_at")
+	LocalDateTime createdAt;
+	
+	@JsonProperty("updated_at")
+	LocalDateTime updatedAt;
 	
 	@JsonProperty("authors")
 	Set<Author> authors;
@@ -61,13 +64,10 @@ public class BookResponse {
 
 	@JsonProperty("categories")
 	Set<Category> categories;
-
-	@JsonProperty("order_details")
-	Set<OrderDetail> orderDetails;
-
-	@JsonProperty("user_books")
+	
+	@JsonProperty("user_book")
 	Set<UserBook> userBooks;
 
-	@JsonProperty("ratings")
-	Set<Rating> ratings;
+	@JsonProperty("chapters")
+	Set<Chapter> chapters;
 }

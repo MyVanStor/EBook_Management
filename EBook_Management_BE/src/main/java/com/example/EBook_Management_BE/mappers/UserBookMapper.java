@@ -12,4 +12,6 @@ public interface UserBookMapper {
 	UserBookMapper iNSTANCE = Mappers.getMapper(UserBookMapper.class);
 	
 	UserBook mapToUserBookEntity(UserBookDTO userBookDTO);
+	
+	
 }
