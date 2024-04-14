@@ -1,14 +1,15 @@
 package com.example.EBook_Management_BE.services.painter;
 
-import com.example.EBook_Management_BE.dtos.PainterDTO;
 import com.example.EBook_Management_BE.entity.Painter;
+import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
+import com.example.EBook_Management_BE.exceptions.DuplicateException;
 
 public interface IPainterService {
-	Painter createPainter(PainterDTO painterDTO);
+	Painter createPainter(Painter painter) throws DuplicateException;
 	
-	Painter getPainterById(Long painterId);
+	Painter getPainterById(Long painterId) throws DataNotFoundException;
 	
-	Painter updatePainter(Long painterId, PainterDTO painterDTO);
+	Painter updatePainter(Long painterId, Painter painterUpdate) throws Exception;
 	
-	Painter deletePainterById(Long painterId) throws Exception;
+	void deletePainterById(Long painterId) throws Exception;
 }

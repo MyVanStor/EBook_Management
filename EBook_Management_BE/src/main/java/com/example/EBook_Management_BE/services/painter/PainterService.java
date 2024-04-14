@@ -1,18 +1,19 @@
 package com.example.EBook_Management_BE.services.painter;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.EBook_Management_BE.dtos.PainterDTO;
-import com.example.EBook_Management_BE.entity.Book;
+import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.entity.Painter;
+import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
+import com.example.EBook_Management_BE.exceptions.DuplicateException;
+import com.example.EBook_Management_BE.exceptions.DeleteException;
 import com.example.EBook_Management_BE.repositories.BookRepository;
 import com.example.EBook_Management_BE.repositories.PainterRepository;
+import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,46 +22,49 @@ import lombok.RequiredArgsConstructor;
 public class PainterService implements IPainterService {
 	private final PainterRepository painterRepository;
 	private final BookRepository bookRepository;
-
+	
+	private final LocalizationUtils localizationUtils;
+	
 	@Override
 	@Transactional
-	public Painter createPainter(PainterDTO painterDTO) {
-		Painter newPainter = Painter.builder().name(painterDTO.getName()).build();
+	public Painter createPainter(Painter painter) throws DuplicateException {
+		if (painterRepository.existsByNameAndUser(painter.getName(), painter.getUser())) {
+			throw new DuplicateException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.PAINTER_DUPLICATE_PAINTER));
+		}
 
-		return painterRepository.save(newPainter);
+		return painterRepository.save(painter);
 	}
 
 	@Override
-	public Painter getPainterById(Long painterId) {
-		return painterRepository.findById(painterId).orElseThrow(() -> new RuntimeException("Painter not found"));
+	public Painter getPainterById(Long painterId) throws DataNotFoundException {
+		return painterRepository.findById(painterId).orElseThrow(() -> new DataNotFoundException(
+				localizationUtils.getLocalizedMessage(MessageExceptionKeys.PAINTER_NOT_FOUND)));
 	}
 
 	@Override
 	@Transactional
-	public Painter updatePainter(Long painterId, PainterDTO painterDTO) {
+	public Painter updatePainter(Long painterId, Painter painterUpdate) throws Exception {
 		Painter exitstingPainter = getPainterById(painterId);
 
-		exitstingPainter.setName(painterDTO.getName());
-		painterRepository.save(exitstingPainter);
+		painterUpdate.setId(exitstingPainter.getId());
+		painterRepository.save(painterUpdate);
 
-		return exitstingPainter;
+		return painterUpdate;
 	}
 
 	@Override
 	@Transactional
-	public Painter deletePainterById(Long painterId) throws Exception {
-		Painter painter = painterRepository.findById(painterId)
-				.orElseThrow(() -> new ChangeSetPersister.NotFoundException());
-		
-		Set<Painter> painters = new HashSet<>();
+	public void deletePainterById(Long painterId) throws Exception {
+		Painter painter = getPainterById(painterId);
+		Set<Painter> painters = new HashSet<Painter>();
 		painters.add(painter);
-		
-		List<Book> books = bookRepository.findByPainters(painters);
-		if (!books.isEmpty()) {
-			throw new IllegalStateException("Cannot delete painter with associated books");
+
+		if (bookRepository.existsByPainters(painters)) {
+			throw new DeleteException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.PAINTER_DELETE_HAVE_ASSOCIATED_BOOK));
 		} else {
 			painterRepository.deleteById(painterId);
-			return painter;
 		}
 	}
 
