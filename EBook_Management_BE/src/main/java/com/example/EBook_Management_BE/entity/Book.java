@@ -2,10 +2,12 @@ package com.example.EBook_Management_BE.entity;
 
 import java.util.Set;
 
+import com.example.EBook_Management_BE.listeners.BookListener;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,6 +27,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @Table(name = "books")
+@EntityListeners(BookListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -48,12 +51,6 @@ public class Book {
 	
 	@Column(name = "publishing_year")
 	Integer publishingYear;
-	
-	@Column(name = "number_of_review")
-	Long numberOfReview;
-	
-	@Column(name = "evaluate", columnDefinition = "FLOAT", nullable = false)
-	double evaluate;
 	
 	@Column(name = "price", columnDefinition = "FLOAT")
 	double price;
@@ -80,6 +77,7 @@ public class Book {
 	@OneToMany(mappedBy = "book")
 	Set<UserBook> userBooks;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "book")
 	Set<Rating> ratings;
 	

@@ -29,8 +29,6 @@ public class BookDTO {
 	@JsonProperty("publishing_year")
 	Integer publishingYear;
 
-	double evaluate;
-
 	String thumbnail;
 
 	double price;

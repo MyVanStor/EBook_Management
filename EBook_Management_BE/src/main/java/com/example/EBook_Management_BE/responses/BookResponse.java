@@ -40,12 +40,6 @@ public class BookResponse {
 
 	@JsonProperty("publishing_year")
 	Integer publishingYear;
-	
-	@JsonProperty("number_of_review")
-	Long numberOfReview;
-	
-	@JsonProperty("evaluate")
-	double evaluate;
 
 	@JsonProperty("price")
 	double price;
