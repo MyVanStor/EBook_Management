@@ -11,8 +11,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.security.core.GrantedAuthority;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -41,10 +42,11 @@ public class RedisConfig {
 		template.setConnectionFactory(redisConnectionFactory());
 
 		template.setKeySerializer(new StringRedisSerializer());
-		template.setValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer(redisObjectMapper()));
 
 		template.setHashKeySerializer(new StringRedisSerializer());
-		template.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
+		template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer(redisObjectMapper()));		
+		
 		template.afterPropertiesSet();
 		return template;
 	}
@@ -52,9 +54,15 @@ public class RedisConfig {
 	@Bean
 	ObjectMapper redisObjectMapper() {
 		ObjectMapper objectMapper = new ObjectMapper();
+		// Configure ObjectMapper to ignore unknown properties
+        objectMapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                false);
+        
 		SimpleModule module = new SimpleModule();
 		module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ISO_DATE_TIME));
 		module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ISO_DATE_TIME));
+		module.addDeserializer(GrantedAuthority.class, new GrantedAuthorityDeserializer());
+		
 		objectMapper.registerModule(module);
 		return objectMapper;
 	}
