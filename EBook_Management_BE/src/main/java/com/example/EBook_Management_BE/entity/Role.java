@@ -2,6 +2,8 @@ package com.example.EBook_Management_BE.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -35,6 +37,7 @@ public class Role {
 	@Column(name = "name", length = 100, nullable = false, unique = true)
 	String name;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
 	List<User> users;
 }

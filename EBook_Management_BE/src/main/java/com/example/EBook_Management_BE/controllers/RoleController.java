@@ -1,12 +1,9 @@
 package com.example.EBook_Management_BE.controllers;
 
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +18,10 @@ import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.dtos.RoleDTO;
 import com.example.EBook_Management_BE.entity.Role;
 import com.example.EBook_Management_BE.enums.Uri;
+import com.example.EBook_Management_BE.mappers.RoleMapper;
 import com.example.EBook_Management_BE.responses.RoleResponse;
-import com.example.EBook_Management_BE.services.role.RoleService;
+import com.example.EBook_Management_BE.services.role.IRoleRedisService;
+import com.example.EBook_Management_BE.services.role.IRoleService;
 import com.example.EBook_Management_BE.utils.MessageKeys;
 import com.example.EBook_Management_BE.utils.ResponseObject;
 
@@ -34,48 +33,74 @@ import lombok.RequiredArgsConstructor;
 @Validated
 @RequiredArgsConstructor
 public class RoleController {
-	private final RoleService roleService;
+	private final IRoleService roleService;
+	private final IRoleRedisService roleRedisService;
 	private final LocalizationUtils localizationUtils;
-
+	
+	@Autowired
+	private RoleMapper roleMapper;
+	
 	@GetMapping("/{id}")
-	public ResponseEntity<ResponseObject> getRoleById(@PathVariable Long id) {
-		Role existingRole = roleService.getRoleById(id);
-		return ResponseEntity.ok(ResponseObject.builder().data(existingRole)
-				.message("Get role information successfully").status(HttpStatus.OK).build());
+	public ResponseEntity<ResponseObject> getRoleById(@PathVariable Long id) throws Exception {
+		Role existingRole = roleRedisService.getRoleById(id);
+		if (existingRole == null) {
+			existingRole = roleService.getRoleById(id);
+			
+			roleRedisService.saveRoleById(id, existingRole);
+		}
+		
+		RoleResponse roleResponse = roleMapper.mapToRoleResponse(existingRole);
+		
+		return ResponseEntity.ok(ResponseObject.builder()
+				.status(HttpStatus.OK)
+				.message(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_GET_BY_ID_SUCCESSFULLY))
+				.data(roleResponse)
+				.build());
 	}
 
-	@PostMapping("")
-	@PreAuthorize("hasRole('ROLE_SYS-ADMIN')")
-	public ResponseEntity<RoleResponse> createRole(@Valid @RequestBody RoleDTO roleDTO, BindingResult result) {
-		RoleResponse roleResponse = new RoleResponse();
+	@PostMapping()
+	@PreAuthorize("hasRole('ROLE_SzYS-ADMIN')")
+	public ResponseEntity<ResponseObject> createRole(@Valid @RequestBody RoleDTO roleDTO) throws Exception {
+		Role role = roleMapper.mapToRoleEntity(roleDTO);
 
-		if (result.hasErrors()) {
-			List<String> errorMessages = result.getFieldErrors().stream().map(FieldError::getDefaultMessage).toList();
-
-			roleResponse.setMessage(localizationUtils.getLocalizedMessage(MessageKeys.INSERT_ROLE_SUCCESSFULLY));
-			roleResponse.setErrors(errorMessages);
-
-			return ResponseEntity.badRequest().body(roleResponse);
-		}
-
-		Role role = roleService.createRole(roleDTO);
-		roleResponse.setRole(role);
-		return ResponseEntity.created(null).body(roleResponse);
+		Role newRole = roleService.createRole(role);
+		roleRedisService.saveRoleById(newRole.getId(), newRole);
+		
+		RoleResponse roleResponse = roleMapper.mapToRoleResponse(newRole);
+		
+		return ResponseEntity.ok(ResponseObject.builder()
+				.status(HttpStatus.CREATED)
+				.message(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_CREATE_SUCCESSFULLY))
+				.data(roleResponse)
+				.build());
 	}
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_SYS-ADMIN')")
-	public ResponseEntity<ResponseObject> updateRole(@PathVariable Long id, @Valid @RequestBody RoleDTO roleDTO) {
-		roleService.updateRole(id, roleDTO);
-		return ResponseEntity.ok(ResponseObject.builder().data(roleService.getRoleById(id))
-				.message(localizationUtils.getLocalizedMessage(MessageKeys.UPDATE_ROLE_SUCCESSFULLY)).build());
+	public ResponseEntity<ResponseObject> updateRole(@PathVariable Long id, @Valid @RequestBody RoleDTO roleDTO) throws Exception {
+		Role role = roleMapper.mapToRoleEntity(roleDTO);
+		
+		roleService.updateRole(id, role);
+		roleRedisService.saveRoleById(id, role);
+		
+		RoleResponse roleResponse = roleMapper.mapToRoleResponse(role);
+		
+		return ResponseEntity.ok(ResponseObject.builder()
+				.status(HttpStatus.OK)
+				.message(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_UPDATE_SUCCESSFULLY))
+				.data(roleResponse)
+				.build());
 	}
 
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_SYS-ADMIN')")
 	public ResponseEntity<ResponseObject> deleteRole(@PathVariable Long id) throws Exception {
 		roleService.deleteRoleById(id);
+		
 		return ResponseEntity
-				.ok(ResponseObject.builder().status(HttpStatus.OK).message("Delete role successfully").build());
+				.ok(ResponseObject.builder()
+						.status(HttpStatus.OK)
+						.message(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_DELETE_SUCCESSFULLY))
+						.build());
 	}
 }

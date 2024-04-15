@@ -1,16 +1,16 @@
 package com.example.EBook_Management_BE.services.role;
 
-import java.util.List;
-
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.EBook_Management_BE.dtos.RoleDTO;
+import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.entity.Role;
-import com.example.EBook_Management_BE.entity.User;
+import com.example.EBook_Management_BE.exceptions.DeleteException;
+import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
+import com.example.EBook_Management_BE.exceptions.DuplicateException;
 import com.example.EBook_Management_BE.repositories.RoleRepository;
 import com.example.EBook_Management_BE.repositories.UserRepository;
+import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,41 +20,46 @@ public class RoleService implements IRoleService {
 	private final RoleRepository roleRepository;
 	private final UserRepository userRepository;
 
-	@Override
-	@Transactional
-	public Role createRole(RoleDTO roleDTO) {
-		Role newRole = Role.builder().name(roleDTO.getName()).build();
-
-		return roleRepository.save(newRole);
-	}
-
-	@Override
-	public Role getRoleById(Long roleId) {
-		return roleRepository.findById(roleId).orElseThrow(() -> new RuntimeException("Role not found"));
-	}
+	private final LocalizationUtils localizationUtils;
 
 	@Override
 	@Transactional
-	public Role updateRole(Long roleId, RoleDTO roleDTO) {
-		Role existingRole = getRoleById(roleId);
+	public Role createRole(Role role) throws DuplicateException {
+		if (roleRepository.existsByName(role.getName())) {
+			throw new DuplicateException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.ROLE_DUPLICATE_NAME));
+		}
 
-		existingRole.setName(roleDTO.getName());
-		roleRepository.save(existingRole);
+		return roleRepository.save(role);
+	}
 
-		return existingRole;
+	@Override
+	public Role getRoleById(Long roleId) throws DataNotFoundException {
+		return roleRepository.findById(roleId).orElseThrow(() -> new DataNotFoundException(
+				localizationUtils.getLocalizedMessage(MessageExceptionKeys.ROLE_NOT_FOUND)));
 	}
 
 	@Override
 	@Transactional
-	public Role deleteRoleById(Long roleId) throws Exception {
-		Role role = roleRepository.findById(roleId).orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+	public Role updateRole(Long roleId, Role roleUpdate) throws Exception {
+		Role exitstingRole = getRoleById(roleId);
 
-		List<User> users = userRepository.findByRole(role);
-		if (!users.isEmpty()) {
-			throw new IllegalStateException("Cannot delete role with associated user");
+		roleUpdate.setId(exitstingRole.getId());
+		roleRepository.save(roleUpdate);
+
+		return roleUpdate;
+	}
+
+	@Override
+	@Transactional
+	public void deleteRoleById(Long roleId) throws Exception {
+		Role role = getRoleById(roleId);
+
+		if (userRepository.existsByRole(role)) {
+			throw new DeleteException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.ROLE_DELETE_HAVE_ASSOCIATED_USER));
 		} else {
 			roleRepository.deleteById(roleId);
-			return role;
 		}
 	}
 
