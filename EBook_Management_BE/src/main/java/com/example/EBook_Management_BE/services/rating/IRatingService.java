@@ -1,16 +1,19 @@
 package com.example.EBook_Management_BE.services.rating;
 
-import com.example.EBook_Management_BE.dtos.RatingDTO;
+import java.util.Set;
+
+import com.example.EBook_Management_BE.entity.Book;
 import com.example.EBook_Management_BE.entity.Rating;
+import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
 
 public interface IRatingService {
-	Rating createRating(RatingDTO ratingDTO);
+	Rating createRating(Rating rating);
 	
-	Rating getRatingById(Long ratingId);
+	Rating getRatingById(Long ratingId) throws DataNotFoundException;
 	
-	Rating updateRating(Long ratingId, RatingDTO ratingDTO);
+	Rating updateRating(Long ratingId, Rating rating);
 
-	void deleteRating(Long ratingId);
+	void deleteRating(Rating rating);
 	
-	int getAllRatingByBookId(Long bookId);
+	Set<Rating> getAllRatingByBook(Book book) throws DataNotFoundException;
 }

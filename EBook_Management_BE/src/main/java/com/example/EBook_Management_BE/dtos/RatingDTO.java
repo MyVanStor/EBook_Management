@@ -1,5 +1,7 @@
 package com.example.EBook_Management_BE.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +19,9 @@ import lombok.experimental.FieldDefaults;
 public class RatingDTO {
 	short score;
 	
+	@JsonProperty("book_id")
 	Long bookId;
 	
+	@JsonProperty("user_id")
 	Long userId;
 }
