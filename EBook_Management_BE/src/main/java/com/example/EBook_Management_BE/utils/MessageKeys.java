@@ -48,4 +48,27 @@ public class MessageKeys {
     public static final String BOOK_CREATE_SUCCESSFULLY = "book.create.successfully";
     public static final String BOOK_UPDATE_SUCCESSFULLY = "book.update.successfully";
     public static final String BOOK_DELETE_SUCCESSFULLY = "book.delete.successfully";
+
+    public static final String FOLLOW_GET_BY_ID_SUCCESSFULLY = "follow.get_by_id.successfully";
+    public static final String FOLLOW_GET_ALL_BY_USER_ID_SUCCESSFULLY = "follow.get_all_by_user_id.successfully";
+    public static final String FOLLOW_GET_ALL_BY_FOLLOWING_SUCCESSFULLY = "follow.get_all_by_following.successfully";
+    public static final String FOLLOW_CREATE_SUCCESSFULLY = "follow.create.successfully";
+    public static final String FOLLOW_DELETE_SUCCESSFULLY = "follow.delete.successfully";
+
+    public static final String RATING_GET_ALL_RATING_BOOK_SUCCESSFULLY = "rating.get_all_rating_book.successfully";
+    public static final String RATING_CREATE_SUCCESSFULLY = "rating.create.successfully";
+    public static final String RATING_UPDATE_SUCCESSFULLY = "rating.update.successfully";
+    public static final String RATING_DELETE_SUCCESSFULLY = "rating.delete.successfully";
+
+    public static final String TRANSACTION_GET_BY_ID_SUCCESSFULLY = "transaction.get_by_id.successfully";
+    public static final String TRANSACTION_GET_ALL_BY_USER_ID_SUCCESSFULLY = "transaction.get_all_by_user_id.successfully";
+    public static final String TRANSACTION_CREATE_SUCCESSFULLY = "transaction.create.successfully";
+    public static final String TRANSACTION_UPDATE_SUCCESSFULLY = "transaction.update.successfully";
+    public static final String TRANSACTION_DELETE_SUCCESSFULLY = "transaction.delete.successfully";
+    
+    public static final String ORDER_GET_BY_ID_SUCCESSFULLY = "order.get_by_id.successfully";
+    public static final String ORDER_CREATE_SUCCESSFULLY = "order.create.successfully";
+    public static final String ORDER_UPDATE_SUCCESSFULLY = "order.update.successfully";
+    public static final String ORDER_DELETE_SUCCESSFULLY = "order.delete.successfully";
+    
 }

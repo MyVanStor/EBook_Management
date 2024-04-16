@@ -33,4 +33,14 @@ public class MessageExceptionKeys {
 
     public static final String BOOK_NOT_FOUND = "exception.book.not_found";
     public static final String BOOK_DELETE_HAVE_USER_BUYING = "exception.book.delete_have_user_buying";
+
+    public static final String FOLLOW_NOT_FOUND = "exception.follow.not_found";
+    public static final String FOLLOW_NOT_FOLLOW_YOURSELF = "exception.follow.not_follow_yourself";
+
+    public static final String RATING_NOT_FOUND = "exception.rating.not_found";
+    public static final String RATING_BOOK_NOT_HAVE_RATING = "exception.rating.book_not_have_rating";
+
+    public static final String TRANSACTION_NOT_FOUND = "exception.transaction.not_found";
+     
+    public static final String ORDER_NOT_FOUND = "exception.order.not_found"; 
 }   
