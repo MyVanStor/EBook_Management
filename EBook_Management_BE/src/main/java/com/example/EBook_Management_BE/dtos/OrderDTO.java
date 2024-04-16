@@ -19,9 +19,6 @@ import lombok.experimental.FieldDefaults;
 public class OrderDTO {
 	@JsonProperty("status")
 	String status;
-		
-	@JsonProperty("total_money")
-	double totalMoney;
 	
 	@JsonProperty("payment_method")
 	String paymentMethod;

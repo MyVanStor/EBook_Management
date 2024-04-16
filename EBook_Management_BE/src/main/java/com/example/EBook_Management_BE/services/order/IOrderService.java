@@ -1,20 +1,12 @@
 package com.example.EBook_Management_BE.services.order;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-
-import com.example.EBook_Management_BE.dtos.OrderDTO;
 import com.example.EBook_Management_BE.entity.Order;
-import com.example.EBook_Management_BE.responses.OrderResponse;
+import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
 
 public interface IOrderService {
-	Order createOrder(OrderDTO orderDTO);
+	Order createOrder(Order order) throws DataNotFoundException;
 	
-	Order getOrderById(Long orderId);
+	Order getOrderById(Long orderId) throws DataNotFoundException;
 	
-	Order updateOrder(Long orderId, String status);
-	
-	void deleteOrder(long orderId);
-	
-	Page<OrderResponse> getAllOrderByUser(Long userId, PageRequest pageRequest);
+	Order updateOrder(Long orderId, Order orderUpdate) throws Exception;
 }
