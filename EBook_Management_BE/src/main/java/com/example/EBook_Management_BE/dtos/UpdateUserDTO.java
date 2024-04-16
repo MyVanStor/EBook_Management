@@ -28,9 +28,6 @@ public class UpdateUserDTO {
 	@JsonProperty("link_avatar")
 	String linkAvatar;
 	
-	@JsonProperty("phone_number")
-	String phoneNumber;
-	
 	short gender;
 	
 	@JsonProperty("date_of_birth")

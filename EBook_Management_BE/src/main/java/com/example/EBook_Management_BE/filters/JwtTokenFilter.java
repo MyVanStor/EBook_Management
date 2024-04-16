@@ -15,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.EBook_Management_BE.components.JwtTokenUtil;
 import com.example.EBook_Management_BE.entity.User;
+import com.example.EBook_Management_BE.services.user.IUserRedisService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -29,6 +30,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	@Value("${api.prefix}")
 	private String apiPrefix;
 	private final UserDetailsService userDetailsService;
+	private final IUserRedisService userRedisService;
 	private final JwtTokenUtil jwtTokenUtil;
 
 	@Override
@@ -47,7 +49,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			final String token = authHeader.substring(7);
 			final String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
 			if (phoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-				User userDetails = (User) userDetailsService.loadUserByUsername(phoneNumber);
+				User userDetails = userRedisService.getUserByPhoneNumber(phoneNumber);
+				if (userDetails == null) {
+					userDetails = (User) userDetailsService.loadUserByUsername(phoneNumber);
+					
+					userRedisService.saveUserByPhoneNumber(phoneNumber, userDetails);
+				}
+						
 				if (jwtTokenUtil.validateToken(token, userDetails)) {
 					UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 							userDetails, null, userDetails.getAuthorities());

@@ -19,21 +19,21 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginResponse {
-	@JsonProperty("message")
-	String message;
-
 	@JsonProperty("token")
 	String token;
 
 	@JsonProperty("refresh_token")
 	String refreshToken;
 	
+	@JsonProperty("token_type")
 	String tokenType;
 	
-	// user's detail
-	Long id;
+	@JsonProperty("user_id")
+	Long userId;
 	
+	@JsonProperty("user_name")
 	String username;
 
+	@JsonProperty("roles")
 	List<String> roles;
 }

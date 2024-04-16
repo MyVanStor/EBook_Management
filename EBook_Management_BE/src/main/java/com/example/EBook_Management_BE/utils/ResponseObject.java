@@ -21,7 +21,7 @@ public class ResponseObject {
 
     @JsonProperty("status")
     private HttpStatus status;
-
+    
     @JsonProperty("data")
     private Object data;
 }

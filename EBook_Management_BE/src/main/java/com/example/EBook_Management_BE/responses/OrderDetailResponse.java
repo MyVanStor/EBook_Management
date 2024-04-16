@@ -1,7 +1,7 @@
 package com.example.EBook_Management_BE.responses;
 
 import com.example.EBook_Management_BE.entity.Book;
-import com.example.EBook_Management_BE.entity.User;
+import com.example.EBook_Management_BE.entity.Order;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AccessLevel;
@@ -18,17 +18,17 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RatingResponse {
+public class OrderDetailResponse {
 	@JsonProperty("id")
 	Long id;
 	
-	@JsonProperty("score")
-	short score;
+	@JsonProperty("price")
+	double price;
 	
 	@JsonProperty("book")
 	Book book;
 	
-	@JsonProperty("user")
-	User user;
+	@JsonProperty("order")
+	Order order;
 
 }

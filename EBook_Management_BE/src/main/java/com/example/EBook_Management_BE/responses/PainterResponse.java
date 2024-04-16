@@ -1,5 +1,6 @@
 package com.example.EBook_Management_BE.responses;
 
+import com.example.EBook_Management_BE.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AccessLevel;
@@ -22,5 +23,7 @@ public class PainterResponse {
 	
 	@JsonProperty("name")
 	String name;
-
+	
+	@JsonProperty("user")
+	User user;
 }

@@ -27,5 +27,9 @@ public class Uri {
 	public static final String USER = "api/v1/user";
 	
 	public static final String ROLE = "api/v1/role";
+	
+	public static final String CHAPTER = "api/v1/chapter";
+
+	public static final String TRANSACTION = "api/v1/transaction";
 
 }
