@@ -2,10 +2,12 @@ package com.example.EBook_Management_BE.entity;
 
 import java.time.LocalDateTime;
 
+import com.example.EBook_Management_BE.listeners.TokenListener;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,6 +24,7 @@ import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "tokens")
+@EntityListeners(TokenListener.class)
 @Getter
 @Setter
 @AllArgsConstructor

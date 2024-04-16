@@ -1,7 +1,10 @@
 package com.example.EBook_Management_BE.entity;
 
+import com.example.EBook_Management_BE.listeners.FollowListener;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,6 +23,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @Table(name = "follows")
+@EntityListeners(FollowListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)

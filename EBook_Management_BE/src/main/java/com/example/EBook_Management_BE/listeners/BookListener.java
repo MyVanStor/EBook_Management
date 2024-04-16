@@ -3,8 +3,8 @@ package com.example.EBook_Management_BE.listeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.example.EBook_Management_BE.entity.Painter;
-import com.example.EBook_Management_BE.services.painter.IPainterRedisService;
+import com.example.EBook_Management_BE.entity.Book;
+import com.example.EBook_Management_BE.services.book.IBookRedisService;
 
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.PostRemove;
@@ -15,45 +15,45 @@ import jakarta.persistence.PreUpdate;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class PainterListener {
-	private final IPainterRedisService painterRedisService;
-	private static final Logger logger = LoggerFactory.getLogger(PainterListener.class);
+public class BookListener {
+	private final IBookRedisService bookRedisService;
+	private static final Logger logger = LoggerFactory.getLogger(BookListener.class);
 
 	@PrePersist
-	public void prePersist(Painter painter) {
+	public void prePersist(Book book) {
 		logger.info("prePersist");
 	}
 
 	@PostPersist // save = persis
-	public void postPersist(Painter painter) {
+	public void postPersist(Book book) {
 		// Update Redis cache
 		logger.info("postPersist");
-		painterRedisService.clearById(painter.getId());
+		bookRedisService.clearById(book.getId());
 	}
 
 	@PreUpdate
-	public void preUpdate(Painter painter) {
+	public void preUpdate(Book book) {
 		// ApplicationEventPublisher.instance().publishEvent(event);
 		logger.info("preUpdate");
 	}
 
 	@PostUpdate
-	public void postUpdate(Painter painter) {
+	public void postUpdate(Book book) {
 		// Update Redis cache
 		logger.info("postUpdate");
-		painterRedisService.clearById(painter.getId());
+		bookRedisService.clearById(book.getId());
 	}
 
 	@PreRemove
-	public void preRemove(Painter painter) {
+	public void preRemove(Book book) {
 		// ApplicationEventPublisher.instance().publishEvent(event);
 		logger.info("preRemove");
 	}
 
 	@PostRemove
-	public void postRemove(Painter painter) {
+	public void postRemove(Book book) {
 		// Update Redis cache
 		logger.info("postRemove");
-		painterRedisService.clearById(painter.getId());
+		bookRedisService.clearById(book.getId());
 	}
 }
