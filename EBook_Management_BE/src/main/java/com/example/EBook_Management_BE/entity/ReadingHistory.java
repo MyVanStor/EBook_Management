@@ -24,7 +24,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class ReadingHistory extends BaseEntity{
+public class ReadingHistory extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")	
@@ -37,4 +37,8 @@ public class ReadingHistory extends BaseEntity{
 	@ManyToOne
 	@JoinColumn(name = "chapter_id")
 	Chapter chapter;
+	
+	@ManyToOne
+	@JoinColumn(name = "book_id")
+	Book book;
 }

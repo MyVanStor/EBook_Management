@@ -71,4 +71,10 @@ public class MessageKeys {
     public static final String ORDER_UPDATE_SUCCESSFULLY = "order.update.successfully";
     public static final String ORDER_DELETE_SUCCESSFULLY = "order.delete.successfully";
     
+    public static final String READING_HISTORY_GET_BY_ID_SUCCESSFULLY = "reading_history.get_by_id.successfully";
+    public static final String READING_HISTORY_GET_ALL_BY_USER_SUCCESSFULLY = "reading_history.get_all_by_user.successfully";
+    public static final String READING_HISTORY_CREATE_SUCCESSFULLY = "reading_history.create.successfully";
+    public static final String READING_HISTORY_UPDATE_SUCCESSFULLY = "reading_history.update.successfully";
+    public static final String READING_HISTORY_DELETE_SUCCESSFULLY = "reading_history.delete.successfully";
+
 }

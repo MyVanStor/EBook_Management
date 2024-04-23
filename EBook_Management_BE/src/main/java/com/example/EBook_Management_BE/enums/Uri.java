@@ -31,5 +31,6 @@ public class Uri {
 	public static final String CHAPTER = "api/v1/chapter";
 
 	public static final String TRANSACTION = "api/v1/transaction";
-
+	
+	public static final String READING_HISTORY = "api/v1/reading-history";
 }

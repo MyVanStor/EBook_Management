@@ -42,5 +42,7 @@ public class MessageExceptionKeys {
 
     public static final String TRANSACTION_NOT_FOUND = "exception.transaction.not_found";
      
-    public static final String ORDER_NOT_FOUND = "exception.order.not_found"; 
+    public static final String ORDER_NOT_FOUND = "exception.order.not_found";
+
+    public static final String READING_HISTORY_NOT_FOUND = "exception.reading_history.not_found";
 }   

@@ -36,51 +36,54 @@ public class Book {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	Long id;
-	
+
 	@Column(name = "title", length = 100, nullable = false, unique = true)
 	String title;
-	
+
 	@Column(name = "summary", length = 255)
 	String summary;
-	
+
 	@Column(name = "image", length = 255)
 	String image;
-	
+
 	@Column(name = "type_of_book", length = 100)
 	String typeOfBook;
-	
+
 	@Column(name = "publishing_year")
 	Integer publishingYear;
-	
+
 	@Column(name = "price", columnDefinition = "FLOAT")
 	double price;
-	
+
 	@ManyToMany
 	@JoinTable(name = "author_book", joinColumns = { @JoinColumn(name = "book_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "author_id") })
 	Set<Author> authors;
-	
+
 	@ManyToMany
 	@JoinTable(name = "painter_book", joinColumns = { @JoinColumn(name = "book_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "painter_id") })
 	Set<Painter> painters;
-	
+
 	@ManyToMany
 	@JoinTable(name = "category_book", joinColumns = { @JoinColumn(name = "book_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "category_id") })
 	Set<Category> categories;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "book")
 	Set<OrderDetail> orderDetails;
-	
+
 	@OneToMany(mappedBy = "book")
 	Set<UserBook> userBooks;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "book")
 	Set<Rating> ratings;
-	
+
 	@OneToMany(mappedBy = "book")
 	Set<Chapter> chapters;
+
+	@OneToMany(mappedBy = "book")
+	Set<ReadingHistory> readingHistories;
 }
