@@ -2,6 +2,8 @@ package com.example.EBook_Management_BE.entity;
 
 import java.util.Set;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import com.example.EBook_Management_BE.listeners.BookListener;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -54,6 +56,9 @@ public class Book {
 
 	@Column(name = "price", columnDefinition = "FLOAT")
 	double price;
+	
+	@Column(name = "number_reads")
+	Long numberReads;
 
 	@ManyToMany
 	@JoinTable(name = "author_book", joinColumns = { @JoinColumn(name = "book_id") }, inverseJoinColumns = {

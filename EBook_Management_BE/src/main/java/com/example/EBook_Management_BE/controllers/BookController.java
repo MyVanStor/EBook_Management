@@ -1,6 +1,7 @@
 package com.example.EBook_Management_BE.controllers;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -221,6 +222,30 @@ public class BookController {
 		return ResponseEntity.ok(ResponseObject.builder()
 				.status(HttpStatus.OK)
 				.message(localizationUtils.getLocalizedMessage(MessageKeys.BOOK_DELETE_SUCCESSFULLY))
+				.build());
+	}
+	
+	@PutMapping("/number-read/{bookId}")
+	public ResponseEntity<ResponseObject> updateNumberRead(@PathVariable Long bookId) throws Exception {
+		Book book = bookRedisService.getBookById(bookId);
+		if (book == null) {
+			book = bookService.getBookById(bookId);
+		}
+		
+		book.setNumberReads(book.getNumberReads() + 1);
+	
+		int random = new Random().nextInt(1000) + 1;
+		if (random == 1) {
+			bookService.updateBook(bookId, book);
+		}
+		bookRedisService.saveBookById(bookId, book);
+		
+		BookResponse bookResponse = bookMapper.mapToBookResponse(book);
+		
+		return ResponseEntity.ok(ResponseObject.builder()
+				.status(HttpStatus.OK)
+				.message(localizationUtils.getLocalizedMessage(MessageKeys.BOOK_UPDATE_SUCCESSFULLY))
+				.data(bookResponse)
 				.build());
 	}
 }

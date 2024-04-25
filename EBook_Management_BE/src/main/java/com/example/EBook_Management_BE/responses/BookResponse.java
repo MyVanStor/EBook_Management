@@ -44,6 +44,9 @@ public class BookResponse {
 	@JsonProperty("price")
 	double price;
 	
+	@JsonProperty("number_reads")
+	Long numberReads;
+	
 	@JsonProperty("created_at")
 	LocalDateTime createdAt;
 	

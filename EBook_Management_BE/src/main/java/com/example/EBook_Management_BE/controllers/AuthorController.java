@@ -118,7 +118,7 @@ public class AuthorController {
 	}
 
 	@DeleteMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SYS-ADMIN')")
 	public ResponseEntity<ResponseObject> deleteAuthor(@PathVariable Long id) throws Exception {
 		authorService.deleteAuthorById(id);
 		

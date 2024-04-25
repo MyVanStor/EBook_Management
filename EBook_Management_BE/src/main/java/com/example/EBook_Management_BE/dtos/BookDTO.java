@@ -32,6 +32,9 @@ public class BookDTO {
 	String thumbnail;
 
 	double price;
+	
+	@JsonProperty("number_reads")
+	Long numberReads;
 
 	Set<Long> categoryIds;
 
