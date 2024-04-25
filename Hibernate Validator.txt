@@ -1,0 +1,33 @@
+Hibernate Validator:
+- @Digits: Kiểm tra có phải số hay không
+	fraction: Số chữ số phần thập phân
+	integer: Số chữ số phần nguyên
+
+- @Email; Kiểm tra định dạng email
+
+- @Max: Kiểm tra giá trị phải bé hơn hoặc bằng value
+
+- @Min: Kiểm tra giá trị phải lớn hơn hoặc bằng value
+
+- @NotBlank: Kiểm tra giá trị không được null, chuỗi trống hoặc chỉ gồm khoảng trắng, áp dụng cho chuỗi(String)
+
+- @NotEmpty: Kiểm tra giá trị không được null và chuỗi trống, áp dụng cho Collection
+
+- @NotNull: Kiểm tra giá trị không được null, áp dụng tất cả kiểu dữ liệu
+- @Null: Kiểm tra giá trị phải null, áp dụng tất cả kiểu dữ liệu
+
+- @Size: Kiểm tra kích thước của một chuỗi, mảng hoặc bất kỳ Collection nào
+	min: Kích thước tối thiểu
+	max: Kích thước tối đa
+
+- @Negative: Kiểm tra 1 số hoặc số thực không được âm 
+- @NegativeOrZezo: Kiểm tra 1 số hoặc số thực bằng 0 hoặc không được âm 
+
+- @Future: Kiểm tra 1 ngày hoặc thời gian phải là thời gian trong tương lai
+- @FutureOrPresent: Kiểm tra 1 ngày hoặc thời gian phải là thời gian trong tương lai hoặc ở hiện tại 
+- @PastOrPresent: Kiểm tra 1 ngày hoặc thời gian phải là thời gian trong quá khứ hoặc ở hiện tại 
+
+- @Range: Kiểm tra 1 giá trị nằm trong 1 khoảng min và max
+
+- @Pattern: Kiểm tra phù hợp biểu thức chính quy
+	regexp: Biểu thức chính quy 

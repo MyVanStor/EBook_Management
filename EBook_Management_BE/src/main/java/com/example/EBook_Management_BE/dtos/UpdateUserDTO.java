@@ -2,8 +2,12 @@ package com.example.EBook_Management_BE.dtos;
 
 import java.util.Date;
 
+import com.example.EBook_Management_BE.utils.MessageKeyValidation;
+import com.example.EBook_Management_BE.validations.user.ValidFullName;
+import com.example.EBook_Management_BE.validations.user.ValidPassword;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,8 +22,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateUserDTO {
+	@ValidFullName
 	String fullname;
 
+	@ValidPassword
 	String password;
 	
 	@JsonProperty("retype_password")
@@ -30,6 +36,7 @@ public class UpdateUserDTO {
 	
 	short gender;
 	
+	@PastOrPresent(message = MessageKeyValidation.USER_DATE_OF_BIRTH)
 	@JsonProperty("date_of_birth")
 	Date dateOfBirth;
 	

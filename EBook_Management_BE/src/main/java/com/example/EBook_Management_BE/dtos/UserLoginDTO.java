@@ -1,23 +1,26 @@
 package com.example.EBook_Management_BE.dtos;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
+import com.example.EBook_Management_BE.validations.user.ValidPassword;
+import com.example.EBook_Management_BE.validations.user.ValidPhoneNumber;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserLoginDTO {
-	@NotBlank(message = "Phone number is required")
-	private String phoneNumber;
+	@ValidPhoneNumber
+	@JsonProperty("phone_number")
+	String phoneNumber;
 
-	@NotBlank(message = "Password cannot be blank")
-	private String password;
-
-	@Min(value = 1, message = "You must enter role's Id")
-	private Long roleId;
+	@ValidPassword
+	String password;
 }
