@@ -11,7 +11,7 @@ import com.example.EBook_Management_BE.responses.CategoryResponse;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CategoryMapper {
-	CategoryMapper iNSTANCE = Mappers.getMapper(CategoryMapper.class);
+	CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
 	Category mapToCategoryEntity(CategoryDTO categoryDTO);
 

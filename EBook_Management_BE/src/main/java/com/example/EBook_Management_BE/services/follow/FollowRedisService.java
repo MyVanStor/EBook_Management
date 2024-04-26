@@ -61,11 +61,11 @@ public class FollowRedisService implements IFollowRedisService{
 	}
 
 	@Override
-	public Set<Follow> getAllFollow(String getBy, Long id) throws Exception {
+	public Set<Follow> getAllFollow(String typeGet, Long id) throws Exception {
 		if (useRedisCache == false) {
 			return null;
 		}
-		String key = this.getKeyFromGetBy(getBy, id);
+		String key = this.getKeyFromGetBy(typeGet, id);
 		String json = (String) redisTemplate.opsForValue().get(key);
 		Set<Follow> follows = json != null
 				? redisObjectMapper.readValue(json, new TypeReference<Set<Follow>>() {
@@ -75,8 +75,8 @@ public class FollowRedisService implements IFollowRedisService{
 	}
 
 	@Override
-	public void saveAllFollow(String getBy, Long id, Set<Follow> follows) throws Exception {
-		String key = this.getKeyFromGetBy(getBy, id);
+	public void saveAllFollow(String typeGet, Long id, Set<Follow> follows) throws Exception {
+		String key = this.getKeyFromGetBy(typeGet, id);
 		String json = redisObjectMapper.writeValueAsString(follows);
 		
 		redisTemplate.opsForValue().set(key, json);

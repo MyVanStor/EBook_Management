@@ -23,7 +23,6 @@ import com.example.EBook_Management_BE.mappers.TransactionMapper;
 import com.example.EBook_Management_BE.responses.TransactionResponse;
 import com.example.EBook_Management_BE.services.transaction.ITransactionRedisService;
 import com.example.EBook_Management_BE.services.transaction.ITransactionService;
-import com.example.EBook_Management_BE.services.user.IUserRedisService;
 import com.example.EBook_Management_BE.services.user.IUserService;
 import com.example.EBook_Management_BE.utils.MessageKeys;
 import com.example.EBook_Management_BE.utils.ResponseObject;
@@ -39,7 +38,6 @@ public class TransactionController {
 	private final ITransactionService transactionService;
 	private final ITransactionRedisService transactionRedisService;
 	private final IUserService userService;
-	private final IUserRedisService userRedisService;
 	
 	private final LocalizationUtils localizationUtils;
 	
@@ -49,12 +47,7 @@ public class TransactionController {
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> getTransactionById(@PathVariable Long id) throws Exception {
-		Transaction existingTransaction = transactionRedisService.getTransactionById(id);
-		if (existingTransaction == null) {
-			existingTransaction = transactionService.getTransactionById(id);
-			
-			transactionRedisService.saveTransactionById(id, existingTransaction);
-		}
+		Transaction existingTransaction = transactionService.getTransactionById(id);
 		
 		TransactionResponse transactionResponse = transactionMapper.mapToTransactionResponse(existingTransaction);
 		
@@ -69,12 +62,7 @@ public class TransactionController {
 	@PreAuthorize("hasRole('ROLE_USER')")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<ResponseObject> createTransaction(@Valid @RequestBody TransactionDTO transactionDTO) throws Exception {
-		User user = userRedisService.getUserById(transactionDTO.getUserId());
-		if (user == null) {
-			user = userService.getUserById(transactionDTO.getUserId());
-			
-			userRedisService.saveUserById(user.getId(), user);
-		}
+		User user = userService.getUserById(transactionDTO.getUserId());
 		
 		Transaction transaction = transactionMapper.mapToTransactionEntity(transactionDTO);
 		transaction.setUser(user);
@@ -95,12 +83,7 @@ public class TransactionController {
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updateTransaction(@PathVariable Long id,
 			@Valid @RequestBody TransactionDTO transactionDTO) throws Exception {
-		User user = userRedisService.getUserById(transactionDTO.getUserId());
-		if (user == null) {
-			user = userService.getUserById(transactionDTO.getUserId());
-			
-			userRedisService.saveUserById(user.getId(), user);
-		}
+		User user = userService.getUserById(transactionDTO.getUserId());
 		
 		Transaction transaction = transactionMapper.mapToTransactionEntity(transactionDTO);
 		transaction.setUser(user);

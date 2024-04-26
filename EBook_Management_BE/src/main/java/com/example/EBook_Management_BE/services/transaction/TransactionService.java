@@ -14,7 +14,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TransactionService implements ITransactionService {
 	private final TransactionRepository transactionRepository;
-	
+	private final ITransactionRedisService transactionRedisService;
+
 	private final LocalizationUtils localizationUtils;
 
 	@Override
@@ -23,25 +24,31 @@ public class TransactionService implements ITransactionService {
 	}
 
 	@Override
-	public Transaction getTransactionById(Long transactionId) throws DataNotFoundException {
-		return transactionRepository.findById(transactionId).orElseThrow(() -> new DataNotFoundException(
-				localizationUtils.getLocalizedMessage(MessageExceptionKeys.TRANSACTION_NOT_FOUND)));
+	public Transaction getTransactionById(Long transactionId) throws Exception {
+		Transaction transaction = transactionRedisService.getTransactionById(transactionId);
+		if (transaction == null) {
+			transaction = transactionRepository.findById(transactionId).orElseThrow(() -> new DataNotFoundException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.TRANSACTION_NOT_FOUND)));
+			
+			transactionRedisService.saveTransactionById(transactionId, transaction);
+		}
+		return transaction;
 	}
 
 	@Override
 	public Transaction updateTransaction(Long transactionId, Transaction transaction) throws Exception {
 		Transaction existingTransaction = getTransactionById(transactionId);
-		
+
 		transaction.setId(existingTransaction.getId());
 		transactionRepository.save(transaction);
-		
+
 		return transaction;
 	}
 
 	@Override
 	public void deleteTransaction(Long transactionId) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }

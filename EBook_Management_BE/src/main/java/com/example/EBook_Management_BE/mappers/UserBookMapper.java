@@ -9,7 +9,7 @@ import com.example.EBook_Management_BE.entity.UserBook;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserBookMapper {
-	UserBookMapper iNSTANCE = Mappers.getMapper(UserBookMapper.class);
+	UserBookMapper INSTANCE = Mappers.getMapper(UserBookMapper.class);
 	
 	UserBook mapToUserBookEntity(UserBookDTO userBookDTO);
 	

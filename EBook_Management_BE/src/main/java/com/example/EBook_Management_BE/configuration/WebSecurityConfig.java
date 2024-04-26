@@ -38,6 +38,7 @@ public class WebSecurityConfig {
 					requests.requestMatchers(
 							String.format("%s/user/register", apiPrefix),
 							String.format("%s/user/login", apiPrefix),
+							String.format("%s/user/login", apiPrefix),
 							
 							// healthcheck
 							String.format("%s/healthcheck/**", apiPrefix)

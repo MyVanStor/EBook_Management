@@ -10,7 +10,7 @@ import com.example.EBook_Management_BE.responses.OrderResponse;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface OrderMapper {
-	OrderMapper iNSTANCE = Mappers.getMapper(OrderMapper.class);
+	OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
 	
 	Order mapToOrderEntity(OrderDTO orderDTO);
 	

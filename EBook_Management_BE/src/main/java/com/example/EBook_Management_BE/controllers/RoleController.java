@@ -42,12 +42,7 @@ public class RoleController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<ResponseObject> getRoleById(@PathVariable Long id) throws Exception {
-		Role existingRole = roleRedisService.getRoleById(id);
-		if (existingRole == null) {
-			existingRole = roleService.getRoleById(id);
-			
-			roleRedisService.saveRoleById(id, existingRole);
-		}
+		Role existingRole = roleService.getRoleById(id);
 		
 		RoleResponse roleResponse = roleMapper.mapToRoleResponse(existingRole);
 		

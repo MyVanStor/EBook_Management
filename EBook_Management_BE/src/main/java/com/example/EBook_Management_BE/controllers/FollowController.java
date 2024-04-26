@@ -26,7 +26,6 @@ import com.example.EBook_Management_BE.mappers.FollowMapper;
 import com.example.EBook_Management_BE.responses.FollowResponse;
 import com.example.EBook_Management_BE.services.follow.IFollowRedisService;
 import com.example.EBook_Management_BE.services.follow.IFollowService;
-import com.example.EBook_Management_BE.services.user.IUserRedisService;
 import com.example.EBook_Management_BE.services.user.IUserService;
 import com.example.EBook_Management_BE.utils.MessageKeys;
 import com.example.EBook_Management_BE.utils.ResponseObject;
@@ -42,7 +41,6 @@ public class FollowController {
 	private final IFollowService followService;
 	private final IFollowRedisService followRedisService;
 	private final IUserService userService;
-	private final IUserRedisService userRedisService;
 	
 	private final LocalizationUtils localizationUtils;
 	
@@ -54,19 +52,9 @@ public class FollowController {
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<ResponseObject> createFollow(@Valid @RequestBody FollowDTO followDTO)
 			throws Exception {
-		User following = userRedisService.getUserById(followDTO.getFollowing());
-		if (following == null) {
-			following = userService.getUserById(followDTO.getFollowing());
-			
-			userRedisService.saveUserById(followDTO.getFollowing(), following);
-		}
+		userService.getUserById(followDTO.getFollowing());
 		
-		User follower = userRedisService.getUserById(followDTO.getUserId());
-		if (follower == null) {
-			follower = userService.getUserById(followDTO.getUserId());
-			
-			userRedisService.saveUserById(followDTO.getUserId(), follower);
-		}
+		User follower = userService.getUserById(followDTO.getUserId());
 		
 		Follow newFollow = Follow.builder()
 				.following(followDTO.getFollowing())
@@ -88,12 +76,7 @@ public class FollowController {
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 	public ResponseEntity<ResponseObject> getFollowById(@PathVariable Long id) throws Exception {
-		Follow existingFollow = followRedisService.getFollowById(id);
-		if (existingFollow == null) {
-			existingFollow = followService.getFollowById(id);
-			
-			followRedisService.saveFollowById(id, existingFollow);
-		}
+		Follow existingFollow = followService.getFollowById(id);
 		
 		FollowResponse followResponse = followMapper.mapToFollowResponse(existingFollow);
 		
@@ -110,6 +93,7 @@ public class FollowController {
 		String messageKey = typeGet.equals("following") 
 				? MessageKeys.FOLLOW_GET_ALL_BY_FOLLOWING_SUCCESSFULLY 
 				: MessageKeys.FOLLOW_GET_ALL_BY_USER_ID_SUCCESSFULLY; 
+		
 		Set<Follow> follows = followRedisService.getAllFollow(typeGet, id);
 		if (follows == null) {
 			if (typeGet == "following") {

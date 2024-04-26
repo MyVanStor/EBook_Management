@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.example.EBook_Management_BE.components.JwtTokenUtil;
+import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.entity.Token;
 import com.example.EBook_Management_BE.entity.User;
 import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
 import com.example.EBook_Management_BE.exceptions.ExpiredTokenException;
 import com.example.EBook_Management_BE.repositories.TokenRepository;
+import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,17 +31,19 @@ public class TokenService implements ITokenService {
 
 	private final TokenRepository tokenRepository;
 	private final JwtTokenUtil jwtTokenUtil;
+	
+	private final LocalizationUtils localizationUtils;
 
 	@Transactional
 	@Override
 	public Token refreshToken(String refreshToken, User user) throws Exception {
 		Token existingToken = tokenRepository.findByRefreshToken(refreshToken);
 		if (existingToken == null) {
-			throw new DataNotFoundException("Refresh token does not exist");
+			throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.REFRESH_TOKEN_NOT_FOUND));
 		}
 		if (existingToken.getRefreshExpirationDate().compareTo(LocalDateTime.now()) < 0) {
 			tokenRepository.delete(existingToken);
-			throw new ExpiredTokenException("Refresh token is expired");
+			throw new ExpiredTokenException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.REFRESH_TOKEN_IS_EXPRIED));
 		}
 		String token = jwtTokenUtil.generateToken(user);
 		LocalDateTime expirationDateTime = LocalDateTime.now().plusSeconds(expiration);

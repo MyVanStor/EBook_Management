@@ -10,7 +10,7 @@ import com.example.EBook_Management_BE.responses.RoleResponse;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface RoleMapper {
-	RoleMapper iNSTANCE = Mappers.getMapper(RoleMapper.class);
+	RoleMapper INSTANCE = Mappers.getMapper(RoleMapper.class);
 
 	Role mapToRoleEntity(RoleDTO roleDTO);
 

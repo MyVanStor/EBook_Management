@@ -12,15 +12,22 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ChapterService implements IChapterService{
+public class ChapterService implements IChapterService {
 	private final ChapterRepository chapterRepository;
+	private final IChapterRedisService chapterRedisService;
 
 	private final LocalizationUtils localizationUtils;
-	
+
 	@Override
-	public Chapter getChapterById(Long chapterId) throws DataNotFoundException {
-		return chapterRepository.findById(chapterId).orElseThrow(() -> new DataNotFoundException(
-				localizationUtils.getLocalizedMessage(MessageExceptionKeys.CHAPTER_NOT_FOUND)));
+	public Chapter getChapterById(Long chapterId) throws Exception {
+		Chapter chapter = chapterRedisService.getChapterById(chapterId);
+		if (chapter == null) {
+			chapter = chapterRepository.findById(chapterId).orElseThrow(() -> new DataNotFoundException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.CHAPTER_NOT_FOUND)));
+			
+			chapterRedisService.saveChapterById(chapterId, chapter);
+		}
+		return chapter;
 	}
 
 	@Override
@@ -31,11 +38,11 @@ public class ChapterService implements IChapterService{
 	@Override
 	public Chapter updateChapter(Long chapterId, Chapter chapter) throws Exception {
 		Chapter existingChapter = getChapterById(chapterId);
-		
+
 		chapter.setId(existingChapter.getId());
 		chapter.setCreatedAt(existingChapter.getCreatedAt());
 		chapterRepository.save(chapter);
-		
+
 		return chapter;
 	}
 

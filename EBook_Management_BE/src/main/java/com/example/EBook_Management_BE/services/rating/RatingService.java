@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RatingService implements IRatingService {
 	private final RatingRepository ratingRepository;
+	private final IRatingRedisService ratingRedisService;
 	
 	private final LocalizationUtils localizationUtils;
 
@@ -28,9 +29,15 @@ public class RatingService implements IRatingService {
 	}
 
 	@Override
-	public Rating getRatingById(Long ratingId) throws DataNotFoundException {
-		return ratingRepository.findById(ratingId)
-				.orElseThrow(() -> new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.RATING_NOT_FOUND)));
+	public Rating getRatingById(Long ratingId) throws Exception {
+		Rating rating = ratingRedisService.getRatingById(ratingId);
+		if (rating == null) {
+			rating = ratingRepository.findById(ratingId)
+					.orElseThrow(() -> new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.RATING_NOT_FOUND)));
+			
+			ratingRedisService.saveRatingById(ratingId, rating);
+		}
+		return rating;
 	}
 
 	@Override

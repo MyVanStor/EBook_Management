@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderService implements IOrderService {
 	private final OrderRepository orderRepository;
+	private final IOrderRedisService orderRedisService;
 	private final OrderDetailRepository orderDetailRepository;
 
 	private final LocalizationUtils localizationUtils;
@@ -36,9 +37,15 @@ public class OrderService implements IOrderService {
 	}
 
 	@Override
-	public Order getOrderById(Long orderId) throws DataNotFoundException {
-		return orderRepository.findById(orderId).orElseThrow(() -> new DataNotFoundException(
-				localizationUtils.getLocalizedMessage(MessageExceptionKeys.ORDER_NOT_FOUND)));
+	public Order getOrderById(Long orderId) throws Exception {
+		Order order = orderRedisService.getOrderById(orderId);
+		if (order == null) {
+			order = orderRepository.findById(orderId).orElseThrow(() -> new DataNotFoundException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.ORDER_NOT_FOUND)));
+			
+			orderRedisService.saveOrderById(orderId, order);
+		}
+		return order;
 	}
 
 	@Override

@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService implements IUserService {
 	private final UserRepository userRepository;
+	private final IUserRedisService userRedisService;
 	private final JwtTokenUtil jwtTokenUtil;
 	private final PasswordEncoder passwordEncoder;
 	private final AuthenticationManager authenticationManager;
@@ -55,9 +56,15 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public User getUserById(Long userId) throws DataNotFoundException {
-		return userRepository.findById(userId).orElseThrow(() -> new DataNotFoundException(
-				localizationUtils.getLocalizedMessage(MessageExceptionKeys.USER_NOT_FOUND)));
+	public User getUserById(Long userId) throws Exception {
+		User user = userRedisService.getUserById(userId);
+		if (user == null) {
+			user = userRepository.findById(userId).orElseThrow(() -> new DataNotFoundException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.USER_NOT_FOUND)));
+			
+			userRedisService.saveUserById(userId, user);
+		}
+		return user;
 	}
 
 	@Override
@@ -89,15 +96,22 @@ public class UserService implements IUserService {
 			throw new ExpiredTokenException(
 					localizationUtils.getLocalizedMessage(MessageExceptionKeys.TOKEN_IS_EXPRIED));
 		}
-
-		String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
-		Optional<User> user = userRepository.findByPhoneNumber(phoneNumber);
-
-		if (user.isPresent()) {
-			return user.get();
-		} else {
-			throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.USER_NOT_FOUND));
+		
+		User user = userRedisService.getUserByTokenOrRefreshToken(token);
+		if (user == null) {
+			String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
+			Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
+			
+			if (userOptional.isPresent()) {
+				user = userOptional.get();
+			} else {
+				throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.USER_NOT_FOUND));
+			}
+			
+			userRedisService.saveUserById(user.getId(), user);
 		}
+		
+		return user;
 	}
 
 	@Override

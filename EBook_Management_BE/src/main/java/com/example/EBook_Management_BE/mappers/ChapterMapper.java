@@ -10,7 +10,7 @@ import com.example.EBook_Management_BE.responses.ChapterResponse;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ChapterMapper {
-	ChapterMapper iNSTANCE = Mappers.getMapper(ChapterMapper.class);
+	ChapterMapper INSTANCE = Mappers.getMapper(ChapterMapper.class);
 	
 	Chapter mapToChapterEntity(ChapterDTO chapterDTO);
 	

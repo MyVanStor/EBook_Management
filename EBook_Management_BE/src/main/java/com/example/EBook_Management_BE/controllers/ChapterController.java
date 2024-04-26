@@ -22,7 +22,6 @@ import com.example.EBook_Management_BE.entity.Chapter;
 import com.example.EBook_Management_BE.enums.Uri;
 import com.example.EBook_Management_BE.mappers.ChapterMapper;
 import com.example.EBook_Management_BE.responses.ChapterResponse;
-import com.example.EBook_Management_BE.services.book.IBookRedisService;
 import com.example.EBook_Management_BE.services.book.IBookService;
 import com.example.EBook_Management_BE.services.chapter.IChapterRedisService;
 import com.example.EBook_Management_BE.services.chapter.IChapterService;
@@ -31,6 +30,7 @@ import com.example.EBook_Management_BE.utils.ResponseObject;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping(value = Uri.CHAPTER)
 @Validated
@@ -39,7 +39,6 @@ public class ChapterController {
 	private final IChapterService chapterService;
 	private final IChapterRedisService chapterRedisService;
 	private final IBookService bookService;
-	private final IBookRedisService bookRedisService;
 	
 	private final LocalizationUtils localizationUtils;
 	
@@ -47,15 +46,10 @@ public class ChapterController {
 	private ChapterMapper chapterMapper;
 	
 	@PostMapping()
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SYS-ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<ResponseObject> createChapter(@Valid @RequestBody ChapterDTO chapterDTO) throws Exception {
-		Book book = bookRedisService.getBookById(chapterDTO.getBookId());
-		if (book == null) {
-			book = bookService.getBookById(chapterDTO.getBookId());
-			
-			bookRedisService.saveBookById(book.getId(), book);
-		}
+		Book book = bookService.getBookById(chapterDTO.getBookId());
 		
 		Chapter chapter = chapterMapper.mapToChapterEntity(chapterDTO);
 		chapter.setBook(book);
@@ -74,12 +68,7 @@ public class ChapterController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<ResponseObject> getChapterById(@PathVariable Long id) throws Exception {
-		Chapter existingChapter = chapterRedisService.getChapterById(id);
-		if (existingChapter == null) {
-			existingChapter = chapterService.getChapterById(id);
-			
-			chapterRedisService.saveChapterById(id, existingChapter);
-		}
+		Chapter existingChapter = chapterService.getChapterById(id);
 		
 		ChapterResponse chapterResponse = chapterMapper.mapToChapterResponse(existingChapter);
 		
@@ -91,15 +80,10 @@ public class ChapterController {
 	}
 	
 	@PutMapping("/{id}")
-//	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updateChapter(@PathVariable Long id,
 			@Valid @RequestBody ChapterDTO chapterDTO) throws Exception {
-		Book book = bookRedisService.getBookById(chapterDTO.getBookId());
-		if (book == null) {
-			book = bookService.getBookById(chapterDTO.getBookId());
-			
-			bookRedisService.saveBookById(book.getId(), book);
-		}
+		Book book = bookService.getBookById(chapterDTO.getBookId());
 		
 		Chapter chapter = chapterMapper.mapToChapterEntity(chapterDTO);
 		chapter.setBook(book);
@@ -117,7 +101,7 @@ public class ChapterController {
 	}
 
 	@DeleteMapping("/{id}")
-//	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> deleteAuthor(@PathVariable Long id) throws Exception {
 		chapterService.deleteChapterById(id);
 		

@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RoleService implements IRoleService {
 	private final RoleRepository roleRepository;
+	private final IRoleRedisService roleRedisService;
 	private final UserRepository userRepository;
 
 	private final LocalizationUtils localizationUtils;
@@ -34,9 +35,15 @@ public class RoleService implements IRoleService {
 	}
 
 	@Override
-	public Role getRoleById(Long roleId) throws DataNotFoundException {
-		return roleRepository.findById(roleId).orElseThrow(() -> new DataNotFoundException(
-				localizationUtils.getLocalizedMessage(MessageExceptionKeys.ROLE_NOT_FOUND)));
+	public Role getRoleById(Long roleId) throws Exception {
+		Role role = roleRedisService.getRoleById(roleId);
+		if (role == null) {
+			role = roleRepository.findById(roleId).orElseThrow(() -> new DataNotFoundException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.ROLE_NOT_FOUND)));
+			
+			roleRedisService.saveRoleById(roleId, role);
+		}
+		return role;
 	}
 
 	@Override

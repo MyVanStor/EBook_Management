@@ -10,7 +10,7 @@ import com.example.EBook_Management_BE.responses.BookResponse;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface BookMapper {
-	BookMapper iNSTANCE = Mappers.getMapper(BookMapper.class);
+	BookMapper INSTANCE = Mappers.getMapper(BookMapper.class);
 
 	Book mapToBookEntity(BookDTO bookDTO);
 	

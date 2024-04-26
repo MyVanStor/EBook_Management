@@ -11,7 +11,7 @@ import com.example.EBook_Management_BE.responses.UserResponse;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
-	UserMapper iNSTANCE = Mappers.getMapper(UserMapper.class);
+	UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 	
 	User mapToUserEntity(UserDTO userDTO);
 	

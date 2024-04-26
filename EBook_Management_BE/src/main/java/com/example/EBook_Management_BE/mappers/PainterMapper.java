@@ -10,7 +10,7 @@ import com.example.EBook_Management_BE.responses.PainterResponse;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface PainterMapper {
-	PainterMapper iNSTANCE = Mappers.getMapper(PainterMapper.class);
+	PainterMapper INSTANCE = Mappers.getMapper(PainterMapper.class);
 	
 	Painter mapToPainterEntity(PainterDTO painterDTO);
 	

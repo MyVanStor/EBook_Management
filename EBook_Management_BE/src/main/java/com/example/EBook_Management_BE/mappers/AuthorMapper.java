@@ -10,7 +10,7 @@ import com.example.EBook_Management_BE.responses.AuthorResponse;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface AuthorMapper {
-	AuthorMapper iNSTANCE = Mappers.getMapper(AuthorMapper.class);
+	AuthorMapper INSTANCE = Mappers.getMapper(AuthorMapper.class);
 	
 	Author mapToAuthorEntity(AuthorDTO authorDTO);
 	

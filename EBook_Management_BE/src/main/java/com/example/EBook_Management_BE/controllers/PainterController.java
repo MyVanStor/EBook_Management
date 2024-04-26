@@ -24,7 +24,6 @@ import com.example.EBook_Management_BE.mappers.PainterMapper;
 import com.example.EBook_Management_BE.responses.PainterResponse;
 import com.example.EBook_Management_BE.services.painter.IPainterRedisService;
 import com.example.EBook_Management_BE.services.painter.IPainterService;
-import com.example.EBook_Management_BE.services.user.IUserRedisService;
 import com.example.EBook_Management_BE.services.user.IUserService;
 import com.example.EBook_Management_BE.utils.MessageKeys;
 import com.example.EBook_Management_BE.utils.ResponseObject;
@@ -39,7 +38,6 @@ import lombok.RequiredArgsConstructor;
 public class PainterController {
 	private final IPainterService painterService;
 	private final IPainterRedisService painterRedisService;
-	private final IUserRedisService userRedisService;
 	private final IUserService userService;
 	
 	private final LocalizationUtils localizationUtils;
@@ -49,12 +47,7 @@ public class PainterController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ResponseObject> getPainterById(@PathVariable Long id) throws Exception {
-		Painter existingPainter = painterRedisService.getPainterById(id);
-		if (existingPainter == null) {
-			existingPainter = painterService.getPainterById(id);
-			
-			painterRedisService.savePainterById(id, existingPainter);
-		}
+		Painter existingPainter = painterService.getPainterById(id);
 		
 		PainterResponse painterResponse = painterMapper.mapToPainterResponse(existingPainter);
 		
@@ -69,12 +62,7 @@ public class PainterController {
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<ResponseObject> createPainter(@Valid @RequestBody PainterDTO painterDTO) throws Exception {
-		User user = userRedisService.getUserById(painterDTO.getUserId());
-		if (user == null) {
-			user = userService.getUserById(painterDTO.getUserId());
-			
-			userRedisService.saveUserById(user.getId(), user);
-		}
+		User user = userService.getUserById(painterDTO.getUserId());
 
 		Painter painter = painterMapper.mapToPainterEntity(painterDTO);
 		painter.setUser(user);
@@ -95,12 +83,7 @@ public class PainterController {
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updatePainter(@PathVariable Long id,
 			@Valid @RequestBody PainterDTO painterDTO) throws Exception {
-		User user = userRedisService.getUserById(painterDTO.getUserId());
-		if (user == null) {
-			user = userService.getUserById(painterDTO.getUserId());
-			
-			userRedisService.saveUserById(user.getId(), user);
-		}
+		User user = userService.getUserById(painterDTO.getUserId());
 		
 		Painter painter = painterMapper.mapToPainterEntity(painterDTO);
 		painter.setUser(user);

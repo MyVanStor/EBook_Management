@@ -25,13 +25,10 @@ import com.example.EBook_Management_BE.entity.User;
 import com.example.EBook_Management_BE.enums.Uri;
 import com.example.EBook_Management_BE.mappers.ReadingHistoryMapper;
 import com.example.EBook_Management_BE.responses.ReadingHistoryResponse;
-import com.example.EBook_Management_BE.services.book.IBookRedisService;
 import com.example.EBook_Management_BE.services.book.IBookService;
-import com.example.EBook_Management_BE.services.chapter.IChapterRedisService;
 import com.example.EBook_Management_BE.services.chapter.IChapterService;
 import com.example.EBook_Management_BE.services.readinghistory.IReadingHistoryRedisService;
 import com.example.EBook_Management_BE.services.readinghistory.IReadingHistoryService;
-import com.example.EBook_Management_BE.services.user.IUserRedisService;
 import com.example.EBook_Management_BE.services.user.IUserService;
 import com.example.EBook_Management_BE.utils.MessageKeys;
 import com.example.EBook_Management_BE.utils.ResponseObject;
@@ -45,11 +42,8 @@ import lombok.RequiredArgsConstructor;
 public class ReadingHistoryController {
 	private final IReadingHistoryRedisService readingHistoryRedisService;
 	private final IReadingHistoryService readingHistoryService;
-	private final IUserRedisService userRedisService;
 	private final IUserService userService;
-	private final IChapterRedisService chapterRedisService;
 	private final IChapterService chapterService;
-	private final IBookRedisService bookRedisService;
 	private final IBookService bookService;
 	
 	private final LocalizationUtils localizationUtils;
@@ -62,26 +56,11 @@ public class ReadingHistoryController {
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<ResponseObject> createReadingHistory(@Valid @RequestBody ReadingHistoryDTO readingHistoryDTO)
 			throws Exception {
-		User user = userRedisService.getUserById(readingHistoryDTO.getUserId());
-		if (user == null) {
-			user = userService.getUserById(readingHistoryDTO.getUserId());
+		User user = userService.getUserById(readingHistoryDTO.getUserId());
 
-			userRedisService.saveUserById(user.getId(), user);
-		}
-
-		Chapter chapter = chapterRedisService.getChapterById(readingHistoryDTO.getChapterId());
-		if (chapter == null) {
-			chapter = chapterService.getChapterById(readingHistoryDTO.getChapterId());
-
-			chapterRedisService.saveChapterById(readingHistoryDTO.getChapterId(), chapter);
-		}
+		Chapter chapter = chapterService.getChapterById(readingHistoryDTO.getChapterId());
 		
-		Book book = bookRedisService.getBookById(readingHistoryDTO.getBookId());
-		if (book == null) {
-			book = bookService.getBookById(readingHistoryDTO.getBookId());
-			
-			bookRedisService.saveBookById(book.getId(), book);
-		}
+		Book book = bookService.getBookById(readingHistoryDTO.getBookId());
 
 		ReadingHistory readingHistory = ReadingHistory.builder()
 				.user(user)
@@ -105,17 +84,9 @@ public class ReadingHistoryController {
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updateReadingHistory(@PathVariable Long id,
 			@PathVariable Long chapterId) throws Exception {
-		ReadingHistory readingHistory = readingHistoryRedisService.getReadingHistoryById(id);
-		if (readingHistory == null) {
-			readingHistory = readingHistoryService.getReadingHistory(id);
-		}
+		ReadingHistory readingHistory = readingHistoryService.getReadingHistory(id);
 		
-		Chapter chapter = chapterRedisService.getChapterById(chapterId);
-		if (chapter == null) {
-			chapter = chapterService.getChapterById(chapterId);
-
-			chapterRedisService.saveChapterById(chapterId, chapter);
-		}
+		Chapter chapter = chapterService.getChapterById(chapterId);
 		
 		readingHistory.setChapter(chapter);
 		readingHistory = readingHistoryService.updateReadingHistory(id, readingHistory);
@@ -133,12 +104,7 @@ public class ReadingHistoryController {
 	@GetMapping("/{userId}")
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> getAllHistoryByUser(@PathVariable Long userId) throws Exception {
-		User user = userRedisService.getUserById(userId);
-		if (user == null) {
-			user = userService.getUserById(userId);
-
-			userRedisService.saveUserById(user.getId(), user);
-		}
+		User user = userService.getUserById(userId);
 		
 		Set<ReadingHistory> readingHistories = readingHistoryService.getAllByUser(user);
 		

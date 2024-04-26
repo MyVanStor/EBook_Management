@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthorService implements IAuthorService {
 	private final AuthorRepository authorRepository;
+	private final IAuthorRedisService authorRedisService;
 	private final BookRepository bookRepository;
 
 	private final LocalizationUtils localizationUtils;
@@ -37,9 +38,16 @@ public class AuthorService implements IAuthorService {
 	}
 
 	@Override
-	public Author getAuthorById(Long authorId) throws DataNotFoundException {
-		return authorRepository.findById(authorId).orElseThrow(() -> new DataNotFoundException(
-				localizationUtils.getLocalizedMessage(MessageExceptionKeys.AUTHOR_NOT_FOUND)));
+	public Author getAuthorById(Long authorId) throws Exception {
+		Author author = authorRedisService.getAuthorById(authorId);
+		if (author == null) {
+			author = authorRepository.findById(authorId).orElseThrow(() -> new DataNotFoundException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.AUTHOR_NOT_FOUND)));
+			
+			authorRedisService.saveAuthorById(authorId, author);
+		}
+
+		return author;
 	}
 
 	@Override

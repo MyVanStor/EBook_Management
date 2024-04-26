@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookService implements IBookService {
 	private final BookRepository bookRepository;
+	private final IBookRedisService bookRedisService;
 	private final UserBookRepository userBookRepository;
 
 	private final LocalizationUtils localizationUtils;
@@ -29,9 +30,16 @@ public class BookService implements IBookService {
 	}
 
 	@Override
-	public Book getBookById(Long bookId) throws DataNotFoundException {
-		return bookRepository.findById(bookId).orElseThrow(() -> new DataNotFoundException(
-				localizationUtils.getLocalizedMessage(MessageExceptionKeys.BOOK_NOT_FOUND)));
+	public Book getBookById(Long bookId) throws Exception {
+		Book book = bookRedisService.getBookById(bookId);
+		if (book == null) {
+			book = bookRepository.findById(bookId).orElseThrow(() -> new DataNotFoundException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.BOOK_NOT_FOUND)));
+			
+			bookRedisService.saveBookById(bookId, book);
+		}
+		
+		return book;
 	}
 
 	@Override

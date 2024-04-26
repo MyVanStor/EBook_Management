@@ -11,7 +11,7 @@ public interface IFollowRedisService {
 
 	void saveFollowById(Long followId, Follow follow) throws Exception;
 	
-	Set<Follow> getAllFollow(String getBy, Long id) throws Exception;
+	Set<Follow> getAllFollow(String typeGet, Long id) throws Exception;
 	
-	void saveAllFollow(String getBy, Long id, Set<Follow> follows) throws Exception;
+	void saveAllFollow(String typeGet, Long id, Set<Follow> follows) throws Exception;
 }

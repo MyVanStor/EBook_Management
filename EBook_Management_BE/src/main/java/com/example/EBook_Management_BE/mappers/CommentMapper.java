@@ -10,7 +10,7 @@ import com.example.EBook_Management_BE.responses.CommentResponse;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CommentMapper {
-	CommentMapper iNSTANCE = Mappers.getMapper(CommentMapper.class);
+	CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
 	Comment mapToCommentEntity(CommentDTO commentDTO);
 	

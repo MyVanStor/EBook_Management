@@ -20,24 +20,32 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FollowService implements IFollowService {
 	private final FollowRepository followRepository;
+	private final IFollowRedisService followRedisService;
 	private final UserService userService;
-	
+
 	private final LocalizationUtils localizationUtils;
 
 	@Override
 	@Transactional
 	public Follow createFollow(Follow follow) throws Exception {
 		if (follow.getFollowing() == follow.getUser().getId()) {
-			throw new SelfFollowException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.FOLLOW_NOT_FOLLOW_YOURSELF));
+			throw new SelfFollowException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.FOLLOW_NOT_FOLLOW_YOURSELF));
 		}
 
 		return followRepository.save(follow);
 	}
 
 	@Override
-	public Follow getFollowById(Long followId) throws DataNotFoundException {
-		return followRepository.findById(followId).orElseThrow(() -> new DataNotFoundException(
-				localizationUtils.getLocalizedMessage(MessageExceptionKeys.FOLLOW_NOT_FOUND)));
+	public Follow getFollowById(Long followId) throws Exception {
+		Follow follow = followRedisService.getFollowById(followId);
+		if (follow == null) {
+			follow = followRepository.findById(followId).orElseThrow(() -> new DataNotFoundException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.FOLLOW_NOT_FOUND)));
+			
+			followRedisService.saveFollowById(followId, follow);
+		}
+		return follow;
 	}
 
 	@Override
@@ -47,9 +55,9 @@ public class FollowService implements IFollowService {
 	}
 
 	@Override
-	public Set<Follow> getAllFollowByUserId(Long userId) throws DataNotFoundException {
+	public Set<Follow> getAllFollowByUserId(Long userId) throws Exception {
 		User user = userService.getUserById(userId);
-		
+
 		return followRepository.findByUser(user);
 	}
 

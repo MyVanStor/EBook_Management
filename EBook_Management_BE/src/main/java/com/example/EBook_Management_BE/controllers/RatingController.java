@@ -26,11 +26,9 @@ import com.example.EBook_Management_BE.entity.User;
 import com.example.EBook_Management_BE.enums.Uri;
 import com.example.EBook_Management_BE.mappers.RatingMapper;
 import com.example.EBook_Management_BE.responses.RatingResponse;
-import com.example.EBook_Management_BE.services.book.IBookRedisService;
 import com.example.EBook_Management_BE.services.book.IBookService;
 import com.example.EBook_Management_BE.services.rating.IRatingRedisService;
 import com.example.EBook_Management_BE.services.rating.IRatingService;
-import com.example.EBook_Management_BE.services.user.IUserRedisService;
 import com.example.EBook_Management_BE.services.user.IUserService;
 import com.example.EBook_Management_BE.utils.MessageKeys;
 import com.example.EBook_Management_BE.utils.ResponseObject;
@@ -45,9 +43,7 @@ import lombok.RequiredArgsConstructor;
 public class RatingController {
 	private final IRatingService ratingService;
 	private final IRatingRedisService ratingRedisService;
-	private final IUserRedisService userRedisServicel;
 	private final IUserService userService;
-	private final IBookRedisService bookRedisService;
 	private final IBookService bookService;
 	
 	private final LocalizationUtils localizationUtils;
@@ -59,20 +55,9 @@ public class RatingController {
 	@ResponseStatus(code = HttpStatus.CREATED)
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> createRating(@Valid @RequestBody RatingDTO ratingDTO) throws Exception {
-		Book book = bookRedisService.getBookById(ratingDTO.getBookId());
-		if (book == null) {
-			book = bookService.getBookById(ratingDTO.getBookId());	
-			
-			bookRedisService.saveBookById(ratingDTO.getBookId(), book);
-
-		}
+		Book book = bookService.getBookById(ratingDTO.getBookId());
 		
-		User user = userRedisServicel.getUserById(ratingDTO.getUserId());
-		if (user == null) {
-			user = userService.getUserById(ratingDTO.getUserId());
-			
-			userRedisServicel.saveUserById(book.getId(), user);
-		}
+		User user = userService.getUserById(ratingDTO.getUserId());
 		
 		Rating rating = Rating.builder()
 				.score(ratingDTO.getScore())
@@ -95,10 +80,8 @@ public class RatingController {
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updateRating(@PathVariable Long id, @Valid @RequestBody RatingDTO ratingDTO) throws Exception {
-		Rating rating = ratingRedisService.getRatingById(id);
-		if (rating == null) {
-			rating = ratingService.getRatingById(id);
-		}
+		Rating rating = ratingService.getRatingById(id);
+		
 		rating.setScore(ratingDTO.getScore());
 		
 		rating = ratingService.updateRating(id, rating);
@@ -116,10 +99,7 @@ public class RatingController {
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> deleteRating(@PathVariable Long id) throws Exception {
-		Rating existingRating = ratingRedisService.getRatingById(id);
-		if (existingRating == null) {
-			existingRating = ratingService.getRatingById(id);
-		}
+		Rating existingRating = ratingService.getRatingById(id);
 		
 		ratingService.deleteRating(existingRating);
 		
@@ -134,12 +114,7 @@ public class RatingController {
 	public ResponseEntity<ResponseObject> getAllRatingByBookId(@PathVariable Long bookId) throws Exception {
 		Set<Rating> ratings = ratingRedisService.getAllRatingBook(bookId);
 		if (ratings == null) {
-			Book book = bookRedisService.getBookById(bookId);
-			if (book == null) {
-				book = bookService.getBookById(bookId);
-			
-				bookRedisService.saveBookById(bookId, book);
-			}
+			Book book = bookService.getBookById(bookId);
 		
 			ratings = ratingService.getAllRatingByBook(book);
 			

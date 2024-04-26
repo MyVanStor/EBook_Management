@@ -30,15 +30,11 @@ import com.example.EBook_Management_BE.enums.StatusUserBook;
 import com.example.EBook_Management_BE.enums.Uri;
 import com.example.EBook_Management_BE.mappers.BookMapper;
 import com.example.EBook_Management_BE.responses.BookResponse;
-import com.example.EBook_Management_BE.services.author.IAuthorRedisService;
 import com.example.EBook_Management_BE.services.author.IAuthorService;
 import com.example.EBook_Management_BE.services.book.IBookRedisService;
 import com.example.EBook_Management_BE.services.book.IBookService;
-import com.example.EBook_Management_BE.services.category.ICategoryRedisService;
 import com.example.EBook_Management_BE.services.category.ICategoryService;
-import com.example.EBook_Management_BE.services.painter.IPainterRedisService;
 import com.example.EBook_Management_BE.services.painter.IPainterService;
-import com.example.EBook_Management_BE.services.user.IUserRedisService;
 import com.example.EBook_Management_BE.services.user.IUserService;
 import com.example.EBook_Management_BE.services.userbook.IUserBookRedisService;
 import com.example.EBook_Management_BE.services.userbook.IUserBookService;
@@ -58,14 +54,9 @@ public class BookController {
 	private final IUserBookService userBookService;
 	private final IUserBookRedisService userBookRedisService;
 	
-	private final IUserRedisService userRedisService;
 	private final IUserService userService;
-	
-	private final ICategoryRedisService categoryRedisService;
 	private final ICategoryService categoryService;
-	private final IPainterRedisService painterRedisService;
 	private final IPainterService painterService;
-	private final IAuthorRedisService authorRedisService;
 	private final IAuthorService authorService;
 
 	private final LocalizationUtils localizationUtils;
@@ -81,36 +72,21 @@ public class BookController {
 		
 		Set<Category> categories = new HashSet<>();
 		for (Long categoryId : bookDTO.getCategoryIds()) {
-			Category category = categoryRedisService.getCategoryById(categoryId);
-			if (category == null) {
-				category = categoryService.getCategoryById(categoryId);
-				
-				categoryRedisService.saveCategoryById(categoryId, category);
-			}
+			Category category = categoryService.getCategoryById(categoryId);
 			category.setBooks(Set.of(book));
 			categories.add(category);
 		}
 		
 		Set<Painter> painters = new HashSet<>();
 		for (Long painterId : bookDTO.getPainterIds()) {
-			Painter painter = painterRedisService.getPainterById(painterId);
-			if (painter == null) {
-				painter = painterService.getPainterById(painterId);
-				
-				painterRedisService.savePainterById(painterId, painter);
-			}
+			Painter painter = painterService.getPainterById(painterId);
 			painter.setBooks(Set.of(book));
 			painters.add(painter);
 		}
 		
 		Set<Author> authors = new HashSet<>();
 		for (Long authorId : bookDTO.getAuthorIds()) {
-			Author author = authorRedisService.getAuthorById(authorId);
-			if (author == null) {
-				author = authorService.getAuthorById(authorId);
-				
-				authorRedisService.saveAuthorById(authorId, author);
-			}
+			Author author = authorService.getAuthorById(authorId);
 			author.setBooks(Set.of(book));
 			authors.add(author);
 		}
@@ -118,12 +94,7 @@ public class BookController {
 		book.setCategories(categories);
 		book.setPainters(painters);
 		
-		User user = userRedisService.getUserById(userId);
-		if (user == null) {
-			user = userService.getUserById(userId);
-			
-			userRedisService.saveUserById(user.getId(), user);
-		}
+		User user = userService.getUserById(userId);		
 		
 		Book newBook = bookService.createBook(book);
 		bookRedisService.saveBookById(newBook.getId(), newBook);
@@ -133,6 +104,7 @@ public class BookController {
 				.book(newBook)
 				.user(user)
 				.build();
+		
 		UserBook newUserBook = userBookService.createUserBook(userBook);
 		userBookRedisService.saveUserBookById(newBook.getId(), newUserBook);
 
@@ -149,12 +121,7 @@ public class BookController {
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> getBookById(@PathVariable Long id) throws Exception {
-		Book existingBook = bookRedisService.getBookById(id);
-		if (existingBook == null) {
-			existingBook = bookService.getBookById(id);
-			
-			bookRedisService.saveBookById(id, existingBook);
-		}
+		Book existingBook = bookService.getBookById(id);
 		
 		BookResponse bookResponse = bookMapper.mapToBookResponse(existingBook);
 		
@@ -172,39 +139,25 @@ public class BookController {
 		
 		Set<Category> categories = new HashSet<>();
 		for (Long categoryId : bookDTO.getCategoryIds()) {
-			Category category = categoryRedisService.getCategoryById(categoryId);
-			if (category == null) {
-				category = categoryService.getCategoryById(categoryId);
-				
-				categoryRedisService.saveCategoryById(categoryId, category);
-			}
+			Category category = categoryService.getCategoryById(categoryId);
 			category.setBooks(Set.of(book));
 			categories.add(category);
 		}
 		
 		Set<Painter> painters = new HashSet<>();
 		for (Long painterId : bookDTO.getPainterIds()) {
-			Painter painter = painterRedisService.getPainterById(painterId);
-			if (painter == null) {
-				painter = painterService.getPainterById(painterId);
-				
-				painterRedisService.savePainterById(painterId, painter);
-			}
+			Painter painter = painterService.getPainterById(painterId);
 			painter.setBooks(Set.of(book));
 			painters.add(painter);
 		}
 		
 		Set<Author> authors = new HashSet<>();
 		for (Long authorId : bookDTO.getAuthorIds()) {
-			Author author = authorRedisService.getAuthorById(authorId);
-			if (author == null) {
-				author = authorService.getAuthorById(authorId);
-				
-				authorRedisService.saveAuthorById(authorId, author);
-			}
+			Author author = authorService.getAuthorById(authorId);
 			author.setBooks(Set.of(book));
 			authors.add(author);
 		}
+		
 		book = bookService.updateBook(id, book);
 		bookRedisService.saveBookById(id, book);
 		
@@ -230,10 +183,7 @@ public class BookController {
 	
 	@PutMapping("/number-read/{bookId}")
 	public ResponseEntity<ResponseObject> updateNumberRead(@PathVariable Long bookId) throws Exception {
-		Book book = bookRedisService.getBookById(bookId);
-		if (book == null) {
-			book = bookService.getBookById(bookId);
-		}
+		Book book = bookService.getBookById(bookId);
 		
 		book.setNumberReads(book.getNumberReads() + 1);
 	

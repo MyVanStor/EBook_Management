@@ -44,12 +44,7 @@ public class CategoryController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<ResponseObject> getCategoryById(@PathVariable Long id) throws Exception {
-		Category existingCategory = categoryRedisService.getCategoryById(id);
-		if (existingCategory == null) {
-			existingCategory = categoryService.getCategoryById(id);
-			
-			categoryRedisService.saveCategoryById(id, existingCategory);
-		}
+		Category existingCategory = categoryService.getCategoryById(id);
 		
 		CategoryResponse categoryResponse = categoryMapper.mapToCategoryResponse(existingCategory);
 		

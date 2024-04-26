@@ -24,6 +24,8 @@ public class MessageExceptionKeys {
     public static final String USER_INVALID_USERNAME_OR_PASSWORD = "exception.user.invalid_username_or_password";
 
     public static final String TOKEN_IS_EXPRIED = "exception.token.is_expried";
+    public static final String REFRESH_TOKEN_NOT_FOUND = "exception.refresh_token.not_found";
+    public static final String REFRESH_TOKEN_IS_EXPRIED = "exception.refresh_token.is_expried";
 
     public static final String COMMENT_NOT_FOUND = "exception.comment.not_found";
 

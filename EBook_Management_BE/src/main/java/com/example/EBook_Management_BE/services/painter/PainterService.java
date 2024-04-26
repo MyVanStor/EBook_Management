@@ -21,10 +21,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PainterService implements IPainterService {
 	private final PainterRepository painterRepository;
+	private final IPainterRedisService painterRedisService;
 	private final BookRepository bookRepository;
-	
+
 	private final LocalizationUtils localizationUtils;
-	
+
 	@Override
 	@Transactional
 	public Painter createPainter(Painter painter) throws DuplicateException {
@@ -37,9 +38,16 @@ public class PainterService implements IPainterService {
 	}
 
 	@Override
-	public Painter getPainterById(Long painterId) throws DataNotFoundException {
-		return painterRepository.findById(painterId).orElseThrow(() -> new DataNotFoundException(
-				localizationUtils.getLocalizedMessage(MessageExceptionKeys.PAINTER_NOT_FOUND)));
+	public Painter getPainterById(Long painterId) throws Exception {
+		Painter painter = painterRedisService.getPainterById(painterId);
+		if (painter == null) {
+			painter = painterRepository.findById(painterId).orElseThrow(() -> new DataNotFoundException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.PAINTER_NOT_FOUND)));
+			
+			painterRedisService.savePainterById(painterId, painter);
+		}
+
+		return painter;
 	}
 
 	@Override

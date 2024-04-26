@@ -9,7 +9,7 @@ import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
 public interface IUserService {
 	User createUser(User user) throws Exception;
 
-	User getUserById(Long userId) throws DataNotFoundException;
+	User getUserById(Long userId) throws Exception;
 
 	User getUserDetailsFromToken(String token) throws Exception;
 

@@ -10,7 +10,7 @@ import com.example.EBook_Management_BE.responses.FollowResponse;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface FollowMapper {
-	FollowMapper iNSTANCE = Mappers.getMapper(FollowMapper.class);
+	FollowMapper INSTANCE = Mappers.getMapper(FollowMapper.class);
 
 	Follow mapToFollowEntity(FollowDTO followDTO);
 

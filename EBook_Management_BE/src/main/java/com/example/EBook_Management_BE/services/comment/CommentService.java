@@ -15,13 +15,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentService implements ICommentService {
 	private final CommentRepository commentRepository;
+	private final ICommentRedisService commentRedisService;
 
 	private final LocalizationUtils localizationUtils;
 
 	@Override
-	public Comment getCommentById(Long commentId) throws DataNotFoundException {
-		return commentRepository.findById(commentId).orElseThrow(() -> new DataNotFoundException(
+	public Comment getCommentById(Long commentId) throws Exception {
+		Comment comment = commentRedisService.getCommentById(commentId);
+		if (comment == null) {
+			comment = commentRepository.findById(commentId).orElseThrow(() -> new DataNotFoundException(
 				localizationUtils.getLocalizedMessage(MessageExceptionKeys.COMMENT_NOT_FOUND)));
+			
+			commentRedisService.saveCommentById(commentId, comment);
+		}
+		
+		return comment; 
 	}
 
 	@Override

@@ -26,11 +26,9 @@ import com.example.EBook_Management_BE.entity.User;
 import com.example.EBook_Management_BE.enums.Uri;
 import com.example.EBook_Management_BE.mappers.OrderMapper;
 import com.example.EBook_Management_BE.responses.OrderResponse;
-import com.example.EBook_Management_BE.services.book.IBookRedisService;
 import com.example.EBook_Management_BE.services.book.IBookService;
 import com.example.EBook_Management_BE.services.order.IOrderRedisService;
 import com.example.EBook_Management_BE.services.order.IOrderService;
-import com.example.EBook_Management_BE.services.user.IUserRedisService;
 import com.example.EBook_Management_BE.services.user.IUserService;
 import com.example.EBook_Management_BE.utils.MessageKeys;
 import com.example.EBook_Management_BE.utils.ResponseObject;
@@ -45,9 +43,7 @@ import lombok.RequiredArgsConstructor;
 public class OrderController {
 	private final IOrderRedisService orderRedisService;
 	private final IOrderService orderService;
-	private final IBookRedisService bookRedisService;
 	private final IBookService bookService;
-	private final IUserRedisService userRedisService;
 	private final IUserService userService;
 	
 	private final LocalizationUtils localizationUtils;
@@ -60,21 +56,12 @@ public class OrderController {
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<ResponseObject> createOrder(@Valid @RequestBody OrderDTO orderDTO) throws Exception {
 		Order order = orderMapper.mapToOrderEntity(orderDTO);
-		User user = userRedisService.getUserById(orderDTO.getUserId());
-		if (user == null) {
-			user = userService.getUserById(orderDTO.getUserId());
-			
-			userRedisService.saveUserById(user.getId(), user);
-		}
+		User user = userService.getUserById(orderDTO.getUserId());
 		
 		Set<OrderDetail> orderDetails = new HashSet<>();
 		for (Long bookId : orderDTO.getBookIds()) {
-			Book book = bookRedisService.getBookById(bookId);
-			if (book == null) {
-				book = bookService.getBookById(bookId);
-				
-				bookRedisService.saveBookById(bookId, book);
-			}
+			Book book = bookService.getBookById(bookId);
+			
 			OrderDetail orderDetail = OrderDetail.builder()
 					.price(book.getPrice())
 					.book(book)
@@ -103,10 +90,7 @@ public class OrderController {
 	@PutMapping("/{id}/{status}")
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updateOrder(@PathVariable Long id, @PathVariable String status) throws Exception {
-		Order order = orderRedisService.getOrderById(id);
-		if (order == null) {
-			order = orderService.getOrderById(id);
-		}
+		Order order = orderService.getOrderById(id);
 		order.setStatus(status);
 		
 	 	orderService.updateOrder(id, order);
@@ -122,12 +106,8 @@ public class OrderController {
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 	public ResponseEntity<ResponseObject> getOrderById(@PathVariable Long id) throws Exception {
-		Order order = orderRedisService.getOrderById(id);
-		if (order == null) {
-			order = orderService.getOrderById(id);
-			
-			orderRedisService.saveOrderById(id, order);
-		}
+		Order order = orderService.getOrderById(id);
+		
 		OrderResponse orderResponse = orderMapper.mapToOrderResponse(order);
 		
 		return ResponseEntity

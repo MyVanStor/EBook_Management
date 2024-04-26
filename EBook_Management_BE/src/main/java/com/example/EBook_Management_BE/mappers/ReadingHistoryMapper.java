@@ -10,7 +10,7 @@ import com.example.EBook_Management_BE.responses.ReadingHistoryResponse;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ReadingHistoryMapper {
-	ReadingHistoryMapper iNSTANCE = Mappers.getMapper(ReadingHistoryMapper.class);
+	ReadingHistoryMapper INSTANCE = Mappers.getMapper(ReadingHistoryMapper.class);
 
 	ReadingHistory mapToReadingHistoryEntity(ReadingHistoryDTO readingHistoryDTO);
 

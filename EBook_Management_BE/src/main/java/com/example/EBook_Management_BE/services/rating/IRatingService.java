@@ -9,7 +9,7 @@ import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
 public interface IRatingService {
 	Rating createRating(Rating rating);
 	
-	Rating getRatingById(Long ratingId) throws DataNotFoundException;
+	Rating getRatingById(Long ratingId) throws Exception;
 	
 	Rating updateRating(Long ratingId, Rating rating);
 

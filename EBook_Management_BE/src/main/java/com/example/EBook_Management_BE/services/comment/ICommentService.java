@@ -1,10 +1,9 @@
 package com.example.EBook_Management_BE.services.comment;
 
 import com.example.EBook_Management_BE.entity.Comment;
-import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
 
 public interface ICommentService {
-	Comment getCommentById(Long commentId) throws DataNotFoundException;
+	Comment getCommentById(Long commentId) throws Exception;
 	
 	Comment createComment(Comment comment);
 	

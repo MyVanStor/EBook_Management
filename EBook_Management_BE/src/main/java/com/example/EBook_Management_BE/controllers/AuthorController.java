@@ -24,7 +24,6 @@ import com.example.EBook_Management_BE.mappers.AuthorMapper;
 import com.example.EBook_Management_BE.responses.AuthorResponse;
 import com.example.EBook_Management_BE.services.author.IAuthorRedisService;
 import com.example.EBook_Management_BE.services.author.IAuthorService;
-import com.example.EBook_Management_BE.services.user.IUserRedisService;
 import com.example.EBook_Management_BE.services.user.IUserService;
 import com.example.EBook_Management_BE.utils.MessageKeys;
 import com.example.EBook_Management_BE.utils.ResponseObject;
@@ -40,7 +39,6 @@ public class AuthorController {
 	private final IAuthorService authorService;
 	private final IAuthorRedisService authorRedisService;
 	private final IUserService userService;
-	private final IUserRedisService userRedisService;
 	
 	private final LocalizationUtils localizationUtils;
 	
@@ -49,12 +47,7 @@ public class AuthorController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ResponseObject> getAuthorById(@PathVariable Long id) throws Exception {
-		Author existingAuthor = authorRedisService.getAuthorById(id);
-		if (existingAuthor == null) {
-			existingAuthor = authorService.getAuthorById(id);
-			
-			authorRedisService.saveAuthorById(id, existingAuthor);
-		}
+		Author existingAuthor = authorService.getAuthorById(id);
 		
 		AuthorResponse authorResponse = authorMapper.mapToAuthorResponse(existingAuthor);
 		
@@ -69,12 +62,7 @@ public class AuthorController {
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<ResponseObject> createAuthor(@Valid @RequestBody AuthorDTO authorDTO) throws Exception {
-		User user = userRedisService.getUserById(authorDTO.getUserId());
-		if (user == null) {
-			user = userService.getUserById(authorDTO.getUserId());
-			
-			userRedisService.saveUserById(user.getId(), user);
-		}
+		User user = userService.getUserById(authorDTO.getUserId());
 		
 		Author author = authorMapper.mapToAuthorEntity(authorDTO);
 		author.setUser(user);
@@ -95,12 +83,7 @@ public class AuthorController {
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updateAuthor(@PathVariable Long id,
 			@Valid @RequestBody AuthorDTO authorDTO) throws Exception {
-		User user = userRedisService.getUserById(authorDTO.getUserId());
-		if (user == null) {
-			user = userService.getUserById(authorDTO.getUserId());
-			
-			userRedisService.saveUserById(user.getId(), user);
-		}
+		User user = userService.getUserById(authorDTO.getUserId());
 		
 		Author author = authorMapper.mapToAuthorEntity(authorDTO);
 		author.setUser(user);

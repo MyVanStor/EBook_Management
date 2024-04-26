@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CategoryService implements ICategoryService {
 	private final CategoryRepository categoryRepository;
+	private final ICategoryRedisService categoryRedisService;
 	private final BookRepository bookRepository;
 
 	private final LocalizationUtils localizationUtils;
@@ -37,9 +38,16 @@ public class CategoryService implements ICategoryService {
 	}
 
 	@Override
-	public Category getCategoryById(Long categoryId) throws DataNotFoundException {
-		return categoryRepository.findById(categoryId).orElseThrow(() -> new DataNotFoundException(
-				localizationUtils.getLocalizedMessage(MessageExceptionKeys.CATEGORY_NOT_FOUND)));	}
+	public Category getCategoryById(Long categoryId) throws Exception {
+		Category category = categoryRedisService.getCategoryById(categoryId);
+		if (category == null) {
+			category = categoryRepository.findById(categoryId).orElseThrow(() -> new DataNotFoundException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.CATEGORY_NOT_FOUND)));
+			
+			categoryRedisService.saveCategoryById(categoryId, category);
+		}
+		return category;
+	}
 
 	@Override
 	@Transactional

@@ -10,7 +10,7 @@ import com.example.EBook_Management_BE.responses.RatingResponse;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface RatingMapper {
-	RatingMapper iNSTANCE = Mappers.getMapper(RatingMapper.class);
+	RatingMapper INSTANCE = Mappers.getMapper(RatingMapper.class);
 	
 	Rating mapToRatingEntity(RatingDTO ratingDTO);
 		

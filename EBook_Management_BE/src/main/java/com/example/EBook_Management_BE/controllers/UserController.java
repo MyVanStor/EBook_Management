@@ -29,7 +29,6 @@ import com.example.EBook_Management_BE.exceptions.InvalidPasswordException;
 import com.example.EBook_Management_BE.mappers.UserMapper;
 import com.example.EBook_Management_BE.responses.LoginResponse;
 import com.example.EBook_Management_BE.responses.UserResponse;
-import com.example.EBook_Management_BE.services.role.IRoleRedisService;
 import com.example.EBook_Management_BE.services.role.IRoleService;
 import com.example.EBook_Management_BE.services.token.TokenService;
 import com.example.EBook_Management_BE.services.user.IUserRedisService;
@@ -50,7 +49,6 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	private final IUserService userService;
 	private final IUserRedisService userRedisService;
-	private final IRoleRedisService roleRedisService;
 	private final IRoleService roleService;
 	private final TokenService tokenService;
 	
@@ -67,12 +65,7 @@ public class UserController {
 					.getLocalizedMessage(MessageExceptionKeys.USER_PASSWORD_DIFFERENT_RETYPE_PASSWORD));
 		}
 		
-		Role role = roleRedisService.getRoleById(userDTO.getRoleId());
-		if (role == null) {
-			role = roleService.getRoleById(userDTO.getRoleId());
-			
-			roleRedisService.saveRoleById(role.getId(), role);
-		}
+		Role role = roleService.getRoleById(userDTO.getRoleId());
 		
 		User user = userMapper.mapToUserEntity(userDTO);
 		user.setRole(role);
@@ -101,12 +94,7 @@ public class UserController {
 		String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
 		
 		String userAgent = request.getHeader("User-Agent");
-		User userDetail = userRedisService.getUserByTokenOrRefreshToken(token);
-		if (userDetail == null) {
-			userDetail = userService.getUserDetailsFromToken(token);
-			
-			userRedisService.saveUserByTokenOrRefreshToken(token, userDetail);
-		}
+		User userDetail = userService.getUserDetailsFromToken(token);
 		Token jwtToken = tokenService.addToken(userDetail, token, isMobileDevice(userAgent));
 
 		LoginResponse loginResponse = LoginResponse.builder()
@@ -126,12 +114,7 @@ public class UserController {
 	@PostMapping("/refreshToken")
 	public ResponseEntity<ResponseObject> refreshToken(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO)
 			throws Exception {
-		User userDetail = userRedisService.getUserByTokenOrRefreshToken(refreshTokenDTO.getRefreshToken());
-		if (userDetail == null) {
-			userDetail = userService.getUserDetailsFromRefreshToken(refreshTokenDTO.getRefreshToken());
-			
-			userRedisService.saveUserByTokenOrRefreshToken(refreshTokenDTO.getRefreshToken(), userDetail);
-		}
+		User userDetail = userService.getUserDetailsFromRefreshToken(refreshTokenDTO.getRefreshToken());
 				
 		Token jwtToken = tokenService.refreshToken(refreshTokenDTO.getRefreshToken(), userDetail);
 		
@@ -153,12 +136,7 @@ public class UserController {
 	public ResponseEntity<ResponseObject> getUserDetails(@RequestHeader("Authorization") String authorizationHeader)
 			throws Exception {
 		String extractedToken = authorizationHeader.substring(7); // Loại bỏ "Bearer " từ chuỗi token
-		User user = userRedisService.getUserByTokenOrRefreshToken(extractedToken);
-		if (user == null) {
-			user = userService.getUserDetailsFromToken(extractedToken);
-			
-			userRedisService.saveUserByTokenOrRefreshToken(extractedToken, user);
-		}
+		User user = userService.getUserDetailsFromToken(extractedToken);
 
 		UserResponse userResponse = userMapper.mapToUserResponse(user);
 		
@@ -181,12 +159,7 @@ public class UserController {
 		}
 		
 		String extractedToken = authorizationHeader.substring(7);
-		User user = userRedisService.getUserByTokenOrRefreshToken(extractedToken);
-		if (user == null) {
-			user = userService.getUserDetailsFromToken(extractedToken);
-			
-			userRedisService.saveUserByTokenOrRefreshToken(extractedToken, user);
-		}
+		User user = userService.getUserDetailsFromToken(extractedToken);
 				
 		// Ensure that the user making the request matches the user being updated
 		if (user.getId() != userId) {

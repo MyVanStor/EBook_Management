@@ -1,10 +1,9 @@
 package com.example.EBook_Management_BE.services.chapter;
 
 import com.example.EBook_Management_BE.entity.Chapter;
-import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
 
 public interface IChapterService {
-	Chapter getChapterById(Long chapterId) throws DataNotFoundException;
+	Chapter getChapterById(Long chapterId) throws Exception;
 	
 	Chapter createChapter(Chapter chapter);
 	

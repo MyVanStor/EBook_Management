@@ -17,21 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.dtos.CommentDTO;
-import com.example.EBook_Management_BE.entity.Book;
-import com.example.EBook_Management_BE.entity.Chapter;
 import com.example.EBook_Management_BE.entity.Comment;
 import com.example.EBook_Management_BE.entity.User;
 import com.example.EBook_Management_BE.enums.CommentReplyType;
 import com.example.EBook_Management_BE.enums.Uri;
 import com.example.EBook_Management_BE.mappers.CommentMapper;
 import com.example.EBook_Management_BE.responses.CommentResponse;
-import com.example.EBook_Management_BE.services.book.IBookRedisService;
 import com.example.EBook_Management_BE.services.book.IBookService;
-import com.example.EBook_Management_BE.services.chapter.IChapterRedisService;
 import com.example.EBook_Management_BE.services.chapter.IChapterService;
 import com.example.EBook_Management_BE.services.comment.ICommentRedisService;
 import com.example.EBook_Management_BE.services.comment.ICommentService;
-import com.example.EBook_Management_BE.services.user.IUserRedisService;
 import com.example.EBook_Management_BE.services.user.IUserService;
 import com.example.EBook_Management_BE.utils.MessageKeys;
 import com.example.EBook_Management_BE.utils.ResponseObject;
@@ -47,11 +42,8 @@ public class CommentController {
 	private final ICommentService commentService;
 	private final ICommentRedisService commentRedisService;
 	private final IUserService userService;
-	private final IUserRedisService userRedisService;
 	private final IBookService bookService;
-	private final IBookRedisService bookRedisService;
 	private final IChapterService chapterService;
-	private final IChapterRedisService chapterRedisService;
 	
 	private final LocalizationUtils localizationUtils;
 	
@@ -61,12 +53,7 @@ public class CommentController {
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER') or hasRole('Role_ADMIN')")
 	public ResponseEntity<ResponseObject> getCommmentById(@PathVariable Long id) throws Exception {
-		Comment existingComment = commentRedisService.getCommentById(id);
-		if (existingComment == null) {
-			existingComment = commentService.getCommentById(id);
-			
-			commentRedisService.saveCommentById(id, existingComment);
-		}
+		Comment existingComment = commentService.getCommentById(id);
 		
 		CommentResponse commentResponse = commentMapper.mapToCommentResponse(existingComment);
 		
@@ -81,34 +68,14 @@ public class CommentController {
 	@PreAuthorize("hasRole('ROLE_USER')")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<ResponseObject> createComment(@Valid @RequestBody CommentDTO commentDTO) throws Exception {
-		User user = userRedisService.getUserById(commentDTO.getUserId());
-		if (user == null) {
-			user = userService.getUserById(commentDTO.getUserId());
-			
-			userRedisService.saveUserById(commentDTO.getUserId(), user);
-		}
+		User user = userService.getUserById(commentDTO.getUserId());
 		
 		if (commentDTO.getReplyType().toUpperCase().equals(CommentReplyType.BOOK)) {
-			Book book = bookRedisService.getBookById(commentDTO.getReplyId());
-			if (book == null) {
-				book = bookService.getBookById(commentDTO.getReplyId());
-			
-				bookRedisService.saveBookById(commentDTO.getReplyId(), book); 
-			}
+			bookService.getBookById(commentDTO.getReplyId());
 		} else if (commentDTO.getReplyType().toUpperCase().equals(CommentReplyType.COMMENT)) {
-			Comment comment = commentRedisService.getCommentById(commentDTO.getReplyId());
-			if (comment == null) {
-				comment = commentService.getCommentById(commentDTO.getReplyId());
-				
-				commentRedisService.saveCommentById(commentDTO.getReplyId(), comment);
-			}
+			commentService.getCommentById(commentDTO.getReplyId());
 		} else if (commentDTO.getReplyType().toUpperCase().equals(CommentReplyType.CHAPTER)) {
-			Chapter chapter = chapterRedisService.getChapterById(commentDTO.getReplyId());
-			if (chapter == null) {
-				chapter = chapterService.getChapterById(commentDTO.getReplyId());
-				
-				chapterRedisService.saveChapterById(commentDTO.getReplyId(), chapter);
-			}
+			chapterService.getChapterById(commentDTO.getReplyId());
 		}
 		
 		Comment comment = commentMapper.mapToCommentEntity(commentDTO);
@@ -129,34 +96,14 @@ public class CommentController {
 	@PutMapping("/{commentId}")
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updateComment(@PathVariable Long commentId, @Valid @RequestBody CommentDTO commentDTO) throws Exception {
-		User user = userRedisService.getUserById(commentDTO.getUserId());
-		if (user == null) {
-			user = userService.getUserById(commentDTO.getUserId());
-			
-			userRedisService.saveUserById(commentDTO.getUserId(), user);
-		}
+		User user = userService.getUserById(commentDTO.getUserId());
 		
 		if (commentDTO.getReplyType().toUpperCase().equals(CommentReplyType.BOOK)) {
-			Book book = bookRedisService.getBookById(commentDTO.getReplyId());
-			if (book == null) {
-				book = bookService.getBookById(commentDTO.getReplyId());
-			
-				bookRedisService.saveBookById(commentDTO.getReplyId(), book); 
-			}
+			bookService.getBookById(commentDTO.getReplyId());
 		} else if (commentDTO.getReplyType().toUpperCase().equals(CommentReplyType.COMMENT)) {
-			Comment comment = commentRedisService.getCommentById(commentDTO.getReplyId());
-			if (comment == null) {
-				comment = commentService.getCommentById(commentDTO.getReplyId());
-				
-				commentRedisService.saveCommentById(commentDTO.getReplyId(), comment);
-			}
+			commentService.getCommentById(commentDTO.getReplyId());
 		} else if (commentDTO.getReplyType().toUpperCase().equals(CommentReplyType.CHAPTER)) {
-			Chapter chapter = chapterRedisService.getChapterById(commentDTO.getReplyId());
-			if (chapter == null) {
-				chapter = chapterService.getChapterById(commentDTO.getReplyId());
-				
-				chapterRedisService.saveChapterById(commentDTO.getReplyId(), chapter);
-			}
+			chapterService.getChapterById(commentDTO.getReplyId());
 		}
 		
 		Comment comment = commentMapper.mapToCommentEntity(commentDTO);

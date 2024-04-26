@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReadingHistoryService implements IReadingHistoryService {
 	private final ReadingHistoryRepository readingHistoryRepository;
+	private final IReadingHistoryRedisService readingHistoryRedisService;
 
 	private final LocalizationUtils localizationUtils;
 
@@ -26,9 +27,15 @@ public class ReadingHistoryService implements IReadingHistoryService {
 	}
 
 	@Override
-	public ReadingHistory getReadingHistory(Long id) throws DataNotFoundException {
-		return readingHistoryRepository.findById(id).orElseThrow(() -> new DataNotFoundException(
-				localizationUtils.getLocalizedMessage(MessageExceptionKeys.READING_HISTORY_NOT_FOUND)));
+	public ReadingHistory getReadingHistory(Long id) throws Exception {
+		ReadingHistory readingHistory = readingHistoryRedisService.getReadingHistoryById(id);
+		if (readingHistory == null) {
+			readingHistory = readingHistoryRepository.findById(id).orElseThrow(() -> new DataNotFoundException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.READING_HISTORY_NOT_FOUND)));
+			
+			readingHistoryRedisService.saveReadingHistoryById(id, readingHistory);
+		}
+		return readingHistory;
 	}
 
 	@Override
@@ -38,7 +45,7 @@ public class ReadingHistoryService implements IReadingHistoryService {
 
 	@Override
 	public void deleteReadingHistory(ReadingHistory readingHistory) throws Exception {
-
+		readingHistoryRepository.delete(readingHistory);
 	}
 
 	@Override
