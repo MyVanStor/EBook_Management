@@ -74,7 +74,7 @@ public class BookController {
 	private BookMapper bookMapper;
 
 	@PostMapping("/{userId}")
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SYS-ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<ResponseObject> createBook(@PathVariable Long userId, @Valid @RequestBody BookDTO bookDTO) throws Exception {
 		Book book = bookMapper.mapToBookEntity(bookDTO);
@@ -147,6 +147,7 @@ public class BookController {
 	}
 
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> getBookById(@PathVariable Long id) throws Exception {
 		Book existingBook = bookRedisService.getBookById(id);
 		if (existingBook == null) {
@@ -165,6 +166,7 @@ public class BookController {
 	}
 
 	@PutMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updateBook(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO) throws Exception {
 		Book book = bookMapper.mapToBookEntity(bookDTO);
 		
@@ -216,6 +218,7 @@ public class BookController {
 	}
 
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> deleteBook(@PathVariable Long id) throws Exception {
 		bookService.deleteBook(id);
 		

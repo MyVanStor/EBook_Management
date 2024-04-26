@@ -98,8 +98,7 @@ public class UserController {
 	public ResponseEntity<ResponseObject> login(@Valid @RequestBody UserLoginDTO userLoginDTO,
 			HttpServletRequest request) throws Exception {
 		// Kiểm tra thông tin đăng nhập và sinh token
-		String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword(),
-				userLoginDTO.getRoleId());
+		String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
 		
 		String userAgent = request.getHeader("User-Agent");
 		User userDetail = userRedisService.getUserByTokenOrRefreshToken(token);

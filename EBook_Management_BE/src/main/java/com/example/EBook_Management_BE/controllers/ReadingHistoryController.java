@@ -102,7 +102,7 @@ public class ReadingHistoryController {
 	}
 	
 	@PutMapping("/{id}/{chapterId}")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updateReadingHistory(@PathVariable Long id,
 			@PathVariable Long chapterId) throws Exception {
 		ReadingHistory readingHistory = readingHistoryRedisService.getReadingHistoryById(id);
@@ -131,6 +131,7 @@ public class ReadingHistoryController {
 	}
 	
 	@GetMapping("/{userId}")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> getAllHistoryByUser(@PathVariable Long userId) throws Exception {
 		User user = userRedisService.getUserById(userId);
 		if (user == null) {

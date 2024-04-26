@@ -52,10 +52,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 				User userDetails = userRedisService.getUserByPhoneNumber(phoneNumber);
 				if (userDetails == null) {
 					userDetails = (User) userDetailsService.loadUserByUsername(phoneNumber);
-					
+
 					userRedisService.saveUserByPhoneNumber(phoneNumber, userDetails);
 				}
-						
+
 				if (jwtTokenUtil.validateToken(token, userDetails)) {
 					UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 							userDetails, null, userDetails.getAuthorities());
@@ -82,18 +82,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 				Pair.of(String.format("%s/painter**", apiPrefix), "GET"),
 
 				Pair.of(String.format("%s/book**", apiPrefix), "GET"),
-				
+
 				Pair.of(String.format("%s/rating/all**", apiPrefix), "GET"),
 
 				Pair.of(String.format("%s/user/register", apiPrefix), "POST"),
 				Pair.of(String.format("%s/user/login", apiPrefix), "POST"),
-				Pair.of(String.format("%s/user/refreshToken", apiPrefix), "POST"),
-
-				// Swagger
-				Pair.of("/api-docs", "GET"), Pair.of("/api-docs/**", "GET"), Pair.of("/swagger-resources", "GET"),
-				Pair.of("/swagger-resources/**", "GET"), Pair.of("/configuration/ui", "GET"),
-				Pair.of("/configuration/security", "GET"), Pair.of("/swagger-ui/**", "GET"),
-				Pair.of("/swagger-ui.html", "GET"), Pair.of("/swagger-ui/index.html", "GET"));
+				Pair.of(String.format("%s/user/refreshToken", apiPrefix), "POST")
+		);
 
 		String requestPath = request.getServletPath();
 		String requestMethod = request.getMethod();

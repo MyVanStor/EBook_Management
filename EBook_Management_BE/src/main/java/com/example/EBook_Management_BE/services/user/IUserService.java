@@ -15,7 +15,7 @@ public interface IUserService {
 
 	User getUserDetailsFromRefreshToken(String refreshToken) throws Exception;
 
-	String login(String phoneNumber, String password, Long roleId) throws Exception;
+	String login(String phoneNumber, String password) throws Exception;
 
 	User updateUser(Long userId, User user) throws Exception;
 

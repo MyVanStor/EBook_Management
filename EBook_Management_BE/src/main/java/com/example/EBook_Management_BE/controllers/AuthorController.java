@@ -66,7 +66,7 @@ public class AuthorController {
 	}
 
 	@PostMapping()
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SYS-ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<ResponseObject> createAuthor(@Valid @RequestBody AuthorDTO authorDTO) throws Exception {
 		User user = userRedisService.getUserById(authorDTO.getUserId());
@@ -92,7 +92,7 @@ public class AuthorController {
 	}
 
 	@PutMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updateAuthor(@PathVariable Long id,
 			@Valid @RequestBody AuthorDTO authorDTO) throws Exception {
 		User user = userRedisService.getUserById(authorDTO.getUserId());
@@ -118,7 +118,7 @@ public class AuthorController {
 	}
 
 	@DeleteMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SYS-ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> deleteAuthor(@PathVariable Long id) throws Exception {
 		authorService.deleteAuthorById(id);
 		

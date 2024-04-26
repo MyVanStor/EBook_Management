@@ -59,7 +59,7 @@ public class RoleController {
 	}
 
 	@PostMapping()
-	@PreAuthorize("hasRole('ROLE_SzYS-ADMIN')")
+	@PreAuthorize("hasRole('ROLE_SYS-ADMIN')")
 	public ResponseEntity<ResponseObject> createRole(@Valid @RequestBody RoleDTO roleDTO) throws Exception {
 		Role role = roleMapper.mapToRoleEntity(roleDTO);
 

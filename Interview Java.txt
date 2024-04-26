@@ -1,0 +1,3 @@
+Q1: 
+- Java là ngôn ngữ lập trình bậc cao
+- Java không phụ thuộc vào nền tảng chủ nhà bởi vì mã nguồn của Java được biên dịch thành một dạng trung gian gọi là bytecode, thay vì mã máy trực tiếp cho một nền tảng cụ thể. Bytecode sau đó được thực thi trên một môi trường thực thi gọi là Java Virtual Machine (JVM). JVM là một phần mềm có khả năng chạy bytecode Java trên bất kỳ hệ điều hành nào có một phiên bản của nó. Điều này cho phép mã Java chạy trên nhiều nền tảng khác nhau mà không cần phải viết lại hoặc biên dịch lại mã nguồn.

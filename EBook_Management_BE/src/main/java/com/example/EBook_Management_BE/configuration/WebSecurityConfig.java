@@ -35,17 +35,12 @@ public class WebSecurityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
 				.authorizeHttpRequests(requests -> {
-					requests.requestMatchers(String.format("%s/user/register", apiPrefix),
+					requests.requestMatchers(
+							String.format("%s/user/register", apiPrefix),
 							String.format("%s/user/login", apiPrefix),
+							
 							// healthcheck
-							String.format("%s/healthcheck/**", apiPrefix),
-
-							// swagger
-							// "/v3/api-docs",
-							// "/v3/api-docs/**",
-							"/api-docs", "/api-docs/**", "/swagger-resources", "/swagger-resources/**",
-							"/configuration/ui", "/configuration/security", "/swagger-ui/**", "/swagger-ui.html",
-							"/webjars/swagger-ui/**", "/swagger-ui/index.html"
+							String.format("%s/healthcheck/**", apiPrefix)
 
 				).permitAll().requestMatchers(HttpMethod.GET, String.format("%s/role**", apiPrefix)).permitAll()
 
@@ -53,16 +48,15 @@ public class WebSecurityConfig {
 
 							.requestMatchers(HttpMethod.GET, String.format("%s/book/**", apiPrefix)).permitAll()
 
-							.requestMatchers(HttpMethod.GET, String.format("%s/book/images/*", apiPrefix))
-							.permitAll()
+							.requestMatchers(HttpMethod.GET, String.format("%s/book/images/*", apiPrefix)).permitAll()
 
 							.requestMatchers(HttpMethod.GET, String.format("%s/order/**", apiPrefix)).permitAll()
 
-							.requestMatchers(HttpMethod.GET, String.format("%s/order_detail/**", apiPrefix))
-							.permitAll()
+							.requestMatchers(HttpMethod.GET, String.format("%s/order_detail/**", apiPrefix)).permitAll()
 
 							.anyRequest().authenticated();
 				}).csrf(AbstractHttpConfigurer::disable);
+		
 		http.securityMatcher(String.valueOf(EndpointRequest.toAnyEndpoint()));
 		return http.build();
 	}

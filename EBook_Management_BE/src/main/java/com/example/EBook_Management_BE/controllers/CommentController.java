@@ -59,7 +59,7 @@ public class CommentController {
 	private CommentMapper commentMapper;
 	
 	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("hasRole('ROLE_USER') or hasRole('Role_ADMIN')")
 	public ResponseEntity<ResponseObject> getCommmentById(@PathVariable Long id) throws Exception {
 		Comment existingComment = commentRedisService.getCommentById(id);
 		if (existingComment == null) {

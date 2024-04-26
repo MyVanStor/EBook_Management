@@ -47,6 +47,7 @@ public class TransactionController {
 	private TransactionMapper transactionMapper;
 	
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> getTransactionById(@PathVariable Long id) throws Exception {
 		Transaction existingTransaction = transactionRedisService.getTransactionById(id);
 		if (existingTransaction == null) {
@@ -65,7 +66,7 @@ public class TransactionController {
 	}
 
 	@PostMapping()
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SYS-ADMIN')")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<ResponseObject> createTransaction(@Valid @RequestBody TransactionDTO transactionDTO) throws Exception {
 		User user = userRedisService.getUserById(transactionDTO.getUserId());
@@ -91,6 +92,7 @@ public class TransactionController {
 	}
 
 	@PutMapping("/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updateTransaction(@PathVariable Long id,
 			@Valid @RequestBody TransactionDTO transactionDTO) throws Exception {
 		User user = userRedisService.getUserById(transactionDTO.getUserId());

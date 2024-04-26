@@ -66,7 +66,7 @@ public class PainterController {
 	}
 
 	@PostMapping()
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SYS-ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<ResponseObject> createPainter(@Valid @RequestBody PainterDTO painterDTO) throws Exception {
 		User user = userRedisService.getUserById(painterDTO.getUserId());
@@ -92,7 +92,7 @@ public class PainterController {
 	}
 
 	@PutMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updatePainter(@PathVariable Long id,
 			@Valid @RequestBody PainterDTO painterDTO) throws Exception {
 		User user = userRedisService.getUserById(painterDTO.getUserId());
@@ -118,7 +118,7 @@ public class PainterController {
 	}
 	
 	@DeleteMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> deletePainter(@PathVariable Long id) throws Exception {
 		painterService.deletePainterById(id);
 		

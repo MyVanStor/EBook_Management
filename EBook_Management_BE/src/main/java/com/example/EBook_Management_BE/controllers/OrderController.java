@@ -120,7 +120,7 @@ public class OrderController {
 	}
 
 	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 	public ResponseEntity<ResponseObject> getOrderById(@PathVariable Long id) throws Exception {
 		Order order = orderRedisService.getOrderById(id);
 		if (order == null) {
