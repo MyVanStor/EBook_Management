@@ -15,13 +15,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
@@ -30,29 +28,28 @@ import lombok.experimental.FieldDefaults;
 @EntityListeners(ChapterListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class Chapter extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	Long id;
-	
+	private Long id;
+
 	@Column(name = "name")
-	String name;
-	
+	private String name;
+
 	@Column(name = "ordinal_number")
-	int ordinalNumber;
-	
+	private int ordinalNumber;
+
 	@Column(name = "thumbnail")
-	String thumbnail;
-	
+	private String thumbnail;
+
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "book_id")
-	Book book;
-	
+	private Book book;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "chapter")
-	Set<ReadingHistory> readingHistories;
+	private Set<ReadingHistory> readingHistories;
 }

@@ -5,39 +5,36 @@ import java.time.LocalDateTime;
 import com.example.EBook_Management_BE.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentResponse {
 	@JsonProperty("id")
-	Long id;
-	
+	private Long id;
+
 	@JsonProperty("comment")
-	String comment;
-	
+	private String comment;
+
 	@JsonProperty("reply_type")
-	String replyType;
-	
+	private String replyType;
+
 	@JsonProperty("reply_id")
-	Long replyId;
-	
+	private Long replyId;
+
 	@JsonProperty("user")
-	User user;
-	
+	private User user;
+
 	@JsonProperty("created_at")
-	LocalDateTime createdAt;
-	
+	private LocalDateTime createdAt;
+
 	@JsonProperty("updated_at")
-	LocalDateTime updatedAt;
+	private LocalDateTime updatedAt;
 }

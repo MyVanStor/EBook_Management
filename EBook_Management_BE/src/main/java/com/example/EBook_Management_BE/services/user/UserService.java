@@ -61,13 +61,14 @@ public class UserService implements IUserService {
 		if (user == null) {
 			user = userRepository.findById(userId).orElseThrow(() -> new DataNotFoundException(
 					localizationUtils.getLocalizedMessage(MessageExceptionKeys.USER_NOT_FOUND)));
-			
+
 			userRedisService.saveUserById(userId, user);
 		}
 		return user;
 	}
 
 	@Override
+	@Transactional
 	public String login(String phoneNumber, String password) throws Exception {
 		Optional<User> optionalUser = userRepository.findByPhoneNumber(phoneNumber);
 
@@ -96,21 +97,22 @@ public class UserService implements IUserService {
 			throw new ExpiredTokenException(
 					localizationUtils.getLocalizedMessage(MessageExceptionKeys.TOKEN_IS_EXPRIED));
 		}
-		
+
 		User user = userRedisService.getUserByTokenOrRefreshToken(token);
 		if (user == null) {
 			String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
 			Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
-			
+
 			if (userOptional.isPresent()) {
 				user = userOptional.get();
 			} else {
-				throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.USER_NOT_FOUND));
+				throw new DataNotFoundException(
+						localizationUtils.getLocalizedMessage(MessageExceptionKeys.USER_NOT_FOUND));
 			}
-			
+
 			userRedisService.saveUserById(user.getId(), user);
 		}
-		
+
 		return user;
 	}
 
@@ -126,27 +128,29 @@ public class UserService implements IUserService {
 	public User updateUser(Long userId, User user) throws Exception {
 		// Find the existing user by userId
 		User existingUser = getUserById(userId);
-
+		
+		List<Token> tokens = tokenRepository.findByUser(existingUser);
+		for (Token token : tokens) {
+			tokenRepository.delete(token);
+		}
+		
 		// Update the password if it is provided in the DTO
 		if (user.getPassword() != null) {
 			String newPassword = user.getPassword();
 			String encodedPassword = passwordEncoder.encode(newPassword);
-			user.setPassword(encodedPassword);
+			existingUser.setPassword(encodedPassword);
 		}
-		if (user.getFullname() != existingUser.getFullname()) {
+		if (user.getFullname() != null && user.getFullname() != existingUser.getFullname()) {
 			existingUser.setFullname(user.getFullname());
 		}
-		if (user.getLinkAvatar() != existingUser.getLinkAvatar()) {
+		if (user.getLinkAvatar() != null && user.getLinkAvatar() != existingUser.getLinkAvatar()) {
 			existingUser.setLinkAvatar(user.getLinkAvatar());
 		}
 		if (user.getGender() != existingUser.getGender()) {
 			existingUser.setGender(user.getGender());
 		}
-		if (user.getDateOfBirth() != existingUser.getDateOfBirth()) {
+		if (user.getDateOfBirth() != null && user.getDateOfBirth() != existingUser.getDateOfBirth()) {
 			existingUser.setDateOfBirth(user.getDateOfBirth());
-		}
-		if (user.getIsActive() != existingUser.getIsActive()) {
-			existingUser.setIsActive(user.getIsActive());
 		}
 
 		return userRepository.save(existingUser);
@@ -175,6 +179,7 @@ public class UserService implements IUserService {
 	}
 
 	@Override
+	@Transactional
 	public void blockOrEnable(Long userId, short active) throws DataNotFoundException {
 		User existingUser = userRepository.findById(userId)
 				.orElseThrow(() -> new DataNotFoundException("User not found"));

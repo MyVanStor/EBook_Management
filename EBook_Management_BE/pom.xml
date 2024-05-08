@@ -105,15 +105,15 @@
 		<dependency>
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-core</artifactId>
-			<version>3.4.11</version> <!-- hoặc phiên bản mới nhất -->
+			<version>3.4.11</version>
 		</dependency>
-		<!--
-		https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations -->
+		<!-- https://mvnrepository.com/artifact/com.paypal.sdk/rest-api-sdk -->
 		<dependency>
-			<groupId>io.swagger.core.v3</groupId>
-			<artifactId>swagger-annotations</artifactId>
-			<version>2.2.20</version>
+			<groupId>com.paypal.sdk</groupId>
+			<artifactId>rest-api-sdk</artifactId>
+			<version>1.14.0</version>
 		</dependency>
+
 		<!-- Spring Data Redis -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

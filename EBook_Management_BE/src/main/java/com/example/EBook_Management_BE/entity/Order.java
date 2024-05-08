@@ -14,12 +14,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
@@ -28,26 +26,25 @@ import lombok.experimental.FieldDefaults;
 @EntityListeners(OrderListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class Order extends BaseEntity{
+public class Order extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	Long id;
-	
+	private Long id;
+
 	@Column(name = "status", length = 100, nullable = false)
-	String status;
-	
+	private String status;
+
 	@Column(name = "total_money", columnDefinition = "FLOAT", nullable = false)
-	double totalMoney;
-	
+	private double totalMoney;
+
 	@Column(name = "payment_method", length = 100)
-	String paymentMethod;
-	
+	private String paymentMethod;
+
 	@OneToMany(mappedBy = "order")
-	Set<OrderDetail> orderDetails;
-	
+	private Set<OrderDetail> orderDetails;
+
 	@ManyToOne()
 	@JoinColumn(name = "user_id")
-	User user;
+	private User user;
 }

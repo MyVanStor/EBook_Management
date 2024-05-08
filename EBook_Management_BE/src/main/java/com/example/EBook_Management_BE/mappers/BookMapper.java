@@ -1,18 +1,17 @@
 package com.example.EBook_Management_BE.mappers;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
 import org.mapstruct.factory.Mappers;
 
 import com.example.EBook_Management_BE.dtos.BookDTO;
 import com.example.EBook_Management_BE.entity.Book;
 import com.example.EBook_Management_BE.responses.BookResponse;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = "spring")
 public interface BookMapper {
 	BookMapper INSTANCE = Mappers.getMapper(BookMapper.class);
 
 	Book mapToBookEntity(BookDTO bookDTO);
-	
+
 	BookResponse mapToBookResponse(Book book);
 }

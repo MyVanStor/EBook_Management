@@ -8,13 +8,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
@@ -22,23 +20,22 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "reading_history")
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class ReadingHistory extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")	
-	Long id;
-	
+	@Column(name = "id")
+	private Long id;
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	User user;
-	
+	private User user;
+
 	@ManyToOne
 	@JoinColumn(name = "chapter_id")
-	Chapter chapter;
-	
+	private Chapter chapter;
+
 	@ManyToOne
 	@JoinColumn(name = "book_id")
-	Book book;
+	private Book book;
 }

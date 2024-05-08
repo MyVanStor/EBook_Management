@@ -10,13 +10,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
@@ -24,23 +22,22 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "order_details")
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class OrderDetail {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	Long id;
-	
+	private Long id;
+
 	@Column(name = "price", columnDefinition = "FLOAT")
-	double price;
-	
+	private double price;
+
 	@ManyToOne
 	@JoinColumn(name = "book_id")
-	Book book;
-	
+	private Book book;
+
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "order_id")
-	Order order;
+	private Order order;
 }

@@ -32,6 +32,7 @@ public class MessageExceptionKeys {
     public static final String CHAPTER_NOT_FOUND = "exception.chapter.not_found";
     
     public static final String USER_BOOK_NOT_FOUND = "exception.user_book.not_found";
+    public static final String USER_BOOK_DUPLICATE_USER_AND_BOOK = "exception.user_book.duplicate_user_and_book";
 
     public static final String BOOK_NOT_FOUND = "exception.book.not_found";
     public static final String BOOK_DELETE_HAVE_USER_BUYING = "exception.book.delete_have_user_buying";

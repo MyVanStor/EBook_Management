@@ -36,8 +36,6 @@ import com.example.EBook_Management_BE.services.book.IBookService;
 import com.example.EBook_Management_BE.services.category.ICategoryService;
 import com.example.EBook_Management_BE.services.painter.IPainterService;
 import com.example.EBook_Management_BE.services.user.IUserService;
-import com.example.EBook_Management_BE.services.userbook.IUserBookRedisService;
-import com.example.EBook_Management_BE.services.userbook.IUserBookService;
 import com.example.EBook_Management_BE.utils.MessageKeys;
 import com.example.EBook_Management_BE.utils.ResponseObject;
 
@@ -50,10 +48,7 @@ import lombok.RequiredArgsConstructor;
 public class BookController {
 	private final IBookService bookService;
 	private final IBookRedisService bookRedisService;
-	
-	private final IUserBookService userBookService;
-	private final IUserBookRedisService userBookRedisService;
-	
+		
 	private final IUserService userService;
 	private final ICategoryService categoryService;
 	private final IPainterService painterService;
@@ -94,22 +89,17 @@ public class BookController {
 		book.setCategories(categories);
 		book.setPainters(painters);
 		
-		User user = userService.getUserById(userId);		
-		
-		Book newBook = bookService.createBook(book);
-		bookRedisService.saveBookById(newBook.getId(), newBook);
-		
+		User user = userService.getUserById(userId);	
 		UserBook userBook = UserBook.builder()
 				.status(StatusUserBook.OWNER)
-				.book(newBook)
+				.book(book)
 				.user(user)
 				.build();
+		book.setUserBooks(Set.of(userBook));
 		
-		UserBook newUserBook = userBookService.createUserBook(userBook);
-		userBookRedisService.saveUserBookById(newBook.getId(), newUserBook);
-
-		BookResponse bookResponse = bookMapper.mapToBookResponse(newBook);
-		bookResponse.setUserBooks(Set.of(newUserBook));
+		bookService.createBook(book);		
+		
+		BookResponse bookResponse = bookMapper.mapToBookResponse(book);
 		
 		return ResponseEntity.ok(ResponseObject.builder()
 				.status(HttpStatus.CREATED)
@@ -186,7 +176,8 @@ public class BookController {
 		Book book = bookService.getBookById(bookId);
 		
 		book.setNumberReads(book.getNumberReads() + 1);
-	
+		
+		
 		int random = new Random().nextInt(1000) + 1;
 		if (random == 1) {
 			bookService.updateBook(bookId, book);
@@ -201,4 +192,5 @@ public class BookController {
 				.data(bookResponse)
 				.build());
 	}
+
 }

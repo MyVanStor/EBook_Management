@@ -27,7 +27,6 @@ import com.example.EBook_Management_BE.enums.Uri;
 import com.example.EBook_Management_BE.mappers.OrderMapper;
 import com.example.EBook_Management_BE.responses.OrderResponse;
 import com.example.EBook_Management_BE.services.book.IBookService;
-import com.example.EBook_Management_BE.services.order.IOrderRedisService;
 import com.example.EBook_Management_BE.services.order.IOrderService;
 import com.example.EBook_Management_BE.services.user.IUserService;
 import com.example.EBook_Management_BE.utils.MessageKeys;
@@ -41,7 +40,6 @@ import lombok.RequiredArgsConstructor;
 @Validated
 @RequiredArgsConstructor
 public class OrderController {
-	private final IOrderRedisService orderRedisService;
 	private final IOrderService orderService;
 	private final IBookService bookService;
 	private final IUserService userService;
@@ -72,13 +70,9 @@ public class OrderController {
 		
 		order.setUser(user);
 		order.setOrderDetails(orderDetails);
-		
 		Order newOrder = orderService.createOrder(order);
-		orderRedisService.saveOrderById(newOrder.getId(), newOrder);
 		
 		OrderResponse orderResponse = orderMapper.mapToOrderResponse(newOrder);
-
-		newOrder.setOrderDetails(orderDetails);
 
 		return ResponseEntity.ok(ResponseObject.builder()
 				.status(HttpStatus.CREATED)
@@ -94,7 +88,6 @@ public class OrderController {
 		order.setStatus(status);
 		
 	 	orderService.updateOrder(id, order);
-	 	orderRedisService.saveOrderById(id, order);
 		
 		return ResponseEntity.ok(ResponseObject.builder()
 				.status(HttpStatus.OK)

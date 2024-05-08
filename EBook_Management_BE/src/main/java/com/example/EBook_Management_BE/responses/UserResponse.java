@@ -6,58 +6,55 @@ import java.util.Date;
 import com.example.EBook_Management_BE.entity.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
 	@JsonProperty("id")
-	Long id;
-	
+	private Long id;
+
 	@JsonProperty("fullname")
-	String fullname;
+	private String fullname;
 
 	@JsonProperty("password")
-	String password;
-	
+	private String password;
+
 	@JsonProperty("link_avatar")
-	String linkAvatar;
-	
+	private String linkAvatar;
+
 	@JsonProperty("phone_number")
-	String phoneNumber;
-	
+	private String phoneNumber;
+
 	@JsonProperty("gender")
-	short gender;
-	
+	private short gender;
+
 	@JsonProperty("budget")
-	double budget;
+	private double budget;
 
 	@JsonProperty("date_of_birth")
-	Date dateOfBirth;
-	
+	private Date dateOfBirth;
+
 	@JsonProperty("facebook_account_id")
-	String facebookAccountId;
-	
+	private String facebookAccountId;
+
 	@JsonProperty("google_account_id")
-	String googleAccountId;
-	
+	private String googleAccountId;
+
 	@JsonProperty("is_active")
-	short isActive;
-	
+	private short isActive;
+
 	@JsonProperty("role")
-	Role role;
-	
+	private Role role;
+
 	@JsonProperty("created_at")
-	LocalDateTime createdAt;
-	
+	private LocalDateTime createdAt;
+
 	@JsonProperty("updated_at")
-	LocalDateTime updatedAt;
+	private LocalDateTime updatedAt;
 }

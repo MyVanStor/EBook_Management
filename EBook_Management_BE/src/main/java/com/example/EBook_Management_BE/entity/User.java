@@ -1,8 +1,8 @@
 package com.example.EBook_Management_BE.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -23,12 +23,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @SuppressWarnings("serial")
 @Entity
@@ -38,86 +36,85 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User extends BaseEntity implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	Long id;
+	private Long id;
 
 	@Column(name = "fullname", length = 100)
-	String fullname;
+	private String fullname;
 
 	@Column(name = "password", nullable = false)
-	String password;
+	private String password;
 
 	@Column(name = "link_avatar", length = 255, unique = true)
-	String linkAvatar;
+	private String linkAvatar;
 
 	@Column(name = "phone_number", length = 10, unique = true)
-	String phoneNumber;
+	private String phoneNumber;
 
 	@Column(name = "gender")
-	short gender;
+	private short gender;
 
 	@Column(name = "budget", columnDefinition = "FLOAT", nullable = false)
-	double budget;
-	
+	private double budget;
+
 	@Column(name = "date_of_birth", columnDefinition = "DATE")
-	Date dateOfBirth;
+	private LocalDateTime dateOfBirth;
 
 	@Column(name = "facebook_account_id", length = 100, unique = true)
-	int facebookAccountId;
+	private int facebookAccountId;
 
 	@Column(name = "google_account_id", length = 100, unique = true)
-	int googleAccountId;
-	
+	private int googleAccountId;
+
 	@Column(name = "is_active")
-	short isActive;
-	
+	private short isActive;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
-	Set<UserBook> userBooks;
-	
+	private Set<UserBook> userBooks;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
-	Set<Rating> ratings;
-	
+	private Set<Rating> ratings;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
-	Set<Comment> comments;
-	
+	private Set<Comment> comments;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
-	Set<Follow> follows;
-	
+	private Set<Follow> follows;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
-	Set<Order> orders;
-	
+	private Set<Order> orders;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
-	Set<SocialAccount> socialAccounts;
-	
+	private Set<SocialAccount> socialAccounts;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
-	Set<Token> tokens;
-	
+	private Set<Token> tokens;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
-	Set<ReadingHistory> readingHistories;
-	
+	private Set<ReadingHistory> readingHistories;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
-	Set<Painter> painters;
-	
+	private Set<Painter> painters;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
-	Set<Author> authors;
-	
+	private Set<Author> authors;
+
 	@ManyToOne
 	@JoinColumn(name = "role_id")
-	Role role;
+	private Role role;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -126,7 +123,7 @@ public class User extends BaseEntity implements UserDetails {
 
 		return authorityList;
 	}
-               
+
 	@Override
 	public String getUsername() {
 		return phoneNumber;
@@ -136,7 +133,7 @@ public class User extends BaseEntity implements UserDetails {
 	public boolean isAccountNonExpired() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;

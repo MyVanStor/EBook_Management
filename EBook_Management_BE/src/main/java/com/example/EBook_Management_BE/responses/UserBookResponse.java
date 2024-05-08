@@ -4,28 +4,25 @@ import com.example.EBook_Management_BE.entity.Book;
 import com.example.EBook_Management_BE.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserBookResponse {
 	@JsonProperty("id")
-	Long id;
-	
+	private Long id;
+
 	@JsonProperty("status")
-	String status;
-	
+	private String status;
+
 	@JsonProperty("user")
-	User user;
-	
+	private User user;
+
 	@JsonProperty("book")
-	Book book; 
+	private Book book;
 }

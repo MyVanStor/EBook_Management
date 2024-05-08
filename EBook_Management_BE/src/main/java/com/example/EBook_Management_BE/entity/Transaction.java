@@ -11,13 +11,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
@@ -26,27 +24,26 @@ import lombok.experimental.FieldDefaults;
 @EntityListeners(TransactionListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class Transaction extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	Long id;
-	
+	private Long id;
+
 	@Column(name = "code")
-	String code;
-	
+	private String code;
+
 	@Column(name = "value")
-	Double value;
-	
+	private Double value;
+
 	@Column(name = "type")
-	String type;
-	
+	private String type;
+
 	@Column(name = "status")
-	String status;
-	
+	private String status;
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	User user;
+	private User user;
 }

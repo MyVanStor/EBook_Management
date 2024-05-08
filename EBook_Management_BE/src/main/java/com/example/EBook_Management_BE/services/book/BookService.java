@@ -26,7 +26,13 @@ public class BookService implements IBookService {
 	@Override
 	@Transactional
 	public Book createBook(Book book) throws Exception {
-		return bookRepository.save(book);
+		bookRepository.save(book);
+		
+		userBookRepository.save(book.getUserBooks().iterator().next());
+		
+		bookRedisService.saveBookById(book.getId(), book);
+		
+		return book;
 	}
 
 	@Override

@@ -28,13 +28,16 @@ public class AuthorService implements IAuthorService {
 
 	@Override
 	@Transactional
-	public Author createAuthor(Author author) throws DuplicateException {
+	public Author createAuthor(Author author) throws Exception {
 		if (authorRepository.existsByNameAndUser(author.getName(), author.getUser())) {
 			throw new DuplicateException(
 					localizationUtils.getLocalizedMessage(MessageExceptionKeys.AUTHOR_DUPLICATE_AUTHOR));
 		}
-
-		return authorRepository.save(author);
+		
+		authorRepository.save(author);
+		authorRedisService.saveAuthorById(author.getId(), author);
+		
+		return author;
 	}
 
 	@Override
@@ -57,7 +60,9 @@ public class AuthorService implements IAuthorService {
 
 		authorUpdate.setId(exitstingAuthor.getId());
 		authorRepository.save(authorUpdate);
-
+		
+		authorRedisService.saveAuthorById(authorId, authorUpdate);
+		
 		return authorUpdate;
 	}
 

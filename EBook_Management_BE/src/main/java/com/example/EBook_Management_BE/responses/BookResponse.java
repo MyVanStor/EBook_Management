@@ -10,61 +10,58 @@ import com.example.EBook_Management_BE.entity.Painter;
 import com.example.EBook_Management_BE.entity.UserBook;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookResponse {
 	@JsonProperty("id")
-	Long id;
+	private Long id;
 
 	@JsonProperty("title")
-	String title;
+	private String title;
 
 	@JsonProperty("summary")
-	String summary;
-	
+	private String summary;
+
 	@JsonProperty("image")
-	String image;
-	
+	private String image;
+
 	@JsonProperty("type_of_book")
-	String typeOfBook;
+	private String typeOfBook;
 
 	@JsonProperty("publishing_year")
-	Integer publishingYear;
+	private Integer publishingYear;
 
 	@JsonProperty("price")
-	double price;
-	
+	private double price;
+
 	@JsonProperty("number_reads")
-	Long numberReads;
-	
+	private Long numberReads;
+
 	@JsonProperty("created_at")
-	LocalDateTime createdAt;
-	
+	private LocalDateTime createdAt;
+
 	@JsonProperty("updated_at")
-	LocalDateTime updatedAt;
-	
+	private LocalDateTime updatedAt;
+
 	@JsonProperty("authors")
-	Set<Author> authors;
+	private Set<Author> authors;
 
 	@JsonProperty("painters")
-	Set<Painter> painters;
+	private Set<Painter> painters;
 
 	@JsonProperty("categories")
-	Set<Category> categories;
-	
+	private Set<Category> categories;
+
 	@JsonProperty("user_book")
-	Set<UserBook> userBooks;
+	private Set<UserBook> userBooks;
 
 	@JsonProperty("chapters")
-	Set<Chapter> chapters;
+	private Set<Chapter> chapters;
 }

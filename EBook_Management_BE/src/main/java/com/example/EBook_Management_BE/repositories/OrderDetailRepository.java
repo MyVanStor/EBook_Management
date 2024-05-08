@@ -11,4 +11,6 @@ import com.example.EBook_Management_BE.entity.OrderDetail;
 
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long>{
 	Set<OrderDetail> findByOrderAndBook(Order order, Book book);
+	
+	boolean existsByBook(Book book);
 }

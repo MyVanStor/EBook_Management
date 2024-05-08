@@ -8,12 +8,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "social_accounts")
@@ -21,25 +19,24 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SocialAccount {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
+	private Long id;
 
 	@Column(name = "provider", nullable = false, length = 20)
-	String provider;
+	private String provider;
 
 	@Column(name = "provider_id", nullable = false, length = 50)
-	String providerId;
+	private String providerId;
 
 	@Column(name = "name", length = 150)
-	String name;
+	private String name;
 
 	@Column(name = "email", length = 150)
-	String email;
-	
+	private String email;
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	User user;
+	private User user;
 }

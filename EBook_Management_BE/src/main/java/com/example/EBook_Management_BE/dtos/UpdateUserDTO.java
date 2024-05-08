@@ -23,29 +23,26 @@ import lombok.Setter;
 @Setter
 public class UpdateUserDTO {
 	@ValidFullName
-	String fullname;
+	private String fullname;
 
 	@ValidPassword
-	String password;
-	
+	private String password;
+
 	@JsonProperty("retype_password")
-    private String retypePassword;
-	
+	private String retypePassword;
+
 	@JsonProperty("link_avatar")
-	String linkAvatar;
-	
-	short gender;
-	
+	private String linkAvatar;
+
+	private short gender;
+
 	@PastOrPresent(message = MessageKeyValidation.USER_DATE_OF_BIRTH)
 	@JsonProperty("date_of_birth")
-	Date dateOfBirth;
-	
+	private Date dateOfBirth;
+
 	@JsonProperty("facebook_account_id")
-	int facebookAccountId;
-	
+	private int facebookAccountId;
+
 	@JsonProperty("google_account_id")
-	int googleAccountId;
-	
-	@JsonProperty("is_active")
-	short isActive;
+	private int googleAccountId;
 }

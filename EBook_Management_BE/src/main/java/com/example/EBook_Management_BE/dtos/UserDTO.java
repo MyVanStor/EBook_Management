@@ -1,6 +1,6 @@
 package com.example.EBook_Management_BE.dtos;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.hibernate.validator.constraints.URL;
 
@@ -12,54 +12,51 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.NegativeOrZero;
 import jakarta.validation.constraints.PastOrPresent;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDTO {
-    @ValidFullName
-	String fullname;
-    
-    @ValidPassword
-	String password;
-	
+	@ValidFullName
+	private String fullname;
+
+	@ValidPassword
+	private String password;
+
 	@JsonProperty("retype_password")
-    String retypePassword;
-	
+	private String retypePassword;
+
 	@URL(message = MessageKeyValidation.USER_AVATAR_URL)
 	@JsonProperty("link_avatar")
-	String linkAvatar;
-	
+	private String linkAvatar;
+
 	@ValidPhoneNumber
 	@JsonProperty("phone_number")
-	String phoneNumber;
-	
-	short gender;
-	
+	private String phoneNumber;
+
+	private short gender;
+
 	@NegativeOrZero(message = MessageKeyValidation.USER_BUDGET_NEGATIVE)
-	double budget;
+	private double budget;
 
 	@PastOrPresent(message = MessageKeyValidation.USER_DATE_OF_BIRTH)
 	@JsonProperty("date_of_birth")
-	Date dateOfBirth;
-	
+	private LocalDateTime dateOfBirth;
+
 	@JsonProperty("facebook_account_id")
-	int facebookAccountId;
-	
+	private int facebookAccountId;
+
 	@JsonProperty("google_account_id")
-	int googleAccountId;
-	
+	private int googleAccountId;
+
 	@JsonProperty("is_active")
-	short isActive;
-	
+	private short isActive;
+
 	@JsonProperty("role_id")
-	Long roleId;
+	private Long roleId;
 }

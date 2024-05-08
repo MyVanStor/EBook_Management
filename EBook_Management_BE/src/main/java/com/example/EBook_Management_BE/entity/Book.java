@@ -2,8 +2,6 @@ package com.example.EBook_Management_BE.entity;
 
 import java.util.Set;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import com.example.EBook_Management_BE.listeners.BookListener;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -18,12 +16,10 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @Entity
 @Getter
@@ -32,63 +28,62 @@ import lombok.experimental.FieldDefaults;
 @EntityListeners(BookListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class Book {
+public class Book extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	Long id;
+	private Long id;
 
 	@Column(name = "title", length = 100, nullable = false, unique = true)
-	String title;
+	private String title;
 
 	@Column(name = "summary", length = 255)
-	String summary;
+	private String summary;
 
 	@Column(name = "image", length = 255)
-	String image;
+	private String image;
 
 	@Column(name = "type_of_book", length = 100)
-	String typeOfBook;
+	private String typeOfBook;
 
 	@Column(name = "publishing_year")
-	Integer publishingYear;
+	private Integer publishingYear;
 
 	@Column(name = "price", columnDefinition = "FLOAT")
-	double price;
-	
+	private double price;
+
 	@Column(name = "number_reads")
-	Long numberReads;
+	private Long numberReads;
 
 	@ManyToMany
 	@JoinTable(name = "author_book", joinColumns = { @JoinColumn(name = "book_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "author_id") })
-	Set<Author> authors;
+	private Set<Author> authors;
 
 	@ManyToMany
 	@JoinTable(name = "painter_book", joinColumns = { @JoinColumn(name = "book_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "painter_id") })
-	Set<Painter> painters;
+	private Set<Painter> painters;
 
 	@ManyToMany
 	@JoinTable(name = "category_book", joinColumns = { @JoinColumn(name = "book_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "category_id") })
-	Set<Category> categories;
+	private Set<Category> categories;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "book")
-	Set<OrderDetail> orderDetails;
+	private Set<OrderDetail> orderDetails;
 
 	@OneToMany(mappedBy = "book")
-	Set<UserBook> userBooks;
+	private Set<UserBook> userBooks;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "book")
-	Set<Rating> ratings;
+	private Set<Rating> ratings;
 
 	@OneToMany(mappedBy = "book")
-	Set<Chapter> chapters;
+	private Set<Chapter> chapters;
 
 	@OneToMany(mappedBy = "book")
-	Set<ReadingHistory> readingHistories;
+	private Set<ReadingHistory> readingHistories;
 }

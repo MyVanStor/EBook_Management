@@ -14,13 +14,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "tokens")
@@ -29,40 +27,39 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class Token {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	Long id;
-	
-	@Column(name = "token", length = 255, unique = true, nullable = false)
-	String token;
-	
+	private Long id;
+
+	@Column(name = "token", unique = true, nullable = false)
+	private String token;
+
 	@Column(name = "token_type", length = 50, nullable = false)
-	String tokenType;
-	
+	private String tokenType;
+
 	@Column(name = "refresh_token", length = 255)
-    private String refreshToken;
-	
+	private String refreshToken;
+
 	@Column(name = "expiration_date")
-	LocalDateTime expirationDate;
-	
+	private LocalDateTime expirationDate;
+
 	@Column(name = "refresh_expiration_date")
-    private LocalDateTime refreshExpirationDate;
-	
+	private LocalDateTime refreshExpirationDate;
+
 	@Column(name = "is_mobile", columnDefinition = "TINYINT(1)")
-    private boolean isMobile;
-	
+	private boolean isMobile;
+
 	@Column(name = "revoked", columnDefinition = "TINYINT(1)", nullable = false)
-	boolean revoked;
+	private boolean revoked;
 
 	@Column(name = "expired", columnDefinition = "TINYINT(1)", nullable = false)
-	boolean expired;
-	
+	private boolean expired;
+
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	User user;
+	private User user;
 }

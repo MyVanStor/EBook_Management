@@ -22,7 +22,6 @@ import com.example.EBook_Management_BE.entity.User;
 import com.example.EBook_Management_BE.enums.Uri;
 import com.example.EBook_Management_BE.mappers.AuthorMapper;
 import com.example.EBook_Management_BE.responses.AuthorResponse;
-import com.example.EBook_Management_BE.services.author.IAuthorRedisService;
 import com.example.EBook_Management_BE.services.author.IAuthorService;
 import com.example.EBook_Management_BE.services.user.IUserService;
 import com.example.EBook_Management_BE.utils.MessageKeys;
@@ -37,7 +36,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthorController {
 	private final IAuthorService authorService;
-	private final IAuthorRedisService authorRedisService;
 	private final IUserService userService;
 	
 	private final LocalizationUtils localizationUtils;
@@ -68,7 +66,6 @@ public class AuthorController {
 		author.setUser(user);
 		
 		Author newAuthor = authorService.createAuthor(author);
-		authorRedisService.saveAuthorById(newAuthor.getId(), newAuthor);
 		
 		AuthorResponse authorResponse = authorMapper.mapToAuthorResponse(newAuthor);
 		
@@ -89,7 +86,6 @@ public class AuthorController {
 		author.setUser(user);
 		
 		authorService.updateAuthor(id, author);
-		authorRedisService.saveAuthorById(id, author);
 		
 		AuthorResponse authorResponse = authorMapper.mapToAuthorResponse(author);
 		

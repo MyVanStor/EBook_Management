@@ -6,13 +6,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.FieldDefaults;
 
 @Data
 @Getter
@@ -20,13 +18,12 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BaseEntity {
 	@Column(name = "created_at")
-	LocalDateTime createdAt;
+	private LocalDateTime createdAt;
 
 	@Column(name = "updated_at")
-	LocalDateTime updatedAt;
+	private LocalDateTime updatedAt;
 
 	@PrePersist
 	protected void onCreate() {

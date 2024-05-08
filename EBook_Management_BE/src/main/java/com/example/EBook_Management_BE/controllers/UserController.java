@@ -1,7 +1,5 @@
 package com.example.EBook_Management_BE.controllers;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +35,6 @@ import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 import com.example.EBook_Management_BE.utils.MessageKeys;
 import com.example.EBook_Management_BE.utils.ResponseObject;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -149,11 +145,10 @@ public class UserController {
 
 	@PutMapping("/details/{userId}")
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-	@Operation(security = { @SecurityRequirement(name = "bearer-key") })
 	public ResponseEntity<ResponseObject> updateUserDetails(@PathVariable Long userId,
 			@RequestBody UpdateUserDTO updatedUserDTO, @RequestHeader("Authorization") String authorizationHeader)
 			throws Exception {
-		if (updatedUserDTO.getPassword().equals(updatedUserDTO.getRetypePassword())) {
+		if (!updatedUserDTO.getPassword().equals(updatedUserDTO.getRetypePassword())) {
 			throw new InvalidPasswordException(localizationUtils
 					.getLocalizedMessage(MessageExceptionKeys.USER_PASSWORD_DIFFERENT_RETYPE_PASSWORD));
 		}
@@ -177,11 +172,32 @@ public class UserController {
 				.data(userResponse)
 				.build());
 	}
+	
+	private String generatePassword() {
+	    String uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	    String specialChars = "!@#$%^&*()_+{}:<>?";
 
-	@PutMapping("/reset-password/{userId}")
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+	    StringBuilder password = new StringBuilder();
+
+	    // Add an uppercase letter
+	    password.append(uppercaseChars.charAt((int) (Math.random() * uppercaseChars.length())));
+
+	    // Generate remaining characters
+	    for (int i = 0; i < 5; i++) {
+	        int randomIndex = (int) (Math.random() * (uppercaseChars.length() + specialChars.length()));
+	        if (randomIndex < uppercaseChars.length()) {
+	            password.append(uppercaseChars.charAt(randomIndex));
+	        } else {
+	            password.append(specialChars.charAt(randomIndex - uppercaseChars.length()));
+	        }
+	    }
+
+	    return password.toString();
+	}
+	
+	@PutMapping("/reset-password/{phoneNumber}")
 	public ResponseEntity<ResponseObject> resetPassword(@Valid @PathVariable String phoneNumber) throws DataNotFoundException {
-			String newPassword = UUID.randomUUID().toString().substring(0, 5); // Tạo mật khẩu mới
+			String newPassword = generatePassword(); // Tạo mật khẩu mới
 			
 			userService.resetPassword(phoneNumber, newPassword);
 			

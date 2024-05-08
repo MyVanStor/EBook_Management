@@ -1,14 +1,13 @@
 package com.example.EBook_Management_BE.mappers;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
 import org.mapstruct.factory.Mappers;
 
 import com.example.EBook_Management_BE.dtos.ReadingHistoryDTO;
 import com.example.EBook_Management_BE.entity.ReadingHistory;
 import com.example.EBook_Management_BE.responses.ReadingHistoryResponse;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = "spring")
 public interface ReadingHistoryMapper {
 	ReadingHistoryMapper INSTANCE = Mappers.getMapper(ReadingHistoryMapper.class);
 

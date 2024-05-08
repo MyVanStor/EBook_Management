@@ -96,7 +96,7 @@ public class FollowController {
 		
 		Set<Follow> follows = followRedisService.getAllFollow(typeGet, id);
 		if (follows == null) {
-			if (typeGet == "following") {
+			if (typeGet.equals("following")) {
 				follows = followService.getAllFollowByFollowing(id);
 			} else {
 				follows = followService.getAllFollowByUserId(id);

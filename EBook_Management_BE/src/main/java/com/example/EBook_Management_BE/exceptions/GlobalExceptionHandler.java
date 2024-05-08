@@ -2,6 +2,7 @@ package com.example.EBook_Management_BE.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -74,6 +75,24 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(SelfFollowException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<ResponseObject> handleSelfFollowException(SelfFollowException exception) {
+	    return ResponseEntity.badRequest().body(ResponseObject.builder()
+	    		.status(HttpStatus.BAD_REQUEST)
+	    		.message(exception.getMessage())	
+	    		.build());
+	}
+	
+	@ExceptionHandler(InvalidPasswordException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<ResponseObject> handleInvalidPasswordException(InvalidPasswordException exception) {
+	    return ResponseEntity.badRequest().body(ResponseObject.builder()
+	    		.status(HttpStatus.BAD_REQUEST)
+	    		.message(exception.getMessage())	
+	    		.build());
+	}
+	
+	@ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<ResponseObject> handleAuthenticationCredentialsNotFoundException(AuthenticationCredentialsNotFoundException exception) {
 	    return ResponseEntity.badRequest().body(ResponseObject.builder()
 	    		.status(HttpStatus.BAD_REQUEST)
 	    		.message(exception.getMessage())	
