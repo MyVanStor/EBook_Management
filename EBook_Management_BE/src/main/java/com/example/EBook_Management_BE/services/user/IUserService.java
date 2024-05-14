@@ -23,5 +23,5 @@ public interface IUserService {
 
 	void resetPassword(String phoneNumber, String newPassword) throws DataNotFoundException;
 
-	public void blockOrEnable(Long userId, short active) throws DataNotFoundException;
+	short blockOrEnable(Long userId) throws Exception;
 }

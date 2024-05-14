@@ -23,7 +23,7 @@ import com.example.EBook_Management_BE.dtos.RatingDTO;
 import com.example.EBook_Management_BE.entity.Book;
 import com.example.EBook_Management_BE.entity.Rating;
 import com.example.EBook_Management_BE.entity.User;
-import com.example.EBook_Management_BE.enums.Uri;
+import com.example.EBook_Management_BE.constants.Uri;
 import com.example.EBook_Management_BE.mappers.RatingMapper;
 import com.example.EBook_Management_BE.responses.RatingResponse;
 import com.example.EBook_Management_BE.services.book.IBookService;

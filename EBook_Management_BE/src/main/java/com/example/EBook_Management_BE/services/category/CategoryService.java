@@ -28,11 +28,14 @@ public class CategoryService implements ICategoryService {
 
 	@Override
 	@Transactional
-	public Category createCategory(Category category) throws DuplicateException {
+	public Category createCategory(Category category) throws Exception {
 		if (categoryRepository.existsByName(category.getName())) {
 			throw new DuplicateException(
 					localizationUtils.getLocalizedMessage(MessageExceptionKeys.CATEGORY_DUPLICATE_CATEGORY));
 		}
+
+		categoryRepository.save(category);
+		categoryRedisService.saveCategoryById(category.getId(), category);
 
 		return categoryRepository.save(category);
 	}
@@ -55,7 +58,7 @@ public class CategoryService implements ICategoryService {
 		Category exitstingCategory = getCategoryById(categoryId);
 
 		categoryUpdate.setId(exitstingCategory.getId());
-		categoryRepository.save(categoryUpdate);
+		categoryUpdate = categoryRepository.save(categoryUpdate);
 
 		return categoryUpdate;
 	}

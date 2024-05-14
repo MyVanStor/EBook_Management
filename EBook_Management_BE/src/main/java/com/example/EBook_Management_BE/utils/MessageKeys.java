@@ -35,6 +35,7 @@ public class MessageKeys {
     public static final String TOKEN_REFRESH_SUCCESSFULLY = "token.refresh.successfully";
 
     public static final String COMMENT_GET_BY_ID_SUCCESSFULLY = "comment.get_by_id.successfully";
+    public static final String COMMENT_GET_ALL_SUCCESFULLY = "comment.get_all.successfully";
     public static final String COMMENT_CREATE_SUCCESSFULLY = "comment.create.successfully";
     public static final String COMMENT_UPDATE_SUCCESSFULLY = "comment.update.successfully";
     public static final String COMMENT_DELETE_SUCCESSFULLY = "comment.delete.successfully";

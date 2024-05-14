@@ -4,7 +4,7 @@ import com.example.EBook_Management_BE.entity.Category;
 import com.example.EBook_Management_BE.exceptions.DuplicateException;
 
 public interface ICategoryService {
-	Category createCategory(Category category) throws DuplicateException;
+	Category createCategory(Category category) throws Exception;
 	
 	Category getCategoryById(Long categoryId) throws Exception;
 	

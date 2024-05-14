@@ -1,4 +1,4 @@
-package com.example.EBook_Management_BE.enums;
+package com.example.EBook_Management_BE.constants;
 
 public class RoleEnum {
 	public static final String ADMIN = "ADMIN";

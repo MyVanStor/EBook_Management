@@ -7,4 +7,6 @@ import com.example.EBook_Management_BE.entity.Role;
 
 public interface RoleRepository extends JpaRepository<Role, Long>{	
 	boolean existsByName(String name);
+
+	Role findByName(String name);
 }

@@ -32,7 +32,7 @@ public class CategoryRedisService implements ICategoryRedisService {
 
 	@Override
 	public Category getCategoryById(Long categoryId) throws Exception {
-		if (useRedisCache == false) {
+		if (!useRedisCache) {
 			return null;
 		}
 		String key = this.getKeyFromId(categoryId);

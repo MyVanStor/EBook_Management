@@ -47,6 +47,18 @@ public class RoleService implements IRoleService {
 	}
 
 	@Override
+	public Role getRoleByName(String roleName) throws Exception {
+		Role role = roleRedisService.getRoleByName(roleName);
+		if (role == null) {
+			role = roleRepository.findByName(roleName);
+
+			roleRedisService.saveRoleByName(roleName, role);
+		}
+
+		return role;
+	}
+
+	@Override
 	@Transactional
 	public Role updateRole(Long roleId, Role roleUpdate) throws Exception {
 		Role exitstingRole = getRoleById(roleId);

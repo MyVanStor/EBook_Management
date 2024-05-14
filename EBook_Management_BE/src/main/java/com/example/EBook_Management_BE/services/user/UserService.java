@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +18,7 @@ import com.example.EBook_Management_BE.components.JwtTokenUtil;
 import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.entity.Token;
 import com.example.EBook_Management_BE.entity.User;
-import com.example.EBook_Management_BE.enums.RoleEnum;
+import com.example.EBook_Management_BE.constants.RoleEnum;
 import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
 import com.example.EBook_Management_BE.exceptions.DuplicateException;
 import com.example.EBook_Management_BE.exceptions.ExpiredTokenException;
@@ -38,7 +40,7 @@ public class UserService implements IUserService {
 
 	private final LocalizationUtils localizationUtils;
 
-	@Override
+    @Override
 	@Transactional
 	public User createUser(User user) throws Exception {
 		if (userRepository.existsByPhoneNumber(user.getPhoneNumber())) {
@@ -47,12 +49,15 @@ public class UserService implements IUserService {
 		}
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-		if (user.getRole().getName().toUpperCase().equals(RoleEnum.ADMIN)
-				|| user.getRole().getName().toUpperCase().equals(RoleEnum.SYSADMIN)) {
-			throw new Exception(localizationUtils.getLocalizedMessage(MessageExceptionKeys.USER_DOES_NOT_CREATE_ADMIN));
+		if (user.getRole().getName().equalsIgnoreCase(RoleEnum.ADMIN)
+				|| user.getRole().getName().equalsIgnoreCase(RoleEnum.SYSADMIN)) {
+			throw new Exception(localizationUtils.getLocalizedMessage(MessageExceptionKeys.USER_CAN_NOT_CREATE_ADMIN));
 		}
 
-		return userRepository.save(user);
+		userRepository.save(user);
+		userRedisService.saveUserById(user.getId(), user);
+
+		return user;
 	}
 
 	@Override
@@ -78,11 +83,6 @@ public class UserService implements IUserService {
 		}
 
 		User existingUser = optionalUser.get();
-		if (existingUser.getFacebookAccountId() == 0 || existingUser.getGoogleAccountId() == 0) {
-			if (!passwordEncoder.matches(password, existingUser.getPassword())) {
-				throw new BadCredentialsException("Wrong phone number or password");
-			}
-		}
 
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phoneNumber,
 				password);
@@ -111,6 +111,7 @@ public class UserService implements IUserService {
 			}
 
 			userRedisService.saveUserById(user.getId(), user);
+			userRedisService.saveUserByTokenOrRefreshToken(token, user);
 		}
 
 		return user;
@@ -129,21 +130,20 @@ public class UserService implements IUserService {
 		// Find the existing user by userId
 		User existingUser = getUserById(userId);
 		
-		List<Token> tokens = tokenRepository.findByUser(existingUser);
-		for (Token token : tokens) {
-			tokenRepository.delete(token);
-		}
-		
 		// Update the password if it is provided in the DTO
 		if (user.getPassword() != null) {
+			// reset password => clear token
+			List<Token> tokens = tokenRepository.findByUser(existingUser);
+			tokenRepository.deleteAll(tokens);
+
 			String newPassword = user.getPassword();
 			String encodedPassword = passwordEncoder.encode(newPassword);
 			existingUser.setPassword(encodedPassword);
 		}
-		if (user.getFullname() != null && user.getFullname() != existingUser.getFullname()) {
+		if (user.getFullname() != null && !user.getFullname().equals(existingUser.getFullname())) {
 			existingUser.setFullname(user.getFullname());
 		}
-		if (user.getLinkAvatar() != null && user.getLinkAvatar() != existingUser.getLinkAvatar()) {
+		if (user.getLinkAvatar() != null && !user.getLinkAvatar().equals(existingUser.getLinkAvatar())) {
 			existingUser.setLinkAvatar(user.getLinkAvatar());
 		}
 		if (user.getGender() != existingUser.getGender()) {
@@ -169,23 +169,28 @@ public class UserService implements IUserService {
 
 		// reset password => clear token
 		List<Token> tokens = tokenRepository.findByUser(existingUser);
-		for (Token token : tokens) {
-			tokenRepository.delete(token);
-		}
+        tokenRepository.deleteAll(tokens);
 
 		String encodedPassword = passwordEncoder.encode(newPassword);
 		existingUser.setPassword(encodedPassword);
+
 		userRepository.save(existingUser);
 	}
 
 	@Override
 	@Transactional
-	public void blockOrEnable(Long userId, short active) throws DataNotFoundException {
-		User existingUser = userRepository.findById(userId)
-				.orElseThrow(() -> new DataNotFoundException("User not found"));
-		existingUser.setIsActive(active);
+	public short blockOrEnable(Long userId) throws Exception {
+		User existingUser = getUserById(userId);
+
+		List<Token> tokens = tokenRepository.findByUser(existingUser);
+		tokenRepository.deleteAll(tokens);
+
+		short newStatus = (short) (existingUser.getIsActive() == 1 ? 0 : 1);
+		existingUser.setIsActive(newStatus);
 
 		userRepository.save(existingUser);
+
+		return newStatus;
 	}
 
 }

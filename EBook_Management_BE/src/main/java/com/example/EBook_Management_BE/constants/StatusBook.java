@@ -1,4 +1,4 @@
-package com.example.EBook_Management_BE.enums;
+package com.example.EBook_Management_BE.constants;
 
 public class StatusBook {
 	public static final String PUBLIC = "public";

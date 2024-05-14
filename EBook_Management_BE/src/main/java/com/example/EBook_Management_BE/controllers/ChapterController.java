@@ -19,7 +19,7 @@ import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.dtos.ChapterDTO;
 import com.example.EBook_Management_BE.entity.Book;
 import com.example.EBook_Management_BE.entity.Chapter;
-import com.example.EBook_Management_BE.enums.Uri;
+import com.example.EBook_Management_BE.constants.Uri;
 import com.example.EBook_Management_BE.mappers.ChapterMapper;
 import com.example.EBook_Management_BE.responses.ChapterResponse;
 import com.example.EBook_Management_BE.services.book.IBookService;

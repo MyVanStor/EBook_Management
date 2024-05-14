@@ -41,16 +41,19 @@ public class TokenService implements ITokenService {
 		if (existingToken == null) {
 			throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.REFRESH_TOKEN_NOT_FOUND));
 		}
-		if (existingToken.getRefreshExpirationDate().compareTo(LocalDateTime.now()) < 0) {
+
+		if (existingToken.getRefreshExpirationDate().isBefore(LocalDateTime.now())) {
 			tokenRepository.delete(existingToken);
 			throw new ExpiredTokenException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.REFRESH_TOKEN_IS_EXPRIED));
 		}
+
 		String token = jwtTokenUtil.generateToken(user);
 		LocalDateTime expirationDateTime = LocalDateTime.now().plusSeconds(expiration);
 		existingToken.setExpirationDate(expirationDateTime);
 		existingToken.setToken(token);
 		existingToken.setRefreshToken(UUID.randomUUID().toString());
 		existingToken.setRefreshExpirationDate(LocalDateTime.now().plusSeconds(expirationRefreshToken));
+
 		return existingToken;
 	}
 

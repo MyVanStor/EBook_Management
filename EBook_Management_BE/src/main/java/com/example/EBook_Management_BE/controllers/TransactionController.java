@@ -18,7 +18,7 @@ import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.dtos.TransactionDTO;
 import com.example.EBook_Management_BE.entity.Transaction;
 import com.example.EBook_Management_BE.entity.User;
-import com.example.EBook_Management_BE.enums.Uri;
+import com.example.EBook_Management_BE.constants.Uri;
 import com.example.EBook_Management_BE.mappers.TransactionMapper;
 import com.example.EBook_Management_BE.responses.TransactionResponse;
 import com.example.EBook_Management_BE.services.transaction.ITransactionRedisService;

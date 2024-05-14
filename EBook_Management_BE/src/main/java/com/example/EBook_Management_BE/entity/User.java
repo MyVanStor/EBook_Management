@@ -1,10 +1,7 @@
 package com.example.EBook_Management_BE.entity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -61,13 +58,7 @@ public class User extends BaseEntity implements UserDetails {
 	private double budget;
 
 	@Column(name = "date_of_birth", columnDefinition = "DATE")
-	private LocalDateTime dateOfBirth;
-
-	@Column(name = "facebook_account_id", length = 100, unique = true)
-	private int facebookAccountId;
-
-	@Column(name = "google_account_id", length = 100, unique = true)
-	private int googleAccountId;
+	private Date dateOfBirth;
 
 	@Column(name = "is_active")
 	private short isActive;
@@ -91,10 +82,6 @@ public class User extends BaseEntity implements UserDetails {
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private Set<Order> orders;
-
-	@JsonIgnore
-	@OneToMany(mappedBy = "user")
-	private Set<SocialAccount> socialAccounts;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")

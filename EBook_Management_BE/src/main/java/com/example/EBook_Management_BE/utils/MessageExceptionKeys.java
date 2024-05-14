@@ -18,7 +18,7 @@ public class MessageExceptionKeys {
     public static final String ROLE_DELETE_HAVE_ASSOCIATED_USER = "exception.role.delete_have_associated_user";
 
     public static final String USER_PASSWORD_DIFFERENT_RETYPE_PASSWORD = "exception.user.password_different_retype_password";
-    public static final String USER_DOES_NOT_CREATE_ADMIN = "exception.user.does_not_create_admin";
+    public static final String USER_CAN_NOT_CREATE_ADMIN = "exception.user.can_not_create_admin";
     public static final String USER_DUPLICATE_USERNAME = "exception.user.duplicate_username";
     public static final String USER_NOT_FOUND = "exception.user.not_found";
     public static final String USER_INVALID_USERNAME_OR_PASSWORD = "exception.user.invalid_username_or_password";
@@ -48,4 +48,6 @@ public class MessageExceptionKeys {
     public static final String ORDER_NOT_FOUND = "exception.order.not_found";
 
     public static final String READING_HISTORY_NOT_FOUND = "exception.reading_history.not_found";
+
+    public static final String DOES_NOT_HAVE_PERMISSION = "exception.does_not_have_permission";
 }   

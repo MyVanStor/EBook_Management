@@ -2,6 +2,7 @@ package com.example.EBook_Management_BE.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -50,7 +51,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ResponseObject> handleDeleteException(DeleteException exception) {
 	    return ResponseEntity.badRequest().body(ResponseObject.builder()
 	    		.status(HttpStatus.BAD_REQUEST)
-	    		.message(localizationUtils.getLocalizedMessage(exception.getMessage()))	
+	    		.message(exception.getMessage())
 	    		.build());
 	}
 	
@@ -59,7 +60,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ResponseObject> handleExpiredTokenException(ExpiredTokenException exception) {
 	    return ResponseEntity.badRequest().body(ResponseObject.builder()
 	    		.status(HttpStatus.BAD_REQUEST)
-	    		.message(localizationUtils.getLocalizedMessage(exception.getMessage()))	
+	    		.message(exception.getMessage())
 	    		.build());
 	}
 	
@@ -97,5 +98,14 @@ public class GlobalExceptionHandler {
 	    		.status(HttpStatus.BAD_REQUEST)
 	    		.message(exception.getMessage())	
 	    		.build());
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<ResponseObject> handleAccessDeniedException(AccessDeniedException exception) {
+		return ResponseEntity.badRequest().body(ResponseObject.builder()
+				.status(HttpStatus.BAD_REQUEST)
+				.message(exception.getMessage())
+				.build());
 	}
 }

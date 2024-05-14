@@ -8,15 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.dtos.BookDTO;
@@ -26,8 +18,8 @@ import com.example.EBook_Management_BE.entity.Category;
 import com.example.EBook_Management_BE.entity.Painter;
 import com.example.EBook_Management_BE.entity.User;
 import com.example.EBook_Management_BE.entity.UserBook;
-import com.example.EBook_Management_BE.enums.StatusUserBook;
-import com.example.EBook_Management_BE.enums.Uri;
+import com.example.EBook_Management_BE.constants.StatusUserBook;
+import com.example.EBook_Management_BE.constants.Uri;
 import com.example.EBook_Management_BE.mappers.BookMapper;
 import com.example.EBook_Management_BE.responses.BookResponse;
 import com.example.EBook_Management_BE.services.author.IAuthorService;
@@ -59,10 +51,10 @@ public class BookController {
 	@Autowired
 	private BookMapper bookMapper;
 
-	@PostMapping("/{userId}")
+	@PostMapping()
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public ResponseEntity<ResponseObject> createBook(@PathVariable Long userId, @Valid @RequestBody BookDTO bookDTO) throws Exception {
+	public ResponseEntity<ResponseObject> createBook(@RequestHeader(name = "user_id") Long userId, @Valid @RequestBody BookDTO bookDTO) throws Exception {
 		Book book = bookMapper.mapToBookEntity(bookDTO);
 		
 		Set<Category> categories = new HashSet<>();

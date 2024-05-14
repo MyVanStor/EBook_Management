@@ -5,19 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.dtos.RoleDTO;
 import com.example.EBook_Management_BE.entity.Role;
-import com.example.EBook_Management_BE.enums.Uri;
+import com.example.EBook_Management_BE.constants.Uri;
 import com.example.EBook_Management_BE.mappers.RoleMapper;
 import com.example.EBook_Management_BE.responses.RoleResponse;
 import com.example.EBook_Management_BE.services.role.IRoleRedisService;
@@ -33,69 +26,68 @@ import lombok.RequiredArgsConstructor;
 @Validated
 @RequiredArgsConstructor
 public class RoleController {
-	private final IRoleService roleService;
-	private final IRoleRedisService roleRedisService;
-	private final LocalizationUtils localizationUtils;
-	
-	@Autowired
-	private RoleMapper roleMapper;
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<ResponseObject> getRoleById(@PathVariable Long id) throws Exception {
-		Role existingRole = roleService.getRoleById(id);
-		
-		RoleResponse roleResponse = roleMapper.mapToRoleResponse(existingRole);
-		
-		return ResponseEntity.ok(ResponseObject.builder()
-				.status(HttpStatus.OK)
-				.message(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_GET_BY_ID_SUCCESSFULLY))
-				.data(roleResponse)
-				.build());
-	}
+    private final IRoleService roleService;
+    private final IRoleRedisService roleRedisService;
+    private final LocalizationUtils localizationUtils;
 
-	@PostMapping()
-	@PreAuthorize("hasRole('ROLE_SYS-ADMIN')")
-	public ResponseEntity<ResponseObject> createRole(@Valid @RequestBody RoleDTO roleDTO) throws Exception {
-		Role role = roleMapper.mapToRoleEntity(roleDTO);
+    @Autowired
+    private RoleMapper roleMapper;
 
-		Role newRole = roleService.createRole(role);
-		roleRedisService.saveRoleById(newRole.getId(), newRole);
-		
-		RoleResponse roleResponse = roleMapper.mapToRoleResponse(newRole);
-		
-		return ResponseEntity.ok(ResponseObject.builder()
-				.status(HttpStatus.CREATED)
-				.message(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_CREATE_SUCCESSFULLY))
-				.data(roleResponse)
-				.build());
-	}
+    @GetMapping()
+    public ResponseEntity<ResponseObject> getRoleById(@RequestHeader(name = "role_id") Long roleId) throws Exception {
+        Role existingRole = roleService.getRoleById(roleId);
 
-	@PutMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_SYS-ADMIN')")
-	public ResponseEntity<ResponseObject> updateRole(@PathVariable Long id, @Valid @RequestBody RoleDTO roleDTO) throws Exception {
-		Role role = roleMapper.mapToRoleEntity(roleDTO);
-		
-		roleService.updateRole(id, role);
-		roleRedisService.saveRoleById(id, role);
-		
-		RoleResponse roleResponse = roleMapper.mapToRoleResponse(role);
-		
-		return ResponseEntity.ok(ResponseObject.builder()
-				.status(HttpStatus.OK)
-				.message(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_UPDATE_SUCCESSFULLY))
-				.data(roleResponse)
-				.build());
-	}
+        RoleResponse roleResponse = roleMapper.mapToRoleResponse(existingRole);
 
-	@DeleteMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_SYS-ADMIN')")
-	public ResponseEntity<ResponseObject> deleteRole(@PathVariable Long id) throws Exception {
-		roleService.deleteRoleById(id);
-		
-		return ResponseEntity
-				.ok(ResponseObject.builder()
-						.status(HttpStatus.OK)
-						.message(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_DELETE_SUCCESSFULLY))
-						.build());
-	}
+        return ResponseEntity.ok(ResponseObject.builder()
+                .status(HttpStatus.OK)
+                .message(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_GET_BY_ID_SUCCESSFULLY))
+                .data(roleResponse)
+                .build());
+    }
+
+    @PostMapping()
+    @PreAuthorize("hasRole('ROLE_SYS-ADMIN')")
+    public ResponseEntity<ResponseObject> createRole(@Valid @RequestBody RoleDTO roleDTO) throws Exception {
+        Role role = roleMapper.mapToRoleEntity(roleDTO);
+
+        Role newRole = roleService.createRole(role);
+        roleRedisService.saveRoleById(newRole.getId(), newRole);
+
+        RoleResponse roleResponse = roleMapper.mapToRoleResponse(newRole);
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .status(HttpStatus.CREATED)
+                .message(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_CREATE_SUCCESSFULLY))
+                .data(roleResponse)
+                .build());
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_SYS-ADMIN')")
+    public ResponseEntity<ResponseObject> updateRole(@PathVariable Long id, @Valid @RequestBody RoleDTO roleDTO) throws Exception {
+        Role role = roleMapper.mapToRoleEntity(roleDTO);
+
+        roleService.updateRole(id, role);
+        roleRedisService.saveRoleById(id, role);
+
+        RoleResponse roleResponse = roleMapper.mapToRoleResponse(role);
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .status(HttpStatus.OK)
+                .message(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_UPDATE_SUCCESSFULLY))
+                .data(roleResponse)
+                .build());
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_SYS-ADMIN')")
+    public ResponseEntity<ResponseObject> deleteRole(@PathVariable Long id) throws Exception {
+        roleService.deleteRoleById(id);
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .status(HttpStatus.OK)
+                .message(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_DELETE_SUCCESSFULLY))
+                .build());
+    }
 }

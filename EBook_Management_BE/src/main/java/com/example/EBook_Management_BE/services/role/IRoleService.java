@@ -8,6 +8,8 @@ public interface IRoleService {
 
 	Role getRoleById(Long roleId)  throws Exception;
 
+	Role getRoleByName(String roleName)  throws Exception;
+
 	Role updateRole(Long roleId, Role roleUpdate) throws Exception;
 
 	void deleteRoleById(Long roleId) throws Exception;

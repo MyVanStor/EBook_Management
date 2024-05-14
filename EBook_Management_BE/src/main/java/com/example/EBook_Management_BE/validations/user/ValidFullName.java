@@ -13,7 +13,7 @@ import jakarta.validation.Payload;
 @Target({ ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ValidFullNameValidator.class)
-public @interface ValidFullName {
+public @interface ValidFullName { 
 	String message() default MessageKeyValidation.USER_FULL_NAME;
 
     Class<?>[] groups() default {};

@@ -10,7 +10,7 @@ import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.entity.Order;
 import com.example.EBook_Management_BE.entity.OrderDetail;
 import com.example.EBook_Management_BE.entity.UserBook;
-import com.example.EBook_Management_BE.enums.StatusUserBook;
+import com.example.EBook_Management_BE.constants.StatusUserBook;
 import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
 import com.example.EBook_Management_BE.exceptions.DuplicateException;
 import com.example.EBook_Management_BE.repositories.OrderDetailRepository;

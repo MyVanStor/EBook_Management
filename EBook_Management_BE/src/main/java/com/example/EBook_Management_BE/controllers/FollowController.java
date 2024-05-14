@@ -21,7 +21,7 @@ import com.example.EBook_Management_BE.components.LocalizationUtils;
 import com.example.EBook_Management_BE.dtos.FollowDTO;
 import com.example.EBook_Management_BE.entity.Follow;
 import com.example.EBook_Management_BE.entity.User;
-import com.example.EBook_Management_BE.enums.Uri;
+import com.example.EBook_Management_BE.constants.Uri;
 import com.example.EBook_Management_BE.mappers.FollowMapper;
 import com.example.EBook_Management_BE.responses.FollowResponse;
 import com.example.EBook_Management_BE.services.follow.IFollowRedisService;

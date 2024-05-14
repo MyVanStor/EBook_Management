@@ -22,7 +22,7 @@ import com.example.EBook_Management_BE.entity.Book;
 import com.example.EBook_Management_BE.entity.Chapter;
 import com.example.EBook_Management_BE.entity.ReadingHistory;
 import com.example.EBook_Management_BE.entity.User;
-import com.example.EBook_Management_BE.enums.Uri;
+import com.example.EBook_Management_BE.constants.Uri;
 import com.example.EBook_Management_BE.mappers.ReadingHistoryMapper;
 import com.example.EBook_Management_BE.responses.ReadingHistoryResponse;
 import com.example.EBook_Management_BE.services.book.IBookService;

@@ -1,4 +1,4 @@
-package com.example.EBook_Management_BE.enums;
+package com.example.EBook_Management_BE.constants;
 
 public class CommentReplyType {
 	public static final String BOOK = "BOOK";

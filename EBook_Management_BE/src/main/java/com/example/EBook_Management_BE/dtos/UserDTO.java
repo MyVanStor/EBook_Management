@@ -1,7 +1,9 @@
 package com.example.EBook_Management_BE.dtos;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
+import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
 
 import com.example.EBook_Management_BE.utils.MessageKeyValidation;
@@ -22,12 +24,15 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
+	@NotBlank
 	@ValidFullName
 	private String fullname;
 
+	@NotBlank
 	@ValidPassword
 	private String password;
 
+	@NotBlank
 	@JsonProperty("retype_password")
 	private String retypePassword;
 
@@ -46,16 +51,10 @@ public class UserDTO {
 
 	@PastOrPresent(message = MessageKeyValidation.USER_DATE_OF_BIRTH)
 	@JsonProperty("date_of_birth")
-	private LocalDateTime dateOfBirth;
-
-	@JsonProperty("facebook_account_id")
-	private int facebookAccountId;
-
-	@JsonProperty("google_account_id")
-	private int googleAccountId;
+	private Date dateOfBirth;
 
 	@JsonProperty("is_active")
-	private short isActive;
+	private short isActive = 1;
 
 	@JsonProperty("role_id")
 	private Long roleId;

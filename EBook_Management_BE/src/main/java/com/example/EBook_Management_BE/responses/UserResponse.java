@@ -40,12 +40,6 @@ public class UserResponse {
 	@JsonProperty("date_of_birth")
 	private Date dateOfBirth;
 
-	@JsonProperty("facebook_account_id")
-	private String facebookAccountId;
-
-	@JsonProperty("google_account_id")
-	private String googleAccountId;
-
 	@JsonProperty("is_active")
 	private short isActive;
 

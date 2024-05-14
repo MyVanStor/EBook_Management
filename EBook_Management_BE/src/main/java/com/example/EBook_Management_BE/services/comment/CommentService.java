@@ -1,5 +1,7 @@
 package com.example.EBook_Management_BE.services.comment;
 
+import com.example.EBook_Management_BE.entity.Book;
+import com.example.EBook_Management_BE.entity.Chapter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,6 +12,9 @@ import com.example.EBook_Management_BE.repositories.CommentRepository;
 import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 
 import lombok.RequiredArgsConstructor;
+
+import java.rmi.NotBoundException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -55,4 +60,13 @@ public class CommentService implements ICommentService {
 		commentRepository.deleteById(commentId);
 	}
 
+	@Override
+	public List<Comment> getAllComment(Long replyId, String replyType) throws DataNotFoundException {
+		List<Comment> comments = commentRepository.findByReplyIdAndReplyType(replyId, replyType);
+		if (comments.isEmpty()) {
+			throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.COMMENT_NOT_FOUND));
+		}
+
+		return comments;
+	}
 }
