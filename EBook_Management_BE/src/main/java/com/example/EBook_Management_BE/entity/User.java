@@ -91,14 +91,6 @@ public class User extends BaseEntity implements UserDetails {
 	@OneToMany(mappedBy = "user")
 	private Set<ReadingHistory> readingHistories;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "user")
-	private Set<Painter> painters;
-
-	@JsonIgnore
-	@OneToMany(mappedBy = "user")
-	private Set<Author> authors;
-
 	@ManyToOne
 	@JoinColumn(name = "role_id")
 	private Role role;

@@ -35,6 +35,12 @@ public class BookDTO {
 	@JsonProperty("status")
 	private String status;
 
+	@JsonProperty("author")
+	private String author;
+
+	@JsonProperty("painter")
+	private String painter;
+
 	@NotBlank(message = MessageKeyValidation.BOOK_THUMBNAIL_NOT_BLANK)
 	@URL(message = MessageKeyValidation.BOOK_THUMBNAIL_URL)
 	private String thumbnail;

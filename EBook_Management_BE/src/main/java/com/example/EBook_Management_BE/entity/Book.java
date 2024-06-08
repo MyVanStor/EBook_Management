@@ -58,15 +58,11 @@ public class Book extends BaseEntity {
 	@Column(name = "number_reads")
 	private Long numberReads;
 
-	@ManyToMany
-	@JoinTable(name = "author_book", joinColumns = { @JoinColumn(name = "book_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "author_id") })
-	private Set<Author> authors;
+	@Column(name = "author")
+	private String author;
 
-	@ManyToMany
-	@JoinTable(name = "painter_book", joinColumns = { @JoinColumn(name = "book_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "painter_id") })
-	private Set<Painter> painters;
+	@Column(name = "painter")
+	private String painter;
 
 	@ManyToMany
 	@JoinTable(name = "category_book", joinColumns = { @JoinColumn(name = "book_id") }, inverseJoinColumns = {

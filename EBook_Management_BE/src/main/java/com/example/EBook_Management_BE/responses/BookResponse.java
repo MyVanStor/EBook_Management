@@ -3,10 +3,8 @@ package com.example.EBook_Management_BE.responses;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import com.example.EBook_Management_BE.entity.Author;
 import com.example.EBook_Management_BE.entity.Category;
 import com.example.EBook_Management_BE.entity.Chapter;
-import com.example.EBook_Management_BE.entity.Painter;
 import com.example.EBook_Management_BE.entity.UserBook;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -47,17 +45,17 @@ public class BookResponse {
 	@JsonProperty("number_reads")
 	private Long numberReads;
 
+	@JsonProperty("author")
+	private String author;
+
+	@JsonProperty("painter")
+	private String painter;
+
 	@JsonProperty("created_at")
 	private LocalDateTime createdAt;
 
 	@JsonProperty("updated_at")
 	private LocalDateTime updatedAt;
-
-	@JsonProperty("authors")
-	private Set<Author> authors;
-
-	@JsonProperty("painters")
-	private Set<Painter> painters;
 
 	@JsonProperty("categories")
 	private Set<Category> categories;
