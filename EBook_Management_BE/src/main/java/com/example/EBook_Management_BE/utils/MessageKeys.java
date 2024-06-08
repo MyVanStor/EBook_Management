@@ -5,16 +5,19 @@ public class MessageKeys {
     public static final String AUTHOR_CREATE_SUCCESSFULLY = "author.create.successfully";
     public static final String AUTHOR_UPDATE_SUCCESSFULLY = "author.update.successfully";
     public static final String AUTHOR_DELETE_SUCCESSFULLY = "author.delete.successfully";
+    public static final String AUTHOR_GET_ALL_SUCCESSFULLY = "author.get_all.successfully";
 
     public static final String PAINTER_GET_BY_ID_SUCCESSFULLY = "painter.get_by_id.successfully";
     public static final String PAINTER_CREATE_SUCCESSFULLY = "painter.create.successfully";
     public static final String PAINTER_UPDATE_SUCCESSFULLY = "painter.update.successfully";
     public static final String PAINTER_DELETE_SUCCESSFULLY = "painter.delete.successfully";
+    public static final String PAINTER_GET_ALL_SUCCESSFULLY = "painter.get_all.successfully";
 
     public static final String CATEGORY_GET_BY_ID_SUCCESSFULLY = "category.get_by_id.successfully";
     public static final String CATEGORY_CREATE_SUCCESSFULLY = "category.create.successfully";
     public static final String CATEGORY_UPDATE_SUCCESSFULLY = "category.update.successfully";
     public static final String CATEGORY_DELETE_SUCCESSFULLY = "category.delete.successfully";
+    public static final String CATEGORY_GET_ALL_SUCCESSFULLY = "category.get_all.successfully";
 
     public static final String ROLE_GET_BY_ID_SUCCESSFULLY = "role.get_by_id.successfully";
     public static final String ROLE_CREATE_SUCCESSFULLY = "role.create.successfully";

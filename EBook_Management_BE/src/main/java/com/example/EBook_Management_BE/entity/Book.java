@@ -46,6 +46,9 @@ public class Book extends BaseEntity {
 	@Column(name = "type_of_book", length = 100)
 	private String typeOfBook;
 
+	@Column(name = "status")
+	private String status;
+
 	@Column(name = "publishing_year")
 	private Integer publishingYear;
 

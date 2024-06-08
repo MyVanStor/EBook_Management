@@ -26,7 +26,7 @@ public class ChapterDTO {
 	private String name;
 
 	@NotNull(message = MessageKeyValidation.CHAPTER_ORDINAL_NUMBER_NOT_NULL)
-	@Negative(message = MessageKeyValidation.CHAPTER_ORDINAL_NUMBER_NEGATIVE)
+	@Positive(message = MessageKeyValidation.CHAPTER_ORDINAL_NUMBER_NEGATIVE)
 	@JsonProperty("ordinal_number")
 	private int ordinalNumber;
 

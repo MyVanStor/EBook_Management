@@ -1,6 +1,7 @@
 package com.example.EBook_Management_BE.services.author;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.example.EBook_Management_BE.entity.User;
@@ -62,6 +63,11 @@ public class AuthorService implements IAuthorService {
     public Author updateAuthor(Long authorId, Author authorUpdate) throws Exception {
         Author exitstingAuthor = getAuthorById(authorId);
 
+        if (exitstingAuthor.getName().equals(authorUpdate.getName()) && exitstingAuthor.getUser().equals(authorUpdate.getUser())) {
+            throw new DuplicateException(
+                    localizationUtils.getLocalizedMessage(MessageExceptionKeys.AUTHOR_DUPLICATE_AUTHOR));
+        }
+
         if (!exitstingAuthor.getUser().getId().equals(((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())) {
             throw new AccessDeniedException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.DOES_NOT_HAVE_PERMISSION));
         }
@@ -92,6 +98,18 @@ public class AuthorService implements IAuthorService {
         } else {
             authorRepository.deleteById(authorId);
         }
+    }
+
+    @Override
+    public List<Author> getAllAuthors() throws Exception {
+        List<Author> authors = authorRedisService.getAllAuthors();
+        if (authors == null) {
+            authors = authorRepository.findAll();
+
+            authorRedisService.saveAllAuthors(authors);
+        }
+
+        return authors;
     }
 
 }

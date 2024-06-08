@@ -23,6 +23,9 @@ import com.example.EBook_Management_BE.utils.ResponseObject;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping(value = Uri.AUTHOR)
 @Validated
@@ -69,7 +72,7 @@ public class AuthorController {
     }
 
     @PutMapping()
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> updateAuthor(@RequestHeader(name = "author_id") Long authorId,
                                                        @Valid @RequestBody AuthorDTO authorDTO) throws Exception {
         User user = userService.getUserById(authorDTO.getUserId());
@@ -90,13 +93,28 @@ public class AuthorController {
     }
 
     @DeleteMapping()
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> deleteAuthor(@RequestHeader(name = "author_id") Long authorId) throws Exception {
         authorService.deleteAuthorById(authorId);
 
         return ResponseEntity.ok(ResponseObject.builder()
                 .status(HttpStatus.OK)
                 .message(localizationUtils.getLocalizedMessage(MessageKeys.AUTHOR_DELETE_SUCCESSFULLY))
+                .build());
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<ResponseObject> getAllAuthor() throws Exception {
+        List<Author> authors = authorService.getAllAuthors();
+
+        List<AuthorResponse> authorResponses = authors.stream()
+                .map(authorMapper::mapToAuthorResponse)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .message(localizationUtils.getLocalizedMessage(MessageKeys.AUTHOR_GET_ALL_SUCCESSFULLY))
+                .status(HttpStatus.OK)
+                .data(authorResponses)
                 .build());
     }
 }

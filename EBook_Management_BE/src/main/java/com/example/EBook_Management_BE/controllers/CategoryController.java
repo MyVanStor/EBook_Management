@@ -21,6 +21,9 @@ import com.example.EBook_Management_BE.utils.ResponseObject;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping(value = Uri.CATEGORY)
 @Validated
@@ -48,7 +51,7 @@ public class CategoryController {
     }
 
     @PostMapping()
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SYS-ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SYS-ADMIN')")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<ResponseObject> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) throws Exception {
         Category category = categoryMapper.mapToCategoryEntity(categoryDTO);
@@ -65,7 +68,7 @@ public class CategoryController {
     }
 
     @PutMapping()
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
     public ResponseEntity<ResponseObject> updateCategory(@RequestHeader(name = "category_id") Long categoryId,
                                                          @Valid @RequestBody CategoryDTO categoryDTO) throws Exception {
         Category category = categoryMapper.mapToCategoryEntity(categoryDTO);
@@ -83,13 +86,28 @@ public class CategoryController {
     }
 
     @DeleteMapping()
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
     public ResponseEntity<ResponseObject> deleteCategory(@RequestHeader(name = "category_id") Long categoryId) throws Exception {
         categoryService.deleteCategoryById(categoryId);
 
         return ResponseEntity.ok(ResponseObject.builder()
                 .status(HttpStatus.OK)
                 .message(localizationUtils.getLocalizedMessage(MessageKeys.CATEGORY_DELETE_SUCCESSFULLY))
+                .build());
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<ResponseObject> getAllCategory() throws Exception {
+        List<Category> categories = categoryService.getAllCategory();
+
+        List<CategoryResponse> categoryResponses = categories.stream()
+                .map(categoryMapper::mapToCategoryResponse)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .message(localizationUtils.getLocalizedMessage(MessageKeys.CATEGORY_GET_ALL_SUCCESSFULLY))
+                .status(HttpStatus.OK)
+                .data(categoryResponses)
                 .build());
     }
 }

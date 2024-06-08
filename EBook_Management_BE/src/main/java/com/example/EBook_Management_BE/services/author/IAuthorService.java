@@ -2,6 +2,8 @@ package com.example.EBook_Management_BE.services.author;
 
 import com.example.EBook_Management_BE.entity.Author;
 
+import java.util.List;
+
 public interface IAuthorService {
 	Author createAuthor(Author author) throws Exception;
 	
@@ -11,4 +13,5 @@ public interface IAuthorService {
 
 	void deleteAuthorById(Long authorId) throws Exception;
 
+	List<Author> getAllAuthors() throws Exception;
 }

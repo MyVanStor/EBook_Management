@@ -1,8 +1,11 @@
 package com.example.EBook_Management_BE.services.painter;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +57,11 @@ public class PainterService implements IPainterService {
 	@Transactional
 	public Painter updatePainter(Long painterId, Painter painterUpdate) throws Exception {
 		Painter exitstingPainter = getPainterById(painterId);
+		if (exitstingPainter.getName().equals(painterUpdate.getName())
+				&& Objects.equals(exitstingPainter.getUser().getId(), painterUpdate.getUser().getId())) {
+			throw new DuplicateException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.PAINTER_DUPLICATE_PAINTER));
+		}
 
 		painterUpdate.setId(exitstingPainter.getId());
 		painterRepository.save(painterUpdate);
@@ -74,6 +82,18 @@ public class PainterService implements IPainterService {
 		} else {
 			painterRepository.deleteById(painterId);
 		}
+	}
+
+	@Override
+	public List<Painter> getAllPainter() throws JsonProcessingException {
+		List<Painter> painters = painterRedisService.getAllPainter();
+		if (painters == null) {
+			painters = painterRepository.findAll();
+
+			painterRedisService.saveAllPainter(painters);
+		}
+
+		return painters;
 	}
 
 }

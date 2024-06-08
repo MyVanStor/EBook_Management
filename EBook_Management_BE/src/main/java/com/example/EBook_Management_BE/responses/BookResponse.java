@@ -35,6 +35,9 @@ public class BookResponse {
 	@JsonProperty("type_of_book")
 	private String typeOfBook;
 
+	@JsonProperty("status")
+	private String status;
+
 	@JsonProperty("publishing_year")
 	private Integer publishingYear;
 

@@ -14,6 +14,8 @@ import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class BookService implements IBookService {
@@ -65,7 +67,7 @@ public class BookService implements IBookService {
 		Book book = getBookById(bookId);
 
 		for (UserBook userBook : book.getUserBooks()) {
-			if (userBook.getStatus() == StatusUserBook.BUYER) {
+			if (Objects.equals(userBook.getStatus(), StatusUserBook.BUYER)) {
 				throw new IllegalStateException(
 						localizationUtils.getLocalizedMessage(MessageExceptionKeys.BOOK_DELETE_HAVE_USER_BUYING));
 			}

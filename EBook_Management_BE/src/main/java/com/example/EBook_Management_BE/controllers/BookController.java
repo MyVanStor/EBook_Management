@@ -40,6 +40,7 @@ import lombok.RequiredArgsConstructor;
 public class BookController {
 	private final IBookService bookService;
 	private final IBookRedisService bookRedisService;
+	private final BookMapper bookMapper;
 		
 	private final IUserService userService;
 	private final ICategoryService categoryService;
@@ -47,9 +48,6 @@ public class BookController {
 	private final IAuthorService authorService;
 
 	private final LocalizationUtils localizationUtils;
-
-	@Autowired
-	private BookMapper bookMapper;
 
 	@PostMapping()
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
@@ -81,7 +79,7 @@ public class BookController {
 		book.setCategories(categories);
 		book.setPainters(painters);
 		
-		User user = userService.getUserById(userId);	
+		User user = userService.getUserById(userId);
 		UserBook userBook = UserBook.builder()
 				.status(StatusUserBook.OWNER)
 				.book(book)
@@ -100,10 +98,10 @@ public class BookController {
 				.build());
 	}
 
-	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-	public ResponseEntity<ResponseObject> getBookById(@PathVariable Long id) throws Exception {
-		Book existingBook = bookService.getBookById(id);
+	@GetMapping()
+//	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+	public ResponseEntity<ResponseObject> getBookById(@RequestHeader(name = "book_id") Long bookId) throws Exception {
+		Book existingBook = bookService.getBookById(bookId);
 		
 		BookResponse bookResponse = bookMapper.mapToBookResponse(existingBook);
 		
@@ -116,7 +114,7 @@ public class BookController {
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-	public ResponseEntity<ResponseObject> updateBook(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO) throws Exception {
+	public ResponseEntity<ResponseObject> updateBook(@RequestHeader(name = "book_id") Long bookId, @Valid @RequestBody BookDTO bookDTO) throws Exception {
 		Book book = bookMapper.mapToBookEntity(bookDTO);
 		
 		Set<Category> categories = new HashSet<>();
@@ -140,8 +138,8 @@ public class BookController {
 			authors.add(author);
 		}
 		
-		book = bookService.updateBook(id, book);
-		bookRedisService.saveBookById(id, book);
+		book = bookService.updateBook(bookId, book);
+		bookRedisService.saveBookById(bookId, book);
 		
 		BookResponse bookResponse = bookMapper.mapToBookResponse(book);
 
@@ -152,10 +150,10 @@ public class BookController {
 				.build());
 	}
 
-	@DeleteMapping("/{id}")
+	@DeleteMapping()
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-	public ResponseEntity<ResponseObject> deleteBook(@PathVariable Long id) throws Exception {
-		bookService.deleteBook(id);
+	public ResponseEntity<ResponseObject> deleteBook(@RequestHeader(name = "book_id") Long bookId) throws Exception {
+		bookService.deleteBook(bookId);
 		
 		return ResponseEntity.ok(ResponseObject.builder()
 				.status(HttpStatus.OK)
@@ -163,21 +161,19 @@ public class BookController {
 				.build());
 	}
 	
-	@PutMapping("/number-read/{bookId}")
-	public ResponseEntity<ResponseObject> updateNumberRead(@PathVariable Long bookId) throws Exception {
+	@PutMapping("/number-read")
+	public ResponseEntity<ResponseObject> updateNumberRead(@RequestHeader(name = "book_id") Long bookId) throws Exception {
 		Book book = bookService.getBookById(bookId);
-		
+
 		book.setNumberReads(book.getNumberReads() + 1);
-		
-		
-		int random = new Random().nextInt(1000) + 1;
+		int random = new Random().nextInt(2) + 1;
 		if (random == 1) {
 			bookService.updateBook(bookId, book);
 		}
-		bookRedisService.saveBookById(bookId, book);
-		
+
 		BookResponse bookResponse = bookMapper.mapToBookResponse(book);
-		
+		bookRedisService.saveBookById(bookId, book);
+
 		return ResponseEntity.ok(ResponseObject.builder()
 				.status(HttpStatus.OK)
 				.message(localizationUtils.getLocalizedMessage(MessageKeys.BOOK_UPDATE_SUCCESSFULLY))

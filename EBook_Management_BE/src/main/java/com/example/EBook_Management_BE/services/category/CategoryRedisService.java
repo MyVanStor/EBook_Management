@@ -1,5 +1,6 @@
 package com.example.EBook_Management_BE.services.category;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class CategoryRedisService implements ICategoryRedisService {
 	@Override
 	public void clearById(Long id) {
 		redisTemplate.delete(getKeyFromId(id));
+		redisTemplate.delete("Category: all");
 	}
 
 	private String getKeyFromId(Long id) {
@@ -49,6 +53,34 @@ public class CategoryRedisService implements ICategoryRedisService {
 		String key = this.getKeyFromId(categoryId);
 		String json = redisObjectMapper.writeValueAsString(category);
 		
+		redisTemplate.opsForValue().set(key, json);
+	}
+
+	private String getKeyFrom() {
+		String key = "Category: all";
+
+		return key;
+	}
+
+	@Override
+	public List<Category> getAllCategory() throws JsonProcessingException {
+		if (!useRedisCache) {
+			return null;
+		}
+		String key = this.getKeyFrom();
+		String json = (String) redisTemplate.opsForValue().get(key);
+		List<Category> categories = json != null
+				? redisObjectMapper.readValue(json, new TypeReference<List<Category>>() {
+		})
+				: null;
+		return categories;
+	}
+
+	@Override
+	public void saveAllCategory(List<Category> categories) throws JsonProcessingException {
+		String key = this.getKeyFrom();
+		String json = redisObjectMapper.writeValueAsString(categories);
+
 		redisTemplate.opsForValue().set(key, json);
 	}
 

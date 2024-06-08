@@ -32,6 +32,9 @@ public class BookDTO {
 	@JsonProperty("publishing_year")
 	private Integer publishingYear;
 
+	@JsonProperty("status")
+	private String status;
+
 	@NotBlank(message = MessageKeyValidation.BOOK_THUMBNAIL_NOT_BLANK)
 	@URL(message = MessageKeyValidation.BOOK_THUMBNAIL_URL)
 	private String thumbnail;

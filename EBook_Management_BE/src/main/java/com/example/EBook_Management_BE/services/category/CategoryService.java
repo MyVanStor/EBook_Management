@@ -1,8 +1,10 @@
 package com.example.EBook_Management_BE.services.category;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +58,10 @@ public class CategoryService implements ICategoryService {
 	@Transactional
 	public Category updateCategory(Long categoryId, Category categoryUpdate) throws Exception {
 		Category exitstingCategory = getCategoryById(categoryId);
+		if (exitstingCategory.getName().equals(categoryUpdate.getName())) {
+			throw new DuplicateException(
+					localizationUtils.getLocalizedMessage(MessageExceptionKeys.CATEGORY_DUPLICATE_CATEGORY));
+		}
 
 		categoryUpdate.setId(exitstingCategory.getId());
 		categoryUpdate = categoryRepository.save(categoryUpdate);
@@ -76,6 +82,18 @@ public class CategoryService implements ICategoryService {
 		} else {
 			categoryRepository.deleteById(categoryId);
 		}
+	}
+
+	@Override
+	public List<Category> getAllCategory() throws JsonProcessingException {
+		List<Category> categories = categoryRedisService.getAllCategory();
+		if (categories == null) {
+			categories = categoryRepository.findAll();
+
+			categoryRedisService.saveAllCategory(categories);
+		}
+
+		return categories;
 	}
 
 }
