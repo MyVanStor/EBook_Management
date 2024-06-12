@@ -41,10 +41,6 @@ public class BookDTO {
 	@JsonProperty("painter")
 	private String painter;
 
-	@NotBlank(message = MessageKeyValidation.BOOK_THUMBNAIL_NOT_BLANK)
-	@URL(message = MessageKeyValidation.BOOK_THUMBNAIL_URL)
-	private String thumbnail;
-
 	@NegativeOrZero(message = MessageKeyValidation.BOOK_PRICE_NEGATIVE)
 	private double price;
 
@@ -53,7 +49,4 @@ public class BookDTO {
 
 	private Set<Long> categoryIds;
 
-	private Set<Long> painterIds;
-
-	private Set<Long> authorIds;
 }

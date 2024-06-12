@@ -5,6 +5,7 @@ import org.springframework.boot.actuate.autoconfigure.security.reactive.Endpoint
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,11 +13,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.example.EBook_Management_BE.filters.JwtTokenFilter;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 @Configuration
@@ -39,7 +45,7 @@ public class WebSecurityConfig {
 							String.format("%s/user/register", apiPrefix),
 							String.format("%s/user/login", apiPrefix),
 							String.format("%s/user/login", apiPrefix),
-							
+
 							// healthcheck
 							String.format("%s/healthcheck/**", apiPrefix)
 
@@ -57,8 +63,9 @@ public class WebSecurityConfig {
 
 							.anyRequest().authenticated();
 				}).csrf(AbstractHttpConfigurer::disable);
-		
+
 		http.securityMatcher(String.valueOf(EndpointRequest.toAnyEndpoint()));
 		return http.build();
 	}
+
 }

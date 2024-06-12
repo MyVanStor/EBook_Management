@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ChapterRedisService implements IChapterRedisService {
@@ -20,8 +22,9 @@ public class ChapterRedisService implements IChapterRedisService {
 	private boolean useRedisCache;
 
 	@Override
-	public void clearById(Long id) {
-		redisTemplate.delete(getKeyFromId(id));
+	public void clearById(Chapter chapter) {
+		redisTemplate.delete(getKeyFromId(chapter.getId()));
+		redisTemplate.delete(getKeyFromBookId(chapter.getBook().getId()));
 	}
 
 	private String getKeyFromId(Long id) {
@@ -49,5 +52,35 @@ public class ChapterRedisService implements IChapterRedisService {
 
 		redisTemplate.opsForValue().set(key, json);
 
+	}
+
+	private String getKeyFromBookId(Long bookId) {
+		String key = String.format("Chapter: all - bookId = %d", bookId);
+
+		return key;
+	}
+
+	@Override
+	public List<Chapter> getAllChapterByBookId(Long bookId) throws Exception {
+		if (useRedisCache == false) {
+			return null;
+		}
+
+		String key = this.getKeyFromBookId(bookId);
+		String json = (String) redisTemplate.opsForValue().get(key);
+		List<Chapter> chapters = json != null
+				? redisObjectMapper.readValue(json, new TypeReference<List<Chapter>>() {
+				})
+				: null;
+
+		return chapters;
+	}
+
+	@Override
+	public void saveAllChapterByBookId(Long bookId, List<Chapter> chapters) throws Exception {
+		String key = this.getKeyFromBookId(bookId);
+		String json = redisObjectMapper.writeValueAsString(chapters);
+
+		redisTemplate.opsForValue().set(key, json);
 	}
 }

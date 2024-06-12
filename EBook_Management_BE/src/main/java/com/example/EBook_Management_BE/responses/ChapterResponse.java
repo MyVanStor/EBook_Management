@@ -2,7 +2,6 @@ package com.example.EBook_Management_BE.responses;
 
 import java.time.LocalDateTime;
 
-import com.example.EBook_Management_BE.entity.Book;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -28,9 +27,6 @@ public class ChapterResponse {
 
 	@JsonProperty("thumbnail")
 	private String thumbnail;
-
-	@JsonProperty("book")
-	private Book book;
 
 	@JsonProperty("created_at")
 	private LocalDateTime createdAt;

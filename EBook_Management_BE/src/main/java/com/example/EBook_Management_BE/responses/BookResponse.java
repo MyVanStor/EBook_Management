@@ -62,7 +62,4 @@ public class BookResponse {
 
 	@JsonProperty("user_book")
 	private Set<UserBook> userBooks;
-
-	@JsonProperty("chapters")
-	private Set<Chapter> chapters;
 }

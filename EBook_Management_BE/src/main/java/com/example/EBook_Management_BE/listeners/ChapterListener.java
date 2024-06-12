@@ -28,7 +28,7 @@ public class ChapterListener {
 	public void postPersist(Chapter chapter) {
 		// Update Redis cache
 		logger.info("postPersist");
-		chapterRedisService.clearById(chapter.getId());
+		chapterRedisService.clearById(chapter);
 	}
 
 	@PreUpdate
@@ -41,7 +41,7 @@ public class ChapterListener {
 	public void postUpdate(Chapter chapter) {
 		// Update Redis cache
 		logger.info("postUpdate");
-		chapterRedisService.clearById(chapter.getId());
+		chapterRedisService.clearById(chapter);
 	}
 
 	@PreRemove
@@ -54,6 +54,6 @@ public class ChapterListener {
 	public void postRemove(Chapter chapter) {
 		// Update Redis cache
 		logger.info("postRemove");
-		chapterRedisService.clearById(chapter.getId()); 
+		chapterRedisService.clearById(chapter);
 	}
 }

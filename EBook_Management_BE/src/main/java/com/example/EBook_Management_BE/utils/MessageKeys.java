@@ -1,18 +1,6 @@
 package com.example.EBook_Management_BE.utils;
 
 public class MessageKeys {
-    public static final String AUTHOR_GET_BY_ID_SUCCESSFULLY = "author.get_by_id.successfully";
-    public static final String AUTHOR_CREATE_SUCCESSFULLY = "author.create.successfully";
-    public static final String AUTHOR_UPDATE_SUCCESSFULLY = "author.update.successfully";
-    public static final String AUTHOR_DELETE_SUCCESSFULLY = "author.delete.successfully";
-    public static final String AUTHOR_GET_ALL_SUCCESSFULLY = "author.get_all.successfully";
-
-    public static final String PAINTER_GET_BY_ID_SUCCESSFULLY = "painter.get_by_id.successfully";
-    public static final String PAINTER_CREATE_SUCCESSFULLY = "painter.create.successfully";
-    public static final String PAINTER_UPDATE_SUCCESSFULLY = "painter.update.successfully";
-    public static final String PAINTER_DELETE_SUCCESSFULLY = "painter.delete.successfully";
-    public static final String PAINTER_GET_ALL_SUCCESSFULLY = "painter.get_all.successfully";
-
     public static final String CATEGORY_GET_BY_ID_SUCCESSFULLY = "category.get_by_id.successfully";
     public static final String CATEGORY_CREATE_SUCCESSFULLY = "category.create.successfully";
     public static final String CATEGORY_UPDATE_SUCCESSFULLY = "category.update.successfully";
@@ -47,6 +35,7 @@ public class MessageKeys {
     public static final String CHAPTER_CREATE_SUCCESSFULLY = "chapter.create.successfully";
     public static final String CHAPTER_UPDATE_SUCCESSFULLY = "chapter.update.successfully";
     public static final String CHAPTER_DELETE_SUCCESSFULLY = "chapter.delete.successfully";
+    public static final String CHAPTER_GET_ALL_BY_BOOK_SUCCESSFULLY = "chapter.get_all_by_book.successfully";
 
     public static final String BOOK_GET_BY_ID_SUCCESSFULLY = "book.get_by_id.successfully";
     public static final String BOOK_CREATE_SUCCESSFULLY = "book.create.successfully";

@@ -1,5 +1,6 @@
 package com.example.EBook_Management_BE.services.chapter;
 
+import com.example.EBook_Management_BE.entity.Book;
 import org.springframework.stereotype.Service;
 
 import com.example.EBook_Management_BE.components.LocalizationUtils;
@@ -9,6 +10,8 @@ import com.example.EBook_Management_BE.repositories.ChapterRepository;
 import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +52,18 @@ public class ChapterService implements IChapterService {
 	@Override
 	public void deleteChapterById(Long chapterId) {
 		chapterRepository.deleteById(chapterId);
+	}
+
+	@Override
+	public List<Chapter> getAllChapterByBook(Book book) throws Exception {
+		List<Chapter> chapters = chapterRedisService.getAllChapterByBookId(book.getId());
+		if (chapters == null) {
+			chapters = chapterRepository.findByBook(book);
+
+			chapterRedisService.saveAllChapterByBookId(book.getId(), chapters);
+		}
+
+		return chapters;
 	}
 
 }

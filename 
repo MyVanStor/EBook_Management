@@ -1,0 +1,41 @@
+* [33m597a401[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m DELETE: Delete 2 table author and painter and update book
+* [33me51ea10[m FEAT: Add get all author, painter and category
+* [33m0189af3[m FIX[author&user]: Fix bug data not save to redis when update and logic code
+* [33m5898897[m FIX[Lombok]: Fix warning annotation lombok
+* [33madc492c[m REFACTOR[Redis]: Move logic get object in redis from controller to service
+* [33maab9698[m FEAT[Authorization]: Add Authorization
+* [33m523614a[m FEAT[validator]: Add data validation feature for incoming requests
+* [33mbf3b601[m FEAT[book]: Add feature number reads of book
+* [33mbacdcb0[m feat: Add new ReadingHistory Object
+* [33m4ad17fa[m Release version 1.1
+* [33m894763c[m feat: Add messages and messages exception
+* [33mff56ac4[m feat: Add EntityListener for Objects
+* [33m27236e0[m feat: Add Redis support for Order and OrderDetail Object
+* [33m6ee2601[m fix: Re config RedisConfig support convert Json to GrantedAuthority and Object
+* [33maf2294e[m feat: Create Transaction Object and Redis support for Transaction Object
+* [33mfaa0607[m refactor: Delete the book evaluete and numberOfReview attribute
+* [33mb791ee3[m feat: Add Redis support for Rating Object
+* [33ma7f1571[m feat: Add Redis support for Role Object
+* [33m19f4834[m feat: Add Redis support for Follow Object
+* [33mcfe7150[m feat: Add Chapter Object include Entity, Api and Redis support for cache data
+* [33m2f83bd6[m feat: Add Redis support to Comment Object
+* [33m32ec8ac[m feat: Add Redis support to Book Object
+* [33m770a503[m feat: Add redis support for User Object
+* [33mc9888cc[m fix: bug Redis convert Json to User Object
+* [33m0d751b7[m feat: Add Redis support for Painter object
+* [33m1f282c1[m feat: Add handler exception
+* [33me4dc42b[m feat: Add Redis support for Category object
+* [33me4bcedd[m refactor: Add Redis support for Author object
+* [33m5b96cf8[m feat: Add messages and messages exception
+* [33mb86d5fc[m refactor: change file location to MVC model
+* [33m7171ee8[m initial FE EBook_Management_App
+* [33m86596a9[m api createOrder, updateOrder, getOrderById, getOrderByUser(have Pageable) success
+* [33m6ac3fa6[m Complete build BE EBook_Management ver Beta
+* [33mecad429[m Config spring security success
+* [33m4bf6308[m Test api CRUD rating v1 success
+* [33m9f638a6[m Test api CRUD followv1 success
+* [33mb2652cf[m Test api CRUD book v1 success
+* [33mb9775d6[m Test api CRUD category, author, painter and role v1 success
+* [33m6428f3e[m change location folder
+* [33m5453afc[m Test api create category v1 success
+* [33m1edcd38[m Initial commit
