@@ -48,6 +48,9 @@ public class FollowRedisService implements IFollowRedisService{
 
 	@Override
 	public void saveFollowById(Long followId, Follow follow) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromId(followId);
 		String json = redisObjectMapper.writeValueAsString(follow);
 		
@@ -76,6 +79,9 @@ public class FollowRedisService implements IFollowRedisService{
 
 	@Override
 	public void saveAllFollow(String typeGet, Long id, Set<Follow> follows) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromGetBy(typeGet, id);
 		String json = redisObjectMapper.writeValueAsString(follows);
 		

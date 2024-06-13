@@ -3,6 +3,8 @@ package com.example.EBook_Management_BE.repositories;
 import java.util.List;
 import java.util.Set;
 
+import com.example.EBook_Management_BE.entity.User;
+import com.example.EBook_Management_BE.entity.UserBook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +20,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 	List<Book> findByCategories(Set<Category> categories);
 
 	boolean existsByCategories(Set<Category> categories);
+
+	List<Book> findAllByUserBooks(List<UserBook> userBooks);
 }

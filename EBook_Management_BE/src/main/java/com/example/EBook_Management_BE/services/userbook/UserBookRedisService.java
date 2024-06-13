@@ -44,6 +44,9 @@ public class UserBookRedisService implements IUserBookRedisService {
 
 	@Override
 	public void saveUserBookById(Long userBookId, UserBook author) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromId(userBookId);
 		String json = redisObjectMapper.writeValueAsString(author);
 

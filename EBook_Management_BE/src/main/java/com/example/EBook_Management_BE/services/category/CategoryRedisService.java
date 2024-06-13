@@ -50,6 +50,9 @@ public class CategoryRedisService implements ICategoryRedisService {
 
 	@Override
 	public void saveCategoryById(Long categoryId, Category category) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromId(categoryId);
 		String json = redisObjectMapper.writeValueAsString(category);
 		
@@ -78,6 +81,9 @@ public class CategoryRedisService implements ICategoryRedisService {
 
 	@Override
 	public void saveAllCategory(List<Category> categories) throws JsonProcessingException {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFrom();
 		String json = redisObjectMapper.writeValueAsString(categories);
 

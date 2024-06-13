@@ -28,7 +28,7 @@ public class BookListener {
 	public void postPersist(Book book) {
 		// Update Redis cache
 		logger.info("postPersist");
-		bookRedisService.clearById(book.getId());
+		bookRedisService.clear(book);
 	}
 
 	@PreUpdate
@@ -41,7 +41,7 @@ public class BookListener {
 	public void postUpdate(Book book) {
 		// Update Redis cache
 		logger.info("postUpdate");
-		bookRedisService.clearById(book.getId());
+		bookRedisService.clear(book);
 	}
 
 	@PreRemove
@@ -54,6 +54,6 @@ public class BookListener {
 	public void postRemove(Book book) {
 		// Update Redis cache
 		logger.info("postRemove");
-		bookRedisService.clearById(book.getId());
+		bookRedisService.clear(book);
 	}
 }

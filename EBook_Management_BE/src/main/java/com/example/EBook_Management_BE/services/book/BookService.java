@@ -1,5 +1,7 @@
 package com.example.EBook_Management_BE.services.book;
 
+import com.example.EBook_Management_BE.entity.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,7 @@ import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -76,5 +79,19 @@ public class BookService implements IBookService {
 		userBookRepository.deleteAll(book.getUserBooks());
 
 		bookRepository.deleteById(bookId);
+	}
+
+	@Override
+	public List<Book> getAllBookByUser(User user) throws JsonProcessingException {
+		List<Book> books = bookRedisService.getAllBookByUser(user);
+		if (books == null) {
+			List<UserBook> userBooks = userBookRepository.findAllByUser(user);
+
+			books = bookRepository.findAllByUserBooks(userBooks);
+
+			bookRedisService.saveAllBookByUser(books, user);
+		}
+
+		return books;
 	}
 }

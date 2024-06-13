@@ -38,7 +38,7 @@ public class UserResponse {
 	private double budget;
 
 	@JsonProperty("date_of_birth")
-	private Date dateOfBirth;
+	private String dateOfBirth;
 
 	@JsonProperty("is_active")
 	private short isActive;

@@ -46,6 +46,9 @@ public class RoleRedisService implements IRoleRedisService{
 
 	@Override
 	public void saveRoleById(Long roleId, Role role) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromId(roleId);
 		String json = redisObjectMapper.writeValueAsString(role);
 		
@@ -75,6 +78,9 @@ public class RoleRedisService implements IRoleRedisService{
 
 	@Override
 	public void saveRoleByName(String roleName, Role role) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromName(roleName);
 		String json = redisObjectMapper.writeValueAsString(role);
 

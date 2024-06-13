@@ -47,6 +47,9 @@ public class ReadingHistoryRedisService implements IReadingHistoryRedisService {
 
 	@Override
 	public void saveReadingHistoryById(Long id, ReadingHistory readingHistory) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromId(id);
 		String json = redisObjectMapper.writeValueAsString(readingHistory);
 		

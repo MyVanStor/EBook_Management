@@ -132,6 +132,7 @@ public class UserService implements IUserService {
 		
 		// Update the password if it is provided in the DTO
 		if (user.getPassword() != null) {
+
 			// reset password => clear token
 			List<Token> tokens = tokenRepository.findByUser(existingUser);
 			tokenRepository.deleteAll(tokens);

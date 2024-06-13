@@ -46,6 +46,9 @@ public class CommentRedisService implements ICommentRedisService {
 
 	@Override
 	public void saveCommentById(Long commentId, Comment comment) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromId(commentId);
 		String json = redisObjectMapper.writeValueAsString(comment);
 		

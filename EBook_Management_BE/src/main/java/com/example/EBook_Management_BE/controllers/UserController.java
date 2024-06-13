@@ -145,9 +145,9 @@ public class UserController {
                 .build());
     }
 
-    @PutMapping("/details")
+    @PutMapping("/details/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_SYS-ADMIN')")
-    public ResponseEntity<ResponseObject> updateUserDetails(@RequestHeader(name = "user_id") Long userId,
+    public ResponseEntity<ResponseObject> updateUserDetails(@PathVariable Long userId,
                                                             @RequestBody UpdateUserDTO updatedUserDTO, @RequestHeader("Authorization") String authorizationHeader)
             throws Exception {
         if (updatedUserDTO.getPassword() != null && !updatedUserDTO.getPassword().equals(updatedUserDTO.getRetypePassword())) {

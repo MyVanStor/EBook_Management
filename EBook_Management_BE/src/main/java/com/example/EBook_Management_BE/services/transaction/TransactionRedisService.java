@@ -42,6 +42,9 @@ public class TransactionRedisService implements ITransactionRedisService {
 
 	@Override
 	public void saveTransactionById(Long transactionId, Transaction transaction) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromId(transactionId);
 		String json = redisObjectMapper.writeValueAsString(transaction);
 		redisTemplate.opsForValue().set(key, json);

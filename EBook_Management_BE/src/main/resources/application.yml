@@ -17,7 +17,7 @@ spring:
     default-locale: en
   data:
     redis:
-      use-redis-cache: true
+      use-redis-cache: false
       host: localhost
       port: 6379
 

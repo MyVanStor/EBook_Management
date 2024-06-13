@@ -42,6 +42,9 @@ public class TokenRedisService implements ITokenRedisService {
 
 	@Override
 	public void saveToken(String tokenString, Token token) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKey(tokenString);
 		String json = redisObjectMapper.writeValueAsString(token);
 		redisTemplate.opsForValue().set(key, json);

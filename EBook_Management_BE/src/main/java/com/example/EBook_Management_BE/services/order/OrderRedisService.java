@@ -45,6 +45,9 @@ public class OrderRedisService implements IOrderRedisService {
 
 	@Override
 	public void saveOrderById(Long orderId, Order order) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromId(orderId);
 		String json = redisObjectMapper.writeValueAsString(order);
 

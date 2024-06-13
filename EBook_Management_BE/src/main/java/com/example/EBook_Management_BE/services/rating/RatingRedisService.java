@@ -48,6 +48,9 @@ public class RatingRedisService implements IRatingRedisService {
 
 	@Override
 	public void saveRatingById(Long ratingId, Rating rating) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromId(ratingId);
 		String json = redisObjectMapper.writeValueAsString(rating);
 		redisTemplate.opsForValue().set(key, json);
@@ -75,6 +78,9 @@ public class RatingRedisService implements IRatingRedisService {
 
 	@Override
 	public void saveAllRatingBook(Long bookId, Set<Rating> ratings) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromBookId(bookId);
 		String json = redisObjectMapper.writeValueAsString(ratings);
 		

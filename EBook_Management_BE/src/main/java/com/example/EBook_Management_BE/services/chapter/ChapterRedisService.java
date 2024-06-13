@@ -47,6 +47,9 @@ public class ChapterRedisService implements IChapterRedisService {
 
 	@Override
 	public void saveChapterById(Long chapterId, Chapter chapter) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromId(chapterId);
 		String json = redisObjectMapper.writeValueAsString(chapter);
 
@@ -78,6 +81,9 @@ public class ChapterRedisService implements IChapterRedisService {
 
 	@Override
 	public void saveAllChapterByBookId(Long bookId, List<Chapter> chapters) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromBookId(bookId);
 		String json = redisObjectMapper.writeValueAsString(chapters);
 

@@ -57,8 +57,8 @@ public class User extends BaseEntity implements UserDetails {
 	@Column(name = "budget", columnDefinition = "FLOAT", nullable = false)
 	private double budget;
 
-	@Column(name = "date_of_birth", columnDefinition = "DATE")
-	private Date dateOfBirth;
+	@Column(name = "date_of_birth")
+	private String dateOfBirth;
 
 	@Column(name = "is_active")
 	private short isActive;

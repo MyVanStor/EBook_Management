@@ -51,7 +51,7 @@ public class UserDTO {
 
 	@PastOrPresent(message = MessageKeyValidation.USER_DATE_OF_BIRTH)
 	@JsonProperty("date_of_birth")
-	private Date dateOfBirth;
+	private String dateOfBirth;
 
 	@JsonProperty("is_active")
 	private short isActive = 1;

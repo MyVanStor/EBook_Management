@@ -34,7 +34,7 @@ public class Book extends BaseEntity {
 	@Column(name = "id")
 	private Long id;
 
-	@Column(name = "title", length = 100, nullable = false, unique = true)
+	@Column(name = "title", length = 100, nullable = false)
 	private String title;
 
 	@Column(name = "summary")

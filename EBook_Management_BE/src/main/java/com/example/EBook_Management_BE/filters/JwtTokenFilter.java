@@ -72,7 +72,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 			filterChain.doFilter(request, response); // enable bypass
 		} catch (Exception e) {
-			logger.info(HttpServletResponse.SC_UNAUTHORIZED);
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			response.getWriter().write(e.getMessage());
 		}

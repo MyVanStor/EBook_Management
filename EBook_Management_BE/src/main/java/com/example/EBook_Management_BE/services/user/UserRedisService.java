@@ -22,6 +22,7 @@ public class UserRedisService implements IUserRedisService{
 	@Override
 	public void clearById(Long id) {
 		redisTemplate.delete(getKeyFromId(id));
+		redisTemplate.delete("*");
 	}
 	
 	private String getKeyFromId(Long id) {
@@ -46,6 +47,9 @@ public class UserRedisService implements IUserRedisService{
 
 	@Override
 	public void saveUserById(Long userId, User user) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromId(userId);
 		String json = redisObjectMapper.writeValueAsString(user);
 		
@@ -74,6 +78,9 @@ public class UserRedisService implements IUserRedisService{
 
 	@Override
 	public void saveUserByTokenOrRefreshToken(String token, User user) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromTokenOrRefreshToken(token);
 		String json = redisObjectMapper.writeValueAsString(user);
 		
@@ -102,6 +109,9 @@ public class UserRedisService implements IUserRedisService{
 
 	@Override
 	public void saveUserByPhoneNumber(String phoneNumber, User user) throws Exception {
+		if (useRedisCache == false) {
+			return;
+		}
 		String key = this.getKeyFromPhoneNumber(phoneNumber);
 		String json = redisObjectMapper.writeValueAsString(user);
 		
