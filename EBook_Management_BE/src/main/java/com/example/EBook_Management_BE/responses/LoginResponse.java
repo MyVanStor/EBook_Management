@@ -28,7 +28,7 @@ public class LoginResponse {
 	@JsonProperty("user_id")
 	private Long userId;
 
-	@JsonProperty("user_name")
+	@JsonProperty("phone_number")
 	private String username;
 
 	@JsonProperty("roles")
