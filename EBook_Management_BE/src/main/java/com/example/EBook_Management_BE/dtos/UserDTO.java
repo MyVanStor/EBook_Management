@@ -49,7 +49,7 @@ public class UserDTO {
 	@NegativeOrZero(message = MessageKeyValidation.USER_BUDGET_NEGATIVE)
 	private double budget;
 
-	@PastOrPresent(message = MessageKeyValidation.USER_DATE_OF_BIRTH)
+//	@PastOrPresent(message = MessageKeyValidation.USER_DATE_OF_BIRTH)
 	@JsonProperty("date_of_birth")
 	private String dateOfBirth;
 
