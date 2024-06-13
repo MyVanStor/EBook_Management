@@ -38,6 +38,7 @@ public class CategoryController {
     private CategoryMapper categoryMapper;
 
     @GetMapping()
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ResponseObject> getCategoryById(@RequestHeader(name = "category_id") Long categoryId) throws Exception {
         Category existingCategory = categoryService.getCategoryById(categoryId);
 

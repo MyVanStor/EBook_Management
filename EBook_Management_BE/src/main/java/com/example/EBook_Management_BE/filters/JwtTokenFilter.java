@@ -41,6 +41,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 				filterChain.doFilter(request, response); // enable bypass
 				return;
 			}
+
+			if ("OPTIONS".equals(request.getMethod())) {
+				filterChain.doFilter(request, response);
+				return;
+			}
+
 			final String authHeader = request.getHeader("Authorization");
 			if (authHeader == null || !authHeader.startsWith("Bearer ")) {
 				response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "authHeader null or not started with Bearer");
@@ -63,8 +69,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 					SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 				}
 			}
+
 			filterChain.doFilter(request, response); // enable bypass
 		} catch (Exception e) {
+			logger.info(HttpServletResponse.SC_UNAUTHORIZED);
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			response.getWriter().write(e.getMessage());
 		}

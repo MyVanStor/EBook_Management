@@ -100,7 +100,7 @@ public class UserController {
                 .userId(userDetail.getId())
                 .build();
 
-        return ResponseEntity.ok().body(ResponseObject.builder()
+        return ResponseEntity.ok(ResponseObject.builder()
                 .status(HttpStatus.OK)
                 .message(localizationUtils.getLocalizedMessage(MessageKeys.USER_LOGIN_SUCCESSFULLY))
                 .data(loginResponse)
