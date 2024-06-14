@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -85,9 +86,7 @@ public class BookService implements IBookService {
 	public List<Book> getAllBookByUser(User user) throws JsonProcessingException {
 		List<Book> books = bookRedisService.getAllBookByUser(user);
 		if (books == null) {
-			List<UserBook> userBooks = userBookRepository.findAllByUser(user);
-
-			books = bookRepository.findAllByUserBooks(userBooks);
+			books = bookRepository.findAllByUserId(user.getId());
 
 			bookRedisService.saveAllBookByUser(books, user);
 		}

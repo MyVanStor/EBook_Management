@@ -11,6 +11,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.EBook_Management_BE.entity.Book;
 import com.example.EBook_Management_BE.entity.Category;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 	boolean existsByTitle(String title);
@@ -21,5 +23,11 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
 	boolean existsByCategories(Set<Category> categories);
 
-	List<Book> findAllByUserBooks(List<UserBook> userBooks);
+	@Query(value = """
+            SELECT b.*
+            FROM books b
+            JOIN user_book ub ON b.id = ub.book_id
+            JOIN users u ON ub.user_id = u.id
+            WHERE u.id = :userId""", nativeQuery = true)
+	List<Book> findAllByUserId(@Param("userId") Long userId);
 }
