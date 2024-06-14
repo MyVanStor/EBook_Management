@@ -16,4 +16,6 @@ public interface IBookService {
 	void deleteBook(Long bookId) throws Exception;
 
 	List<Book> getAllBookByUser(User user) throws JsonProcessingException;
+
+	List<Book> getAllBookByType(String type, Long page, Long limit) throws JsonProcessingException;
 }

@@ -15,11 +15,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
-	boolean existsByTitle(String title);
-
 	Page<Book> findAll(Pageable pageable);
-
-	List<Book> findByCategories(Set<Category> categories);
 
 	boolean existsByCategories(Set<Category> categories);
 
@@ -30,4 +26,12 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             JOIN users u ON ub.user_id = u.id
             WHERE u.id = :userId""", nativeQuery = true)
 	List<Book> findAllByUserId(@Param("userId") Long userId);
+
+	@Query(value = """
+            SELECT b 
+            FROM Book b 
+            WHERE b.typeOfBook = :type
+            ORDER BY b.createdAt DESC
+            """)
+	Page<Book> findAllByType(@Param("type") String type, Pageable pageable);
 }

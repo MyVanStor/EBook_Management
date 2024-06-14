@@ -162,4 +162,19 @@ public class BookController {
                 .build());
     }
 
+    @GetMapping("/all/{type}/{page}/{limit}")
+    public ResponseEntity<ResponseObject> getAllBookByType(@PathVariable String type, @PathVariable Long page, @PathVariable Long limit) throws Exception {
+        List<Book> books = bookService.getAllBookByType(type, page - 1, limit);
+
+        List<BookResponse> bookResponses = books.stream()
+                .map(bookMapper::mapToBookResponse)
+                .toList();
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .message(localizationUtils.getLocalizedMessage(MessageKeys.BOOK_GET_ALL_BY_TYPE))
+                .status(HttpStatus.OK)
+                .data(bookResponses)
+                .build());
+    }
+
 }

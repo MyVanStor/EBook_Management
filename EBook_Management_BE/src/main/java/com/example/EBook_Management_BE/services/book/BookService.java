@@ -2,6 +2,9 @@ package com.example.EBook_Management_BE.services.book;
 
 import com.example.EBook_Management_BE.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,5 +95,12 @@ public class BookService implements IBookService {
 		}
 
 		return books;
+	}
+
+	@Override
+	public List<Book> getAllBookByType(String type, Long page, Long limit) throws JsonProcessingException {
+		Pageable pageable = PageRequest.of(Math.toIntExact(page), Math.toIntExact(limit));
+		Page<Book> bookPage = bookRepository.findAllByType(type, pageable);
+		return bookPage.getContent();
 	}
 }
