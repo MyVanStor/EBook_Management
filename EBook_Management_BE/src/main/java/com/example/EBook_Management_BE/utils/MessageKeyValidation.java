@@ -14,7 +14,7 @@ public class MessageKeyValidation {
 	public static final String BOOK_TITLE_NOT_BLANK = "validation.book.title.not_blank";
 	public static final String BOOK_THUMBNAIL_NOT_BLANK = "validation.book.thumbnail.not_blank";
 	public static final String BOOK_THUMBNAIL_URL = "validation.book.thumbnail.url";
-	public static final String BOOK_PRICE_NEGATIVE = "validation.book.price.negative";
+	public static final String BOOK_PRICE_POISITIVE = "validation.book.price.positive";
 
 	public static final String CHAPTER_NAME_NOT_BLANK = "validation.chapter.name.not_blank";
 	public static final String CHAPTER_THUMBNAIL_NOT_BLANK = "validation.chapter.thumbnail.not_blank";

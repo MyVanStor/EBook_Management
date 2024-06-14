@@ -17,7 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class OrderDetailDTO {
-	@NegativeOrZero(message = MessageKeyValidation.BOOK_PRICE_NEGATIVE)
+	@NegativeOrZero(message = MessageKeyValidation.BOOK_PRICE_POISITIVE)
 	private double price;
 
 	@Positive(message = MessageKeyValidation.ID_POSITIVE)

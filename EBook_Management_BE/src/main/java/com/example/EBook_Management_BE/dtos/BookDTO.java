@@ -2,12 +2,11 @@ package com.example.EBook_Management_BE.dtos;
 
 import java.util.Set;
 
-import org.hibernate.validator.constraints.URL;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import com.example.EBook_Management_BE.utils.MessageKeyValidation;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.validation.constraints.NegativeOrZero;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,7 +40,7 @@ public class BookDTO {
 	@JsonProperty("painter")
 	private String painter;
 
-	@NegativeOrZero(message = MessageKeyValidation.BOOK_PRICE_NEGATIVE)
+	@PositiveOrZero(message = MessageKeyValidation.BOOK_PRICE_POISITIVE)
 	private double price;
 
 	@JsonProperty("number_reads")
