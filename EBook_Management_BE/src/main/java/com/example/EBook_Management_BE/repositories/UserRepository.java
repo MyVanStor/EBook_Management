@@ -22,8 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	List<User> findByRole(Role role);
 	
 	@Query("SELECT o FROM User o WHERE o.isActive = 1 AND (:keyword IS NULL OR :keyword = '' OR " +
-            "o.fullname LIKE %:keyword% " +
-            "OR o.phoneNumber LIKE %:keyword%) " +
+            "o.fullname LIKE %:keyword%) " +
             "AND LOWER(o.role.name) = 'user'")
     Page<User> findAll(@Param("keyword") String keyword, Pageable pageable);
 }

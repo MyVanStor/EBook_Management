@@ -13,7 +13,7 @@ import com.example.EBook_Management_BE.entity.Category;
 import com.example.EBook_Management_BE.exceptions.DeleteException;
 import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
 import com.example.EBook_Management_BE.exceptions.DuplicateException;
-import com.example.EBook_Management_BE.repositories.BookRepository;
+import com.example.EBook_Management_BE.repositories.book.BookRepository;
 import com.example.EBook_Management_BE.repositories.CategoryRepository;
 import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 

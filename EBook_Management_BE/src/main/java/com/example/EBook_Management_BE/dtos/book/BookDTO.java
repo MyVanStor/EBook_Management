@@ -1,4 +1,4 @@
-package com.example.EBook_Management_BE.dtos;
+package com.example.EBook_Management_BE.dtos.book;
 
 import java.util.Set;
 

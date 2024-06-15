@@ -4,12 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -158,11 +156,6 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public Page<User> findAll(String keyword, Pageable pageable) throws Exception {
-		return userRepository.findAll(keyword, pageable);
-	}
-
-	@Override
 	@Transactional
 	public void resetPassword(String phoneNumber, String newPassword) throws DataNotFoundException {
 		User existingUser = userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new DataNotFoundException(
@@ -192,6 +185,13 @@ public class UserService implements IUserService {
 		userRepository.save(existingUser);
 
 		return newStatus;
+	}
+
+	@Override
+	public Page<User> getAllUsers(String keyword, Long page, Long limit) {
+		Pageable pageable = PageRequest.of(Math.toIntExact(page), Math.toIntExact(limit));
+		Page<User> userPage = userRepository.findAll(keyword, pageable);
+		return userPage;
 	}
 
 }

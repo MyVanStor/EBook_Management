@@ -5,13 +5,16 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.example.EBook_Management_BE.dtos.book.SearchBookDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.EBook_Management_BE.components.LocalizationUtils;
-import com.example.EBook_Management_BE.dtos.BookDTO;
+import com.example.EBook_Management_BE.dtos.book.BookDTO;
 import com.example.EBook_Management_BE.entity.Book;
 import com.example.EBook_Management_BE.entity.Category;
 import com.example.EBook_Management_BE.entity.User;
@@ -177,4 +180,22 @@ public class BookController {
                 .build());
     }
 
+    @PostMapping("/search/{page}/{limit}")
+    public ResponseEntity<ResponseObject> searchBook(@Valid @RequestBody SearchBookDTO searchBookDTO,
+                                                     @PathVariable Long page,
+                                                     @PathVariable Long limit) {
+        Page<Book> books = bookService.searchBook(searchBookDTO, page - 1, limit);
+
+        List<BookResponse> bookResponses = books.getContent().stream()
+                .map(bookMapper::mapToBookResponse)
+                .toList();
+
+        Page<BookResponse> bookResponsesPage = new PageImpl<>(bookResponses, books.getPageable(), books.getTotalElements());
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .message(localizationUtils.getLocalizedMessage(MessageKeys.BOOK_SEARCH_SUCCESSFULLY))
+                .status(HttpStatus.OK)
+                .data(bookResponsesPage)
+                .build());
+    }
 }

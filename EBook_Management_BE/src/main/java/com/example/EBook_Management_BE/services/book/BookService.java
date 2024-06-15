@@ -1,6 +1,8 @@
 package com.example.EBook_Management_BE.services.book;
 
+import com.example.EBook_Management_BE.dtos.book.SearchBookDTO;
 import com.example.EBook_Management_BE.entity.User;
+import com.example.EBook_Management_BE.repositories.book.BookRepositoryCustom;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +15,7 @@ import com.example.EBook_Management_BE.entity.Book;
 import com.example.EBook_Management_BE.entity.UserBook;
 import com.example.EBook_Management_BE.constants.StatusUserBook;
 import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
-import com.example.EBook_Management_BE.repositories.BookRepository;
+import com.example.EBook_Management_BE.repositories.book.BookRepository;
 import com.example.EBook_Management_BE.repositories.UserBookRepository;
 import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 
@@ -21,13 +23,13 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class BookService implements IBookService {
 	private final BookRepository bookRepository;
 	private final IBookRedisService bookRedisService;
+	private final BookRepositoryCustom bookRepositoryCustom;
 	private final UserBookRepository userBookRepository;
 
 	private final LocalizationUtils localizationUtils;
@@ -102,5 +104,13 @@ public class BookService implements IBookService {
 		Pageable pageable = PageRequest.of(Math.toIntExact(page), Math.toIntExact(limit));
 		Page<Book> bookPage = bookRepository.findAllByType(type, pageable);
 		return bookPage.getContent();
+	}
+
+	@Override
+	public Page<Book> searchBook(SearchBookDTO searchBookDTO, Long page, Long limit) {
+		Pageable pageable = PageRequest.of(Math.toIntExact(page), Math.toIntExact(limit));
+		Page<Book> bookPage = bookRepositoryCustom.searchBook(searchBookDTO, pageable);
+
+		return  bookPage;
 	}
 }

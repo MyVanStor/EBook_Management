@@ -22,6 +22,7 @@ public class MessageKeys {
     public static final String USER_CHANGE_PASSWORD_SUCCESSFULLY = "user.change_password.successfully";
     public static final String USER_BLOCK_SUCCESSFULLY = "user.block.successfully";
     public static final String USER_ENABLE_SUCCESSFULLY = "user.enable.successfully";
+    public static final String USER_SEARCH_SUCCESSFULLY = "user.search.successfully";
 
     public static final String TOKEN_REFRESH_SUCCESSFULLY = "token.refresh.successfully";
 
@@ -43,6 +44,7 @@ public class MessageKeys {
     public static final String BOOK_DELETE_SUCCESSFULLY = "book.delete.successfully";
     public static final String BOOK_GET_ALL_BY_USER = "book.get_all_by_user.successfully";
     public static final String BOOK_GET_ALL_BY_TYPE = "book.get_all_by_type.successfully";
+    public static final String BOOK_SEARCH_SUCCESSFULLY = "book.search.successfully";
 
     public static final String FOLLOW_GET_BY_ID_SUCCESSFULLY = "follow.get_by_id.successfully";
     public static final String FOLLOW_GET_ALL_BY_USER_ID_SUCCESSFULLY = "follow.get_all_by_user_id.successfully";

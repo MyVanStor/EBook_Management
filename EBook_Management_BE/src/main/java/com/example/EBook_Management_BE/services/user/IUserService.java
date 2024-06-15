@@ -19,9 +19,9 @@ public interface IUserService {
 
 	User updateUser(Long userId, User user) throws Exception;
 
-	Page<User> findAll(String keyword, Pageable pageable) throws Exception;
-
 	void resetPassword(String phoneNumber, String newPassword) throws DataNotFoundException;
 
 	short blockOrEnable(Long userId) throws Exception;
+
+	Page<User> getAllUsers(String keyword, Long page, Long limit);
 }

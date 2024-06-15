@@ -118,4 +118,13 @@ public class GlobalExceptionHandler {
 				.message(exception.getMessage())
 				.build());
 	}
+
+	@ExceptionHandler(Exception.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<ResponseObject> handleException(Exception exception) {
+		return ResponseEntity.badRequest().body(ResponseObject.builder()
+				.status(HttpStatus.BAD_REQUEST)
+				.message(exception.getMessage())
+				.build());
+	}
 }

@@ -1,8 +1,10 @@
 package com.example.EBook_Management_BE.services.book;
 
+import com.example.EBook_Management_BE.dtos.book.SearchBookDTO;
 import com.example.EBook_Management_BE.entity.Book;
 import com.example.EBook_Management_BE.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -18,4 +20,6 @@ public interface IBookService {
 	List<Book> getAllBookByUser(User user) throws JsonProcessingException;
 
 	List<Book> getAllBookByType(String type, Long page, Long limit) throws JsonProcessingException;
+
+	Page<Book> searchBook(SearchBookDTO searchBookDTO, Long page, Long limit);
 }

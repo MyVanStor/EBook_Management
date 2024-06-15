@@ -4,6 +4,9 @@ import com.example.EBook_Management_BE.constants.RoleEnum;
 import com.example.EBook_Management_BE.services.token.ITokenService;
 import org.aspectj.weaver.patterns.IToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,6 +39,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -224,6 +228,26 @@ public class UserController {
                 .message(message)
                 .status(HttpStatus.OK)
                 .data(null)
+                .build());
+    }
+
+    @GetMapping("/search/{keyword}/{page}/{limit}")
+    public ResponseEntity<ResponseObject> getAllUser(@PathVariable String keyword, @PathVariable Long page, @PathVariable Long limit) {
+        if (Objects.equals(keyword, "null")) {
+            keyword = "";
+        }
+        Page<User> userPage = userService.getAllUsers(keyword, page - 1, limit);
+
+        List<UserResponse> userResponses = userPage.getContent().stream()
+                .map(userMapper::mapToUserResponse)
+                .toList();
+
+        Page<UserResponse> userResponsePageable = new PageImpl<>(userResponses, userPage.getPageable(), userPage.getTotalElements());
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .message(localizationUtils.getLocalizedMessage(MessageKeys.USER_SEARCH_SUCCESSFULLY))
+                .status(HttpStatus.OK)
+                .data(userResponsePageable)
                 .build());
     }
 }

@@ -1,10 +1,9 @@
-package com.example.EBook_Management_BE.repositories;
+package com.example.EBook_Management_BE.repositories.book;
 
 import java.util.List;
 import java.util.Set;
 
-import com.example.EBook_Management_BE.entity.User;
-import com.example.EBook_Management_BE.entity.UserBook;
+import com.example.EBook_Management_BE.dtos.book.SearchBookDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
