@@ -32,10 +32,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
         JOIN user_book ub ON b.id = ub.book_id
         JOIN users u ON ub.user_id = u.id
         WHERE u.id = :account_id
-        AND b.status != 'private'
+        AND b.type_of_book != 'private'
+        ORDER BY b.created_at DESC
         """, nativeQuery = true)
 	List<Book> findAllBooksByAccount(@Param("account_id") Long accountId);
-
 
 	@Query(value = """
             SELECT b 
