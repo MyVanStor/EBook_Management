@@ -47,7 +47,7 @@ public class BookController {
     private final LocalizationUtils localizationUtils;
 
     @PostMapping("/{userId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<ResponseObject> createBook(@PathVariable Long userId, @Valid @RequestBody BookDTO bookDTO) throws Exception {
         Book book = bookMapper.mapToBookEntity(bookDTO);
@@ -79,9 +79,9 @@ public class BookController {
                 .build());
     }
 
-    @GetMapping()
+    @GetMapping("/{bookId}")
 //	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-    public ResponseEntity<ResponseObject> getBookById(@RequestHeader(name = "book_id") Long bookId) throws Exception {
+    public ResponseEntity<ResponseObject> getBookById(@PathVariable Long bookId) throws Exception {
         Book existingBook = bookService.getBookById(bookId);
 
         BookResponse bookResponse = bookMapper.mapToBookResponse(existingBook);

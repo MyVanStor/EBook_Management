@@ -233,8 +233,10 @@ public class UserController {
 
     @GetMapping("/search/{keyword}/{page}/{limit}")
     public ResponseEntity<ResponseObject> getAllUser(@PathVariable String keyword, @PathVariable Long page, @PathVariable Long limit) {
-        if (Objects.equals(keyword, "null")) {
+        if (Objects.equals(keyword, "anull")) {
             keyword = "";
+        } else {
+            keyword = keyword.substring(1);
         }
         Page<User> userPage = userService.getAllUsers(keyword, page - 1, limit);
 
