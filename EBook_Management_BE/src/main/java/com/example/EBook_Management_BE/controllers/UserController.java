@@ -252,4 +252,17 @@ public class UserController {
                 .data(userResponsePageable)
                 .build());
     }
+
+    @GetMapping("/{userBookId}")
+    public ResponseEntity<ResponseObject> getUserByUserBookId(@PathVariable Long userBookId) throws Exception {
+        User user = userService.getUserByUserBookId(userBookId);
+
+        UserResponse userResponse = userMapper.mapToUserResponse(user);
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .message(localizationUtils.getLocalizedMessage(MessageKeys.USER_GET_BY_ID_SUCCESSFULLY))
+                .status(HttpStatus.OK)
+                .data(userResponse)
+                .build());
+    }
 }

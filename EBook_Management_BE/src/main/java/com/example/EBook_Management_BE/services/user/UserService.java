@@ -3,6 +3,8 @@ package com.example.EBook_Management_BE.services.user;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.EBook_Management_BE.entity.UserBook;
+import com.example.EBook_Management_BE.repositories.UserBookRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService implements IUserService {
 	private final UserRepository userRepository;
 	private final IUserRedisService userRedisService;
+	private final UserBookRepository userBookRepository;
 	private final JwtTokenUtil jwtTokenUtil;
 	private final PasswordEncoder passwordEncoder;
 	private final AuthenticationManager authenticationManager;
@@ -192,6 +195,16 @@ public class UserService implements IUserService {
 		Pageable pageable = PageRequest.of(Math.toIntExact(page), Math.toIntExact(limit));
 		Page<User> userPage = userRepository.findAll(keyword, pageable);
 		return userPage;
+	}
+
+	@Override
+	public User getUserByUserBookId(Long userBookId) throws DataNotFoundException {
+		Optional<UserBook> userBook = userBookRepository.findById(userBookId);
+		if (userBook.isPresent()) {
+			return userBook.get().getUser();
+		} else {
+			throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.USER_NOT_FOUND));
+		}
 	}
 
 }

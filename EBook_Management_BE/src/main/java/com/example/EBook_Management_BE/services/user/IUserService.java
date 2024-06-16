@@ -24,4 +24,6 @@ public interface IUserService {
 	short blockOrEnable(Long userId) throws Exception;
 
 	Page<User> getAllUsers(String keyword, Long page, Long limit);
+
+	User getUserByUserBookId(Long userBookId) throws DataNotFoundException;
 }

@@ -39,13 +39,17 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom {
         if (searchBookDTO.getKeyword() != null && !searchBookDTO.getKeyword().isEmpty()) {
             String pattern = "%" + searchBookDTO.getKeyword().toLowerCase() + "%";
             predicates.add(cb.or(
-                    cb.like(cb.lower(book.get("title")), pattern)
+                    cb.like(cb.lower(book.get("title")), pattern),
+                    cb.like(cb.lower(book.get("author")), pattern),
+                    cb.like(cb.lower(book.get("painter")), pattern)
             ));
         }
 
         if (searchBookDTO.getCategoryIds() != null && !searchBookDTO.getCategoryIds().isEmpty()) {
             predicates.add(bookCategoryJoin.get("id").in(searchBookDTO.getCategoryIds()));
         }
+
+        predicates.add(cb.notEqual(book.get("typeOfBook"), "private"));
 
         query.where(cb.and(predicates.toArray(new Predicate[0])));
         query.distinct(true);  // Ensure distinct results when using many-to-many relationships
