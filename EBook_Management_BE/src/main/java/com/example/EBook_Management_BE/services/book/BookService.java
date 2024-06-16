@@ -65,6 +65,7 @@ public class BookService implements IBookService {
 		Book existingBook = getBookById(bookId);
 
 		book.setId(existingBook.getId());
+		book.setNumberReads(existingBook.getNumberReads());
 		bookRepository.save(book);
 
 		return book;

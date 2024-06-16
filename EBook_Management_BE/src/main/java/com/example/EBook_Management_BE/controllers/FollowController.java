@@ -62,7 +62,6 @@ public class FollowController {
                 .build();
 
         newFollow = followService.createFollow(newFollow);
-        followRedisService.saveFollowById(newFollow.getId(), newFollow);
 
         FollowResponse followResponse = followMapper.mapToFollowResponse(newFollow);
 
@@ -88,7 +87,7 @@ public class FollowController {
     }
 
     @GetMapping("/all/{typeGet}/{id}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseObject> getAllFollow(@PathVariable Long id, @PathVariable String typeGet) throws Exception {
         String messageKey = typeGet.equals("following")
                 ? MessageKeys.FOLLOW_GET_ALL_BY_FOLLOWING_SUCCESSFULLY

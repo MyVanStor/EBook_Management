@@ -93,9 +93,9 @@ public class BookController {
                 .build());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{bookId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-    public ResponseEntity<ResponseObject> updateBook(@RequestHeader(name = "book_id") Long bookId, @Valid @RequestBody BookDTO bookDTO) throws Exception {
+    public ResponseEntity<ResponseObject> updateBook(@PathVariable Long bookId, @Valid @RequestBody BookDTO bookDTO) throws Exception {
         Book book = bookMapper.mapToBookEntity(bookDTO);
 
         Set<Category> categories = new HashSet<>();
@@ -104,6 +104,7 @@ public class BookController {
             category.setBooks(Set.of(book));
             categories.add(category);
         }
+        book.setCategories(categories);
 
         book = bookService.updateBook(bookId, book);
         bookRedisService.saveBookById(bookId, book);
@@ -117,9 +118,9 @@ public class BookController {
                 .build());
     }
 
-    @DeleteMapping()
+    @DeleteMapping("/{bookId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-    public ResponseEntity<ResponseObject> deleteBook(@RequestHeader(name = "book_id") Long bookId) throws Exception {
+    public ResponseEntity<ResponseObject> deleteBook(@PathVariable Long bookId) throws Exception {
         bookService.deleteBook(bookId);
 
         return ResponseEntity.ok(ResponseObject.builder()

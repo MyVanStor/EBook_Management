@@ -1,7 +1,9 @@
 package com.example.EBook_Management_BE.services.follow;
 
+import java.util.Objects;
 import java.util.Set;
 
+import com.example.EBook_Management_BE.exceptions.DuplicateException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +30,13 @@ public class FollowService implements IFollowService {
 	@Override
 	@Transactional
 	public Follow createFollow(Follow follow) throws Exception {
-		if (follow.getFollowing() == follow.getUser().getId()) {
+		if (Objects.equals(follow.getFollowing(), follow.getUser().getId())) {
 			throw new SelfFollowException(
 					localizationUtils.getLocalizedMessage(MessageExceptionKeys.FOLLOW_NOT_FOLLOW_YOURSELF));
+		}
+
+		if (followRepository.existsByFollowingAndUser(follow.getFollowing(), follow.getUser())) {
+			throw new DuplicateException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.FOLLOW_EXISTED));
 		}
 
 		return followRepository.save(follow);

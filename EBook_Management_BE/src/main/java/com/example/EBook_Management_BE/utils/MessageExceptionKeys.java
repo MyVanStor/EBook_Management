@@ -39,6 +39,7 @@ public class MessageExceptionKeys {
 
     public static final String FOLLOW_NOT_FOUND = "exception.follow.not_found";
     public static final String FOLLOW_NOT_FOLLOW_YOURSELF = "exception.follow.not_follow_yourself";
+    public static final String FOLLOW_EXISTED = "exception.follow.exists";
 
     public static final String RATING_NOT_FOUND = "exception.rating.not_found";
     public static final String RATING_BOOK_NOT_HAVE_RATING = "exception.rating.book_not_have_rating";
