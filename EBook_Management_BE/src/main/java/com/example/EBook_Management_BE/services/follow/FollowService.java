@@ -66,4 +66,13 @@ public class FollowService implements IFollowService {
 		return followRepository.findByFollowing(following);
 	}
 
+	@Override
+	public Follow getFollowByTwoUser(Long userId1, User user2) throws Exception {
+		Follow follow = followRepository.findByFollowingAndUser(userId1, user2);
+		if (follow == null) {
+			return null;
+		}
+		return follow;
+	}
+
 }

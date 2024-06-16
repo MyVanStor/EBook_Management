@@ -38,93 +38,113 @@ import lombok.RequiredArgsConstructor;
 @Validated
 @RequiredArgsConstructor
 public class FollowController {
-	private final IFollowService followService;
-	private final IFollowRedisService followRedisService;
-	private final IUserService userService;
-	
-	private final LocalizationUtils localizationUtils;
-	
-	@Autowired
-	private FollowMapper followMapper;
+    private final IFollowService followService;
+    private final IFollowRedisService followRedisService;
+    private final IUserService userService;
 
-	@PostMapping()
-	@PreAuthorize("hasRole('ROLE_USER')")
-	@ResponseStatus(code = HttpStatus.CREATED)
-	public ResponseEntity<ResponseObject> createFollow(@Valid @RequestBody FollowDTO followDTO)
-			throws Exception {
-		userService.getUserById(followDTO.getFollowing());
-		
-		User follower = userService.getUserById(followDTO.getUserId());
-		
-		Follow newFollow = Follow.builder()
-				.following(followDTO.getFollowing())
-				.user(follower)
-				.build();
-		
-		newFollow = followService.createFollow(newFollow);
-		followRedisService.saveFollowById(newFollow.getId(), newFollow);
+    private final LocalizationUtils localizationUtils;
 
-		FollowResponse followResponse = followMapper.mapToFollowResponse(newFollow);
-		
-		return ResponseEntity.ok(ResponseObject.builder()
-				.status(HttpStatus.CREATED)
-				.message(localizationUtils.getLocalizedMessage(MessageKeys.FOLLOW_CREATE_SUCCESSFULLY))
-				.data(followResponse)
-				.build());
-	}
-	
-	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-	public ResponseEntity<ResponseObject> getFollowById(@PathVariable Long id) throws Exception {
-		Follow existingFollow = followService.getFollowById(id);
-		
-		FollowResponse followResponse = followMapper.mapToFollowResponse(existingFollow);
-		
-		return ResponseEntity.ok(ResponseObject.builder()
-				.status(HttpStatus.OK)
-				.message(localizationUtils.getLocalizedMessage(MessageKeys.FOLLOW_GET_BY_ID_SUCCESSFULLY))
-				.data(followResponse)
-				.build());
-	}
-	
-	@GetMapping("/all/{typeGet}/{id}")
-	@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-	public ResponseEntity<ResponseObject> getAllFollow(@PathVariable Long id, @PathVariable String typeGet) throws Exception {
-		String messageKey = typeGet.equals("following") 
-				? MessageKeys.FOLLOW_GET_ALL_BY_FOLLOWING_SUCCESSFULLY 
-				: MessageKeys.FOLLOW_GET_ALL_BY_USER_ID_SUCCESSFULLY; 
-		
-		Set<Follow> follows = followRedisService.getAllFollow(typeGet, id);
-		if (follows == null) {
-			if (typeGet.equals("following")) {
-				follows = followService.getAllFollowByFollowing(id);
-			} else {
-				follows = followService.getAllFollowByUserId(id);
-			}
-			
-			followRedisService.saveAllFollow(typeGet, id, follows);
-		}
-		
-		Set<FollowResponse> followResponses = new HashSet<FollowResponse>();
-		for (Follow follow : follows) {
-			followResponses.add(followMapper.mapToFollowResponse(follow));
-		}
-		
-		return ResponseEntity.ok(ResponseObject.builder()
-				.message(localizationUtils.getLocalizedMessage(messageKey))
-				.status(HttpStatus.OK)
-				.data(followResponses)
-				.build());
-	}
-	
-	@DeleteMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<ResponseObject> deleteFollow(@PathVariable Long id) throws Exception {
-		followService.deleteFollow(id);
-		
-		return ResponseEntity.ok(ResponseObject.builder()
-				.status(HttpStatus.OK)
-				.message(localizationUtils.getLocalizedMessage(MessageKeys.FOLLOW_DELETE_SUCCESSFULLY))
-				.build());
-	}
+    @Autowired
+    private FollowMapper followMapper;
+
+    @PostMapping()
+//    @PreAuthorize("hasRole('ROLE_USER')")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public ResponseEntity<ResponseObject> createFollow(@Valid @RequestBody FollowDTO followDTO)
+            throws Exception {
+        userService.getUserById(followDTO.getFollowing());
+
+        User follower = userService.getUserById(followDTO.getUserId());
+
+        Follow newFollow = Follow.builder()
+                .following(followDTO.getFollowing())
+                .user(follower)
+                .build();
+
+        newFollow = followService.createFollow(newFollow);
+        followRedisService.saveFollowById(newFollow.getId(), newFollow);
+
+        FollowResponse followResponse = followMapper.mapToFollowResponse(newFollow);
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .status(HttpStatus.CREATED)
+                .message(localizationUtils.getLocalizedMessage(MessageKeys.FOLLOW_CREATE_SUCCESSFULLY))
+                .data(followResponse)
+                .build());
+    }
+
+    @GetMapping("/{id}")
+//    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ResponseObject> getFollowById(@PathVariable Long id) throws Exception {
+        Follow existingFollow = followService.getFollowById(id);
+
+        FollowResponse followResponse = followMapper.mapToFollowResponse(existingFollow);
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .status(HttpStatus.OK)
+                .message(localizationUtils.getLocalizedMessage(MessageKeys.FOLLOW_GET_BY_ID_SUCCESSFULLY))
+                .data(followResponse)
+                .build());
+    }
+
+    @GetMapping("/all/{typeGet}/{id}")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ResponseObject> getAllFollow(@PathVariable Long id, @PathVariable String typeGet) throws Exception {
+        String messageKey = typeGet.equals("following")
+                ? MessageKeys.FOLLOW_GET_ALL_BY_FOLLOWING_SUCCESSFULLY
+                : MessageKeys.FOLLOW_GET_ALL_BY_USER_ID_SUCCESSFULLY;
+
+        Set<Follow> follows = followRedisService.getAllFollow(typeGet, id);
+        if (follows == null) {
+            if (typeGet.equals("following")) {
+                follows = followService.getAllFollowByFollowing(id);
+            } else {
+                follows = followService.getAllFollowByUserId(id);
+            }
+
+            followRedisService.saveAllFollow(typeGet, id, follows);
+        }
+
+        Set<FollowResponse> followResponses = new HashSet<FollowResponse>();
+        for (Follow follow : follows) {
+            followResponses.add(followMapper.mapToFollowResponse(follow));
+        }
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .message(localizationUtils.getLocalizedMessage(messageKey))
+                .status(HttpStatus.OK)
+                .data(followResponses)
+                .build());
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<ResponseObject> deleteFollow(@PathVariable Long id) throws Exception {
+        followService.deleteFollow(id);
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .status(HttpStatus.OK)
+                .message(localizationUtils.getLocalizedMessage(MessageKeys.FOLLOW_DELETE_SUCCESSFULLY))
+                .build());
+    }
+
+    @GetMapping("/{userId1}/{userId2}")
+    public ResponseEntity<ResponseObject> getFollowByTwoUserId(@PathVariable Long userId1, @PathVariable Long userId2) throws Exception {
+        User user = userService.getUserById(userId2);
+
+        Follow follow = followService.getFollowByTwoUser(userId1, user);
+
+        FollowResponse followResponse;
+        if (follow == null) {
+            followResponse = FollowResponse.builder().id(0L).build();
+        } else {
+            followResponse = followMapper.mapToFollowResponse(follow);
+        }
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .message(localizationUtils.getLocalizedMessage(MessageKeys.FOLLOW_GET_BY_ID_SUCCESSFULLY))
+                .status(HttpStatus.OK)
+                .data(followResponse)
+                .build());
+    }
 }
