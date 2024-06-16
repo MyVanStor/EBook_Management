@@ -51,6 +51,7 @@ public class BookController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<ResponseObject> createBook(@PathVariable Long userId, @Valid @RequestBody BookDTO bookDTO) throws Exception {
         Book book = bookMapper.mapToBookEntity(bookDTO);
+        book.setNumberReads(0L);
 
         Set<Category> categories = new HashSet<>();
         for (Long categoryId : bookDTO.getCategoryIds()) {
@@ -129,8 +130,8 @@ public class BookController {
                 .build());
     }
 
-    @PutMapping("/number-read")
-    public ResponseEntity<ResponseObject> updateNumberRead(@RequestHeader(name = "book_id") Long bookId) throws Exception {
+    @PutMapping("/number-read/{bookId}")
+    public ResponseEntity<ResponseObject> updateNumberRead(@PathVariable Long bookId) throws Exception {
         Book book = bookService.getBookById(bookId);
 
         book.setNumberReads(book.getNumberReads() + 1);

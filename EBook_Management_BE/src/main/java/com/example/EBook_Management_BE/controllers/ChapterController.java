@@ -41,7 +41,7 @@ public class ChapterController {
     private ChapterMapper chapterMapper;
 
     @PostMapping()
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<ResponseObject> createChapter(@Valid @RequestBody ChapterDTO chapterDTO) throws Exception {
         Book book = bookService.getBookById(chapterDTO.getBookId());
@@ -106,8 +106,8 @@ public class ChapterController {
                 .build());
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<ResponseObject> getAllChapterByBook(@RequestHeader(name = "book_id") Long bookId) throws Exception {
+    @GetMapping("/all/{bookId}")
+    public ResponseEntity<ResponseObject> getAllChapterByBook(@PathVariable Long bookId) throws Exception {
         Book book = bookService.getBookById(bookId);
 
         List<Chapter> chapters = chapterService.getAllChapterByBook(book);
