@@ -22,4 +22,6 @@ public interface IBookService {
 	List<Book> getAllBookByType(String type, Long page, Long limit) throws JsonProcessingException;
 
 	Page<Book> searchBook(SearchBookDTO searchBookDTO, Long page, Long limit);
+
+	List<Book> getBookByAccount(User user);
 }

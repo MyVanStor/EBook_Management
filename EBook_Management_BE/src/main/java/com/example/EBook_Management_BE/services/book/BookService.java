@@ -113,4 +113,11 @@ public class BookService implements IBookService {
 
 		return  bookPage;
 	}
+
+	@Override
+	public List<Book> getBookByAccount(User user) {
+		List<Book> books = bookRepository.findAllBooksByAccount(user.getId());
+
+		return books;
+	}
 }

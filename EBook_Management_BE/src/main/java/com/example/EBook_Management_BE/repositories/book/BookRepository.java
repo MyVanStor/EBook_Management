@@ -27,6 +27,17 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 	List<Book> findAllByUserId(@Param("userId") Long userId);
 
 	@Query(value = """
+        SELECT b.*
+        FROM books b
+        JOIN user_book ub ON b.id = ub.book_id
+        JOIN users u ON ub.user_id = u.id
+        WHERE u.id = :account_id
+        AND b.status != 'private'
+        """, nativeQuery = true)
+	List<Book> findAllBooksByAccount(@Param("account_id") Long accountId);
+
+
+	@Query(value = """
             SELECT b 
             FROM Book b 
             WHERE b.typeOfBook = :type

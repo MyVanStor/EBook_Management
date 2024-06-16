@@ -198,4 +198,21 @@ public class BookController {
                 .data(bookResponsesPage)
                 .build());
     }
+
+    @GetMapping("/account/{accountId}")
+    public ResponseEntity<ResponseObject> getAllBookAccount(@PathVariable Long accountId) throws Exception {
+        User user = userService.getUserById(accountId);
+
+        List<Book> books = bookService.getBookByAccount(user);
+
+        List<BookResponse> bookResponses = books.stream()
+                .map(bookMapper::mapToBookResponse)
+                .toList();
+
+        return ResponseEntity.ok(ResponseObject.builder()
+                .message(localizationUtils.getLocalizedMessage(MessageKeys.BOOK_GET_ALL_BY_USER))
+                .status(HttpStatus.OK)
+                .data(bookResponses)
+                .build());
+    }
 }
