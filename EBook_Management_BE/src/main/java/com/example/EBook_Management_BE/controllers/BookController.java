@@ -135,10 +135,8 @@ public class BookController {
         Book book = bookService.getBookById(bookId);
 
         book.setNumberReads(book.getNumberReads() + 1);
-        int random = new Random().nextInt(2) + 1;
-        if (random == 1) {
-            bookService.updateBook(bookId, book);
-        }
+
+        bookService.updateBook(bookId, book);
 
         BookResponse bookResponse = bookMapper.mapToBookResponse(book);
         bookRedisService.saveBookById(bookId, book);
