@@ -53,7 +53,7 @@ public class RatingController {
 
 	@PostMapping()
 	@ResponseStatus(code = HttpStatus.CREATED)
-	@PreAuthorize("hasRole('ROLE_USER')")
+//	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> createRating(@Valid @RequestBody RatingDTO ratingDTO) throws Exception {
 		Book book = bookService.getBookById(ratingDTO.getBookId());
 		

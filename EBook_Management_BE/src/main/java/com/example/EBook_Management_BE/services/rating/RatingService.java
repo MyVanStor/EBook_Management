@@ -2,6 +2,7 @@ package com.example.EBook_Management_BE.services.rating;
 
 import java.util.Set;
 
+import com.example.EBook_Management_BE.exceptions.DuplicateException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,10 @@ public class RatingService implements IRatingService {
 
 	@Override
 	@Transactional
-	public Rating createRating(Rating rating) {		
+	public Rating createRating(Rating rating) throws DuplicateException {
+		if (ratingRepository.existsByUserAndBook(rating.getUser(), rating.getBook())) {
+			throw new DuplicateException("Đã ồn tại");
+		}
 		return ratingRepository.save(rating);
 	}
 
