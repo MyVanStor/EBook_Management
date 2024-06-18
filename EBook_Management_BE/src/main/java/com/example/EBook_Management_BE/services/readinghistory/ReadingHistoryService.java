@@ -26,8 +26,9 @@ public class ReadingHistoryService implements IReadingHistoryService {
 	@Override
 	@Transactional
 	public ReadingHistory createReadingHistory(ReadingHistory readingHistory) throws DuplicateException {
-		if (readingHistoryRepository.existsByBookAndUserAndChapter(readingHistory.getBook(), readingHistory.getUser(), readingHistory.getChapter())) {
-			throw new DuplicateException("User have reading in chapter");
+		ReadingHistory existingHistory = readingHistoryRepository.findByBookAndUserForUpdate(readingHistory.getBook(), readingHistory.getUser());
+		if (existingHistory != null) {
+			throw new DuplicateException("User have reading in book");
 		}
 
 		return readingHistoryRepository.save(readingHistory);
@@ -59,7 +60,7 @@ public class ReadingHistoryService implements IReadingHistoryService {
 
 	@Override
 	public Set<ReadingHistory> getAllByUser(User user) {
-		return readingHistoryRepository.findByUser(user);
+		return readingHistoryRepository.getAllByUser(user);
 	}
 
 }
