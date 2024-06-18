@@ -2,6 +2,7 @@ package com.example.EBook_Management_BE.services.readinghistory;
 
 import java.util.Set;
 
+import com.example.EBook_Management_BE.exceptions.DuplicateException;
 import org.springframework.stereotype.Service;
 
 import com.example.EBook_Management_BE.components.LocalizationUtils;
@@ -12,6 +13,7 @@ import com.example.EBook_Management_BE.repositories.ReadingHistoryRepository;
 import com.example.EBook_Management_BE.utils.MessageExceptionKeys;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +24,12 @@ public class ReadingHistoryService implements IReadingHistoryService {
 	private final LocalizationUtils localizationUtils;
 
 	@Override
-	public ReadingHistory createReadingHistory(ReadingHistory readingHistory) {
+	@Transactional
+	public ReadingHistory createReadingHistory(ReadingHistory readingHistory) throws DuplicateException {
+		if (readingHistoryRepository.existsByBookAndUserAndChapter(readingHistory.getBook(), readingHistory.getUser(), readingHistory.getChapter())) {
+			throw new DuplicateException("User have reading in chapter");
+		}
+
 		return readingHistoryRepository.save(readingHistory);
 	}
 
@@ -39,11 +46,13 @@ public class ReadingHistoryService implements IReadingHistoryService {
 	}
 
 	@Override
+	@Transactional
 	public ReadingHistory updateReadingHistory(Long id, ReadingHistory readingHistoryUpdate) throws Exception {
 		return readingHistoryRepository.save(readingHistoryUpdate);
 	}
 
 	@Override
+	@Transactional
 	public void deleteReadingHistory(ReadingHistory readingHistory) throws Exception {
 		readingHistoryRepository.delete(readingHistory);
 	}

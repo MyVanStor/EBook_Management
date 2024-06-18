@@ -52,7 +52,7 @@ public class ReadingHistoryController {
 	private ReadingHistoryMapper readingHistoryMapper;
 
 	@PostMapping()
-	@PreAuthorize("hasRole('ROLE_USER')")
+//	@PreAuthorize("hasRole('ROLE_USER')")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<ResponseObject> createReadingHistory(@Valid @RequestBody ReadingHistoryDTO readingHistoryDTO)
 			throws Exception {
@@ -69,7 +69,6 @@ public class ReadingHistoryController {
 				.build();
 
 		ReadingHistory newReadingHistory = readingHistoryService.createReadingHistory(readingHistory);
-		readingHistoryRedisService.saveReadingHistoryById(newReadingHistory.getId(), newReadingHistory);
 
 		ReadingHistoryResponse readingHistoryResponse = readingHistoryMapper.mapToReadingHistoryResponse(newReadingHistory);
 
@@ -81,7 +80,7 @@ public class ReadingHistoryController {
 	}
 	
 	@PutMapping("/{id}/{chapterId}")
-	@PreAuthorize("hasRole('ROLE_USER')")
+//	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updateReadingHistory(@PathVariable Long id,
 			@PathVariable Long chapterId) throws Exception {
 		ReadingHistory readingHistory = readingHistoryService.getReadingHistory(id);
@@ -89,9 +88,8 @@ public class ReadingHistoryController {
 		Chapter chapter = chapterService.getChapterById(chapterId);
 		
 		readingHistory.setChapter(chapter);
-		readingHistory = readingHistoryService.updateReadingHistory(id, readingHistory);
-		readingHistoryRedisService.saveReadingHistoryById(id, readingHistory);
-		
+		readingHistoryService.updateReadingHistory(id, readingHistory);
+
 		ReadingHistoryResponse readingHistoryResponse = readingHistoryMapper.mapToReadingHistoryResponse(readingHistory);
 		
 		return ResponseEntity.ok(ResponseObject.builder()
@@ -101,8 +99,8 @@ public class ReadingHistoryController {
 				.build());
 	}
 	
-	@GetMapping("/{userId}")
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@GetMapping("/all/{userId}")
+//	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> getAllHistoryByUser(@PathVariable Long userId) throws Exception {
 		User user = userService.getUserById(userId);
 		

@@ -83,6 +83,7 @@ public class Book extends BaseEntity {
 	@OneToMany(mappedBy = "book")
 	private Set<Chapter> chapters;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "book")
 	private Set<ReadingHistory> readingHistories;
 }
