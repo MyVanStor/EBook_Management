@@ -1,5 +1,6 @@
 package com.example.EBook_Management_BE.services.rating;
 
+import java.util.List;
 import java.util.Set;
 
 import com.example.EBook_Management_BE.exceptions.DuplicateException;
@@ -57,7 +58,7 @@ public class RatingService implements IRatingService {
 	}
 
 	@Override
-	public Set<Rating> getAllRatingByBook(Book book) throws DataNotFoundException {		
+	public Set<Rating> getAllRatingByBook(Book book) throws DataNotFoundException {
 		Set<Rating> ratings = ratingRepository.findByBook(book);
 		if (ratings.isEmpty()) {
 			throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.RATING_BOOK_NOT_HAVE_RATING));

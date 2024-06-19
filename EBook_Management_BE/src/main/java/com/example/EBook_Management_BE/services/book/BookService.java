@@ -3,6 +3,7 @@ package com.example.EBook_Management_BE.services.book;
 import com.example.EBook_Management_BE.dtos.book.SearchBookDTO;
 import com.example.EBook_Management_BE.entity.*;
 import com.example.EBook_Management_BE.repositories.ChapterRepository;
+import com.example.EBook_Management_BE.repositories.RatingRepository;
 import com.example.EBook_Management_BE.repositories.ReadingHistoryRepository;
 import com.example.EBook_Management_BE.repositories.book.BookRepositoryCustom;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +37,7 @@ public class BookService implements IBookService {
 	private final LocalizationUtils localizationUtils;
 	private final ReadingHistoryRepository readingHistoryRepository;
 	private final ChapterRepository chapterRepository;
+	private final RatingRepository ratingRepository;
 
 	@Override
 	@Transactional
@@ -90,6 +93,9 @@ public class BookService implements IBookService {
 
 		List<Chapter> chapters = chapterRepository.findByBook(book);
 		chapterRepository.deleteAll(chapters);
+
+		Set<Rating> ratings = ratingRepository.findByBook(book);
+		ratingRepository.deleteAll(ratings);
 
 		userBookRepository.deleteAll(book.getUserBooks());
 
