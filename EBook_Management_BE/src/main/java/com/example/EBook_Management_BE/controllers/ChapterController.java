@@ -97,7 +97,7 @@ public class ChapterController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-    public ResponseEntity<ResponseObject> deleteAuthor(@PathVariable Long id) throws Exception {
+    public ResponseEntity<ResponseObject> deleteChapter(@PathVariable Long id) throws Exception {
         chapterService.deleteChapterById(id);
 
         return ResponseEntity.ok(ResponseObject.builder()

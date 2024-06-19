@@ -1,7 +1,9 @@
 package com.example.EBook_Management_BE.services.book;
 
 import com.example.EBook_Management_BE.dtos.book.SearchBookDTO;
-import com.example.EBook_Management_BE.entity.User;
+import com.example.EBook_Management_BE.entity.*;
+import com.example.EBook_Management_BE.repositories.ChapterRepository;
+import com.example.EBook_Management_BE.repositories.ReadingHistoryRepository;
 import com.example.EBook_Management_BE.repositories.book.BookRepositoryCustom;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.data.domain.Page;
@@ -11,8 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.EBook_Management_BE.components.LocalizationUtils;
-import com.example.EBook_Management_BE.entity.Book;
-import com.example.EBook_Management_BE.entity.UserBook;
 import com.example.EBook_Management_BE.constants.StatusUserBook;
 import com.example.EBook_Management_BE.exceptions.DataNotFoundException;
 import com.example.EBook_Management_BE.repositories.book.BookRepository;
@@ -33,6 +33,8 @@ public class BookService implements IBookService {
 	private final UserBookRepository userBookRepository;
 
 	private final LocalizationUtils localizationUtils;
+	private final ReadingHistoryRepository readingHistoryRepository;
+	private final ChapterRepository chapterRepository;
 
 	@Override
 	@Transactional
@@ -82,6 +84,12 @@ public class BookService implements IBookService {
 						localizationUtils.getLocalizedMessage(MessageExceptionKeys.BOOK_DELETE_HAVE_USER_BUYING));
 			}
 		}
+
+		List<ReadingHistory> readingHistories = readingHistoryRepository.findByBook(book);
+		readingHistoryRepository.deleteAll(readingHistories);
+
+		List<Chapter> chapters = chapterRepository.findByBook(book);
+		chapterRepository.deleteAll(chapters);
 
 		userBookRepository.deleteAll(book.getUserBooks());
 

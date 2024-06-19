@@ -1,6 +1,8 @@
 package com.example.EBook_Management_BE.services.chapter;
 
 import com.example.EBook_Management_BE.entity.Book;
+import com.example.EBook_Management_BE.entity.ReadingHistory;
+import com.example.EBook_Management_BE.repositories.ReadingHistoryRepository;
 import org.springframework.stereotype.Service;
 
 import com.example.EBook_Management_BE.components.LocalizationUtils;
@@ -20,6 +22,7 @@ public class ChapterService implements IChapterService {
 	private final IChapterRedisService chapterRedisService;
 
 	private final LocalizationUtils localizationUtils;
+	private final ReadingHistoryRepository readingHistoryRepository;
 
 	@Override
 	public Chapter getChapterById(Long chapterId) throws Exception {
@@ -50,7 +53,12 @@ public class ChapterService implements IChapterService {
 	}
 
 	@Override
-	public void deleteChapterById(Long chapterId) {
+	public void deleteChapterById(Long chapterId) throws Exception {
+		Chapter chapter = getChapterById(chapterId);
+
+		List<ReadingHistory> chapters = readingHistoryRepository.findByChapter(chapter);
+		readingHistoryRepository.deleteAll(chapters);
+
 		chapterRepository.deleteById(chapterId);
 	}
 
