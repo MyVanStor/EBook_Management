@@ -95,7 +95,7 @@ public class BookController {
     }
 
     @PutMapping("/{bookId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> updateBook(@PathVariable Long bookId, @Valid @RequestBody BookDTO bookDTO) throws Exception {
         Book book = bookMapper.mapToBookEntity(bookDTO);
 
@@ -120,7 +120,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{bookId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> deleteBook(@PathVariable Long bookId) throws Exception {
         bookService.deleteBook(bookId);
 

@@ -53,7 +53,7 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom {
 
         query.where(cb.and(predicates.toArray(new Predicate[0])));
         query.distinct(true);  // Ensure distinct results when using many-to-many relationships
-        query.orderBy(cb.desc(book.get("createdAt")));
+        query.orderBy(cb.desc(book.get("updatedAt")));
 
         List<Book> books = entityManager.createQuery(query)
                 .setFirstResult((int) pageable.getOffset())

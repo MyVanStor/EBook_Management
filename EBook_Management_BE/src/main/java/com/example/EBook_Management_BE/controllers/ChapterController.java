@@ -75,7 +75,7 @@ public class ChapterController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> updateChapter(@PathVariable Long id,
                                                         @Valid @RequestBody ChapterDTO chapterDTO) throws Exception {
         Book book = bookService.getBookById(chapterDTO.getBookId());
@@ -96,7 +96,7 @@ public class ChapterController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> deleteChapter(@PathVariable Long id) throws Exception {
         chapterService.deleteChapterById(id);
 
