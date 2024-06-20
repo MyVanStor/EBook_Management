@@ -60,9 +60,6 @@ public class RatingService implements IRatingService {
 	@Override
 	public Set<Rating> getAllRatingByBook(Book book) throws DataNotFoundException {
 		Set<Rating> ratings = ratingRepository.findByBook(book);
-		if (ratings.isEmpty()) {
-			throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageExceptionKeys.RATING_BOOK_NOT_HAVE_RATING));
-		}
 		
 		return ratings;
 	}
