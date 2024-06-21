@@ -133,13 +133,17 @@ public class UserService implements IUserService {
 		
 		// Update the password if it is provided in the DTO
 		if (user.getPassword() != null) {
+			String newPassword = user.getPassword();
+			String encodedPassword = passwordEncoder.encode(newPassword);
+			if (encodedPassword.equals(existingUser.getPassword())) {
+				throw new RuntimeException("Mật khẩu mới khoong trung mat khau cu");
+			}
 
 //			// reset password => clear token
 //			List<Token> tokens = tokenRepository.findByUser(existingUser);
 //			tokenRepository.deleteAll(tokens);
 
-			String newPassword = user.getPassword();
-			String encodedPassword = passwordEncoder.encode(newPassword);
+
 			existingUser.setPassword(encodedPassword);
 		}
 		if (user.getFullname() != null && !user.getFullname().equals(existingUser.getFullname())) {

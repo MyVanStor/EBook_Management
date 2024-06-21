@@ -135,7 +135,6 @@ public class BookController {
         Book book = bookService.getBookById(bookId);
 
         book.setNumberReads(book.getNumberReads() + 1);
-
         bookService.updateBook(bookId, book);
 
         BookResponse bookResponse = bookMapper.mapToBookResponse(book);
