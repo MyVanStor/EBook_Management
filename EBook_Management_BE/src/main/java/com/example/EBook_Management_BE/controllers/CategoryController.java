@@ -37,9 +37,8 @@ public class CategoryController {
     @Autowired
     private CategoryMapper categoryMapper;
 
-    @GetMapping()
-    @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<ResponseObject> getCategoryById(@RequestHeader(name = "category_id") Long categoryId) throws Exception {
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<ResponseObject> getCategoryById(@PathVariable Long categoryId) throws Exception {
         Category existingCategory = categoryService.getCategoryById(categoryId);
 
         CategoryResponse categoryResponse = categoryMapper.mapToCategoryResponse(existingCategory);
@@ -68,9 +67,9 @@ public class CategoryController {
                 .build());
     }
 
-    @PutMapping()
+    @PutMapping("/{categoryId}")
 //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
-    public ResponseEntity<ResponseObject> updateCategory(@RequestHeader(name = "category_id") Long categoryId,
+    public ResponseEntity<ResponseObject> updateCategory(@PathVariable Long categoryId,
                                                          @Valid @RequestBody CategoryDTO categoryDTO) throws Exception {
         Category category = categoryMapper.mapToCategoryEntity(categoryDTO);
 
@@ -86,9 +85,9 @@ public class CategoryController {
                 .build());
     }
 
-    @DeleteMapping()
+    @DeleteMapping("/{categoryId}")
 //    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYS-ADMIN')")
-    public ResponseEntity<ResponseObject> deleteCategory(@RequestHeader(name = "category_id") Long categoryId) throws Exception {
+    public ResponseEntity<ResponseObject> deleteCategory(@PathVariable Long categoryId) throws Exception {
         categoryService.deleteCategoryById(categoryId);
 
         return ResponseEntity.ok(ResponseObject.builder()

@@ -216,7 +216,7 @@ public class UserController {
     }
 
     @PutMapping("/block")
-    @PreAuthorize("hasRole('ROLE_SYS-ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_SYS-ADMIN')")
     public ResponseEntity<ResponseObject> blockOrEnable(@RequestHeader(name = "user_id") Long userId) throws Exception {
         short newStatus = userService.blockOrEnable(userId);
 

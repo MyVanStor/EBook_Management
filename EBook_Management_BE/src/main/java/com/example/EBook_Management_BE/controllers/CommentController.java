@@ -50,7 +50,7 @@ public class CommentController {
     private CommentMapper commentMapper;
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('Role_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_USER') or hasRole('Role_ADMIN')")
     public ResponseEntity<ResponseObject> getCommmentById(@PathVariable Long id) throws Exception {
         Comment existingComment = commentService.getCommentById(id);
 
@@ -64,7 +64,7 @@ public class CommentController {
     }
 
     @PostMapping()
-    @PreAuthorize("hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_USER')")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<ResponseObject> createComment(@Valid @RequestBody CommentDTO commentDTO) throws Exception {
         User user = userService.getUserById(commentDTO.getUserId());
@@ -93,7 +93,7 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> updateComment(@PathVariable Long commentId, @Valid @RequestBody CommentDTO commentDTO) throws Exception {
         User user = userService.getUserById(commentDTO.getUserId());
 
@@ -121,7 +121,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> deleteComment(@PathVariable Long id) throws Exception {
         commentService.deleteComment(id);
 

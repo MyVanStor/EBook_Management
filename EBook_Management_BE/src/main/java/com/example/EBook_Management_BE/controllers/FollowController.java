@@ -117,7 +117,7 @@ public class FollowController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ResponseObject> deleteFollow(@PathVariable Long id) throws Exception {
         followService.deleteFollow(id);
 

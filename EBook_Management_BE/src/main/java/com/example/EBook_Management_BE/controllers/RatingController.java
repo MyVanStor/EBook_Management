@@ -78,7 +78,7 @@ public class RatingController {
 	}
 
 	@PutMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_USER')")
+//	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updateRating(@PathVariable Long id, @Valid @RequestBody RatingDTO ratingDTO) throws Exception {
 		Rating rating = ratingService.getRatingById(id);
 		
@@ -97,7 +97,7 @@ public class RatingController {
 	}
 
 	@DeleteMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_USER')")
+//	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> deleteRating(@PathVariable Long id) throws Exception {
 		Rating existingRating = ratingService.getRatingById(id);
 		

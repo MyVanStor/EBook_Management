@@ -50,7 +50,7 @@ public class OrderController {
 	private OrderMapper orderMapper;
 	
 	@PostMapping("")
-	@PreAuthorize("hasRole('ROLE_USER')")
+//	@PreAuthorize("hasRole('ROLE_USER')")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<ResponseObject> createOrder(@Valid @RequestBody OrderDTO orderDTO) throws Exception {
 		Order order = orderMapper.mapToOrderEntity(orderDTO);
@@ -82,7 +82,7 @@ public class OrderController {
 	}
 
 	@PutMapping("/{id}/{status}")
-	@PreAuthorize("hasRole('ROLE_USER')")
+//	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ResponseObject> updateOrder(@PathVariable Long id, @PathVariable String status) throws Exception {
 		Order order = orderService.getOrderById(id);
 		order.setStatus(status);
@@ -97,7 +97,7 @@ public class OrderController {
 	}
 
 	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
 	public ResponseEntity<ResponseObject> getOrderById(@PathVariable Long id) throws Exception {
 		Order order = orderService.getOrderById(id);
 		
